@@ -30,10 +30,11 @@ class Verified extends Verify
 
         $paymentStatus = (string) $object->payment_status;
 
+        /** @var SalesOrder $salesOrder */
+        $salesOrder = $this->_objectManager->create(SalesOrder::class);
+        $salesOrder->load($order->getOrderId());
+
         if ($paymentStatus == self::ORDER_STATUS_UNPAID) {
-            /** @var SalesOrder $salesOrder */
-            $salesOrder = $this->_objectManager->create(SalesOrder::class);
-            $salesOrder->load($order->getOrderId());
             $this->storage->setData('current_order_id', $salesOrder->getId());
 
             /** @var \Magento\Framework\Controller\Result\Redirect $resultRedirect */
@@ -42,6 +43,11 @@ class Verified extends Verify
 
             return $resultRedirect;
         }
+
+        $salesOrder->setState(SalesOrder::STATE_PROCESSING)
+            ->setStatus(SalesOrder::STATE_PROCESSING)
+            ->save()
+        ;
 
         $this->storage->unsetData(self::CONFIRMED_ORDER_ID_KEY);
         return $this->resultFactory->create(ResultFactory::TYPE_PAGE);
