@@ -21,6 +21,6 @@
         "psr-4": {
             "ZPay\\Standard\\": ""
         }
-    }
+    },
     "minimum-stability": "stable"
 }
