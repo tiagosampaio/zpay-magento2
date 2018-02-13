@@ -1,0 +1,26 @@
+{
+    "name": "tiagosampaio/zpay-magento2",
+    "description":"This is the official ZPay module for Magento 2.",
+    "type": "project",
+    "require": {
+        "zendframework/zend-http": "^2.7"
+    },
+    "suggest": {},
+    "type": "magento2-module",
+    "version": "2.0.0",
+    "authors": [
+        {
+            "name": "Tiago Sampaio",
+            "email": "tiago@tiagosampaio.com"
+        }
+    ],
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "ZPay\\Standard\\": ""
+        }
+    }
+    "minimum-stability": "stable"
+}
