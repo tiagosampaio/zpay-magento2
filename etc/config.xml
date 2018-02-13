@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Tiago Sampaio <tiago@tiagosampaio.com>
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <payment>
+            <zpay_standard>
+                <active>1</active>
+                <model>ZPay\Standard\Model\Payment\Method\Standard</model>
+                <order_status>pending</order_status>
+                <title>ZPay (pay with bitcoin)</title>
+                <allowspecific>0</allowspecific>
+                <group>zpay</group>
+                <sort_order>90</sort_order>
+                <payment_action>order</payment_action>
+                <service_url_production>https://api.zeepay.io/</service_url_production>
+                <service_url_sandbox>https://sandbox-api.zeepay.io/</service_url_sandbox>
+            </zpay_standard>
+        </payment>
+    </default>
+</config>

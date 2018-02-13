@@ -1,0 +1,18 @@
+/**
+ * @author Tiago Sampaio <tiago@tiagosampaio.com>
+ */
+
+.zpay-standard-header-section {}
+
+.zpay-standard-header-section .entry-edit-head {
+    background: url("images/zpay-logo.png") 25px rgba(91, 44, 162, 1) no-repeat;
+    padding-left: 150px;
+}
+
+.zpay-standard-header-section .entry-edit-head > a,
+.zpay-standard-header-section .entry-edit-head > a:active,
+.zpay-standard-header-section .entry-edit-head > a:hover,
+.zpay-standard-header-section .entry-edit-head > a:visited,
+.zpay-standard-header-section .entry-edit-head > a:focus {
+    color: white;
+}

@@ -1,0 +1,80 @@
+<?php
+/**
+ * @var \ZPay\Standard\Block\Payment\Wrapper $this
+ * @var \Magento\Sales\Model\Order           $order
+ */
+$order      = $this->getLastOrder();
+$orderId    = $order->getRealOrderId();
+$grandTotal = $order->getGrandTotal();
+
+$zOrderId   = $this->getZpayOrder()->getZpayOrderId();
+$zQuoteId   = $this->getZpayOrder()->getZpayQuoteId();
+$zAddress   = $this->getZpayOrder()->getZpayAddress();
+$zAmountTo  = $this->getZpayOrder()->getZpayAmountTo();
+$zTime      = $this->getZpayOrder()->getZpayTime();
+$zTimestamp = $this->getZpayOrder()->getZpayTimestamp();
+?>
+
+<div class="zpay-wrapper">
+    <h2><?php echo __('Please send Bitcoins to this address') ?></h2>
+    <div class="code-wrapper">
+        <div class="left">
+            <canvas id="zpay-code" width="300" height="300"></canvas>
+        </div>
+        <div class="right">
+            <div class="clock-div">
+                <p class="clock-title"><?php echo __('This quote is available until...') ?></p>
+                <span id="clock-timer"></span>
+            </div>
+            <button class="force-refresh"><?php echo __('Update Quote') ?></button>
+        </div>
+        <div class="loader"></div>
+    </div>
+    <table class="values">
+        <tbody>
+        <tr>
+            <td><?php echo __('Address:') ?></td>
+            <td><div class="code-text" data-total="<?php echo $zAddress ?>"><?php echo $zAddress ?></div></td>
+        </tr>
+        <tr>
+            <td>R$:</td>
+            <td><span class="brl"><?php echo $this->currency($order->getGrandTotal()) ?></span></td>
+        </tr>
+        <tr>
+            <td>BTC:</td>
+            <td><span class="btc"><?php echo $zAmountTo ?></span></td>
+        </tr>
+        <tr>
+            <td><?php echo __('BTC/BRL Rate:') ?></td>
+            <td><span class="rate"><?php echo $this->currency($this->getBtcRate()) ?></span></td>
+        </tr>
+        </tbody>
+    </table>
+
+<!--    <script type="text/x-magento-init">{".force-refresh":{"ZPay_Standard/js/standard/test":{"url":"http://www.example.url", "method":"post"}}}</script>-->
+
+    <script type="text/javascript">
+        requirejs(['jquery', 'zpay-payment'], function (jQuery, ZPay) {
+            ZPay.setup(
+                jQuery('#zpay-code'),
+                jQuery('.force-refresh'),
+                '<?php echo $this->dataHelper()->getUpdateUrl() ?>',
+                '<?php echo $this->dataHelper()->getVerifyUrl() ?>',
+                '<?php echo $this->dataHelper()->getVerifiedUrl() ?>',
+                10000,
+                function (api) {
+                    jQuery('.code-text').text(api.ZOrder.address);
+                    jQuery('.btc').text(api.ZOrder.amount);
+                }
+            ).setupZOrder(
+                '<?php echo $zOrderId ?>',
+                '<?php echo $zQuoteId ?>',
+                '<?php echo $zAddress?>',
+                '<?php echo $zAmountTo?>',
+                '<?php echo $zTime?>',
+                '<?php echo $zTimestamp?>'
+            ).setTimerContainer(jQuery('#clock-timer'))
+                .start();
+        });
+    </script>
+</div>

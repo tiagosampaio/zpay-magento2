@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <title>Pay With Bitcoins</title>
+        <css src="ZPay_Standard::css/styles.css"/>
+    </head>
+    <body>
+        <referenceContainer name="order.success.additional.info">
+            <container name="zpay.standard.payment.wrapper" htmlTag="div" htmlClass="zpay-standard-payment-wrapper">
+                <block class="ZPay\Standard\Block\Payment\Wrapper" name="onepage.success.redirect_wrapper" />
+            </container>
+        </referenceContainer>
+    </body>
+</page>

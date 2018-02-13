@@ -1,0 +1,18 @@
+<?php
+/**
+ * @author Tiago Sampaio <tiago@tiagosampaio.com>
+ */
+?>
+<dl class="items check payable" id="payment_form_<?= $block->escapeHtml($block->getMethodCode()) ?>" style="display:none;">
+    <dt class="title"><?php echo $block->escapeHtml(__('Make Check payable to:')) ?></dt>
+    <dd class="content">
+        <div class="label">
+            <p><?php echo $this->__('You will see a QR code to make the payment after you place the order.'); ?></p>
+        </div>
+        <?php if ($message = $this->getMethod()->getConfigData('message')): ?>
+            <div class="additional-message">
+                <?php echo $message; ?>
+            </div>
+        <?php endif; ?>
+    </dd>
+</dl>

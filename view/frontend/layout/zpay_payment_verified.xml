@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Tiago Sampaio <tiago@tiagosampaio.com>
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <title>Pay With Bitcoins</title>
+        <css src="ZPay_Standard::css/styles.css"/>
+    </head>
+    <body>
+        <referenceBlock name="page.main.title">
+            <action method="setPageTitle">
+                <argument translate="true" name="title" xsi:type="string">Your Payment is Confirmed!</argument>
+            </action>
+        </referenceBlock>
+        <referenceContainer name="content">
+            <container name="zpay.standard.payment.wrapper" htmlTag="div" htmlClass="zpay-standard-payment-wrapper">
+
+            </container>
+        </referenceContainer>
+    </body>
+</page>
