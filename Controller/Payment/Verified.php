@@ -28,9 +28,9 @@ class Verified extends Verify
             return false;
         }
 
-        $payoutStatus = (string) $object->payout_status;
+        $paymentStatus = (string) $object->payment_status;
 
-        if ($payoutStatus == self::ORDER_STATUS_UNPAID) {
+        if ($paymentStatus == self::ORDER_STATUS_UNPAID) {
             /** @var SalesOrder $salesOrder */
             $salesOrder = $this->_objectManager->create(SalesOrder::class);
             $salesOrder->load($order->getOrderId());

@@ -5,6 +5,7 @@ namespace ZPay\Standard\Controller\Payment;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\Session\Storage;
+use Magento\Framework\Pricing\Helper\Data as HelperPricing;
 use ZPay\Standard\Model\Service\Api;
 use ZPay\Standard\Model\Transaction\Order;
 
@@ -22,16 +23,21 @@ abstract class PaymentAbstract extends Action
     /** @var Storage */
     protected $storage;
 
+    /** @var HelperPricing */
+    protected $helperPricing;
+
     /**
      * PaymentAbstract constructor.
      *
      * @param Context $context
      * @param Api     $api
      */
-    public function __construct(Context $context, Api $api, Storage $storage)
+    public function __construct(Context $context, Api $api, Storage $storage, HelperPricing $helperPricing)
     {
         $this->api = $api;
         $this->storage = $storage;
+        $this->helperPricing = $helperPricing;
+
         parent::__construct($context);
     }
 

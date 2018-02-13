@@ -28,19 +28,19 @@ class Verify extends PaymentAbstract
         }
 
         try {
-            $payoutStatus = (string) $object->payout_status;
+            $paymentStatus = (string) $object->payment_status;
             //$orderStatus  = (string) $object->order_status;
 
             $data = [];
 
-            switch ($payoutStatus) {
+            switch ($paymentStatus) {
                 case self::ORDER_STATUS_PAID:
-                    $data['status'] = $payoutStatus;
+                    $data['status'] = $paymentStatus;
                     $this->storage->setData(self::CONFIRMED_ORDER_ID_KEY, $order->getZpayOrderId());
                     break;
                 case self::ORDER_STATUS_UNPAID:
                 default:
-                    $data['status'] = $payoutStatus;
+                    $data['status'] = $paymentStatus;
                     break;
             }
 
@@ -75,7 +75,7 @@ class Verify extends PaymentAbstract
                 return false;
             }
 
-            if (!$object->payout_status) {
+            if (!$object->payment_status) {
                 return false;
             }
 

@@ -124,7 +124,7 @@ define(['jquery', 'jquery-qrcode'], function (jQuery) {
                 data:{order:object.ZOrder.orderId},
                 dataType:'json',
                 success: function (data) {
-                    if (!data.status) {
+                    if (!data || !data.status) {
                         return;
                     }
 
@@ -158,12 +158,21 @@ define(['jquery', 'jquery-qrcode'], function (jQuery) {
                 data:{order:object.ZOrder.orderId},
                 dataType:'json',
                 success: function (data) {
+                    if (!data) {
+                        return this;
+                    }
+                    
                     object.ZOrder.orderId   = data.order_id;
                     object.ZOrder.quoteId   = data.quote_id;
                     object.ZOrder.amount    = data.amount_to;
                     object.ZOrder.address   = data.address;
                     object.ZOrder.time      = data.time;
                     object.ZOrder.timestamp = data.timestamp;
+
+                    jQuery('table.values .code-text').html(object.ZOrder.address);
+                    jQuery('table.values .btc').html(object.ZOrder.amount);
+                    jQuery('table.values .brl .price').html(data.total_brl);
+                    jQuery('table.values .rate .price').html(data.rate);
 
                     object.generateQRCode();
 

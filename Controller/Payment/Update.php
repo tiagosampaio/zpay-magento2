@@ -3,6 +3,7 @@
 namespace ZPay\Standard\Controller\Payment;
 
 use Magento\Framework\Controller\ResultFactory;
+use Magento\Sales\Model\Order as SalesOrder;
 use ZPay\Standard\Model\Transaction\Order;
 
 class Update extends PaymentAbstract
@@ -35,6 +36,16 @@ class Update extends PaymentAbstract
                 ->setZpayTime((int) $data->time)
                 ->setZpayTimestamp($data->timestamp)
                 ->save();
+
+            /** @var SalesOrder $salesOrder */
+            $salesOrder = $this->_objectManager->create(SalesOrder::class);
+            $salesOrder->load($order->getOrderId());
+
+            $grandTotal  = (float) $salesOrder->getGrandTotal();
+            $bitcoinRate = (float) ($grandTotal/$order->getZpayAmountTo());
+
+            $data->total_brl = $this->helperPricing->currency($grandTotal, true, false);
+            $data->rate      = $this->helperPricing->currency($bitcoinRate, true, false);
 
             return $this->resultFactory->create(ResultFactory::TYPE_JSON)->setData((array) $data);
         } catch (\Exception $e) {
