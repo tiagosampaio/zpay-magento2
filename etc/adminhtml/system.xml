@@ -8,7 +8,7 @@
     <system>
         <section id="payment">
             <group id="zpay_standard" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label><![CDATA[ZPay Standard&nbsp;<i>Accept and process payments with BitCoin.</i>]]></label>
+                <label><![CDATA[ZPay&nbsp;<i>Accept and process payments with BitCoin.</i>]]></label>
                 <fieldset_css>complex zpay-standard-header-section</fieldset_css>
                 <field id="title" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Title</label>

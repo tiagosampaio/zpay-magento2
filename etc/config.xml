@@ -11,7 +11,7 @@
                 <active>1</active>
                 <model>ZPay\Standard\Model\Payment\Method\Standard</model>
                 <order_status>pending</order_status>
-                <title>ZPay (pay with bitcoin)</title>
+                <title>ZPay (pague com BitCoin)</title>
                 <allowspecific>0</allowspecific>
                 <group>zpay</group>
                 <sort_order>90</sort_order>
