@@ -3,7 +3,6 @@
 namespace ZPay\Standard\Controller\Payment;
 
 use Magento\Framework\Controller\ResultFactory;
-use Magento\Sales\Model\Order as SalesOrder;
 use ZPay\Standard\Model\Transaction\Order;
 
 class Verified extends Verify
@@ -30,9 +29,8 @@ class Verified extends Verify
 
         $paymentStatus = (string) $object->payment_status;
 
-        /** @var SalesOrder $salesOrder */
-        $salesOrder = $this->_objectManager->create(SalesOrder::class);
-        $salesOrder->load($order->getOrderId());
+        /** @var \Magento\Sales\Model\Order $salesOrder */
+        $salesOrder = $this->orderRepository->get($order->getOrderId());
 
         if ($paymentStatus == self::ORDER_STATUS_UNPAID) {
             $this->storage->setData('current_order_id', $salesOrder->getId());
@@ -44,13 +42,20 @@ class Verified extends Verify
             return $resultRedirect;
         }
 
-        $salesOrder->setState(SalesOrder::STATE_PROCESSING)
-            ->setStatus(SalesOrder::STATE_PROCESSING)
-            ->save()
-        ;
+        if ($salesOrder->canInvoice()) {
+            /** @var \Magento\Sales\Model\Order\Invoice $invoice */
+            $invoice = $this->invoiceService->prepareInvoice($salesOrder);
+            $invoice->register()
+                ->save();
+
+            $transaction = $this->transaction
+                ->addObject($salesOrder)
+                ->addObject($invoice);
+
+            $transaction->save();
+        }
 
         $this->storage->unsetData(self::CONFIRMED_ORDER_ID_KEY);
         return $this->resultFactory->create(ResultFactory::TYPE_PAGE);
     }
-
 }

@@ -1,0 +1,5 @@
+<?php
+/** @var \ZPay\Standard\Block\Info\Standard $this */
+?>
+<h4><?php echo __('Paid with BitCoins using ZPay') ?></h4>
+<span><?php echo __('BTC: %1', (float) $this->getZPayOrder()->getZpayAmountTo())?></span>
