@@ -28,6 +28,8 @@ class Verified extends Verify
         }
 
         $paymentStatus = (string) $object->payment_status;
+        $order->setZpayPayoutStatus($paymentStatus)
+            ->save();
 
         /** @var \Magento\Sales\Model\Order $salesOrder */
         $salesOrder = $this->orderRepository->get($order->getOrderId());
