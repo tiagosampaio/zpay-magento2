@@ -1,16 +1,9 @@
 <?php
-/**
- * @author Tiago Sampaio <tiago@tiagosampaio.com>
- */
 
-namespace ZPay\Standard\Model\Transaction;
-
-use Magento\Framework\Model\AbstractModel;
-use ZPay\Standard\Api\Data\TransactionOrderInterface;
-use ZPay\Standard\Model\ResourceModel\Transaction\Order as ResourceOrder;
+namespace ZPay\Standard\Api\Data;
 
 /**
- * Class Order
+ * Interface TransactionOrderInterface
  *
  * @method integer getId()
  * @method integer getQuoteId()
@@ -36,13 +29,9 @@ use ZPay\Standard\Model\ResourceModel\Transaction\Order as ResourceOrder;
  * @method $this setZpayTime(integer $zpayTime)
  * @method $this setZpayTimestamp(string $zpayTimestamp)
  *
- * @package ZPay\Standard\Model\Transaction
+ * @package ZPay\Standard\Api\Data
  */
-class Order extends AbstractModel implements TransactionOrderInterface
+interface TransactionOrderInterface
 {
 
-    protected function _construct()
-    {
-        $this->_init(ResourceOrder::class);
-    }
 }
