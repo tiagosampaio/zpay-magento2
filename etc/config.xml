@@ -8,7 +8,7 @@
     <default>
         <payment>
             <zpay_standard>
-                <active>1</active>
+                <active>0</active>
                 <model>ZPay\Standard\Model\Payment\Method\Standard</model>
                 <order_status>pending</order_status>
                 <title>ZPay (pague com BitCoin)</title>

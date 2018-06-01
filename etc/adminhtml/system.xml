@@ -39,7 +39,11 @@
                     <label>ZPay Contract ID</label>
                     <comment>Your ZPay's account contract ID.</comment>
                 </field>
-                <field id="sort_order" translate="label" type="text" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="validate_credentials" translate="label" type="button" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <frontend_model>ZPay\Standard\Block\System\Config\Credentials\ValidateCredentials</frontend_model>
+                    <comment>Click in the button to validate your credentials.</comment>
+                </field>
+                <field id="sort_order" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Sort Order</label>
                     <frontend_class>validate-number</frontend_class>
                 </field>
