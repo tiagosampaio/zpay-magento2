@@ -16,8 +16,8 @@
                 <group>zpay</group>
                 <sort_order>90</sort_order>
                 <payment_action>order</payment_action>
-                <service_url_production>https://api.zeepay.io/</service_url_production>
-                <service_url_sandbox>https://sandbox-api.zeepay.io/</service_url_sandbox>
+                <service_url_production>https://api.zpay.ws/</service_url_production>
+                <service_url_sandbox>https://sandbox-api.zpay.ws/</service_url_sandbox>
             </zpay_standard>
         </payment>
     </default>
