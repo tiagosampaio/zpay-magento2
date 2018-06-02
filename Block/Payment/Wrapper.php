@@ -8,6 +8,7 @@ use Magento\Framework\View\Element\Template\Context;
 use Magento\Framework\ObjectManagerInterface;
 use Magento\Checkout\Model\Session as CheckoutSession;
 use Magento\Framework\Session\StorageInterface;
+use Magento\Sales\Api\OrderRepositoryInterface;
 use ZPay\Standard\Model\Transaction\Order as ZPayOrder;
 use ZPay\Standard\Helper\Data as HelperData;
 use Magento\Framework\Pricing\Helper\Data as HelperPricing;
@@ -36,6 +37,9 @@ class Wrapper extends Template
     /** @var CheckoutSession */
     protected $checkoutSession;
 
+    /** @var OrderRepositoryInterface */
+    protected $orderRepository;
+
 
     public function __construct(
         Context $context,
@@ -45,6 +49,7 @@ class Wrapper extends Template
         StorageInterface $storage,
         Registry $registry,
         CheckoutSession $checkoutSession,
+        OrderRepositoryInterface $orderRepository,
         array $data = []
     )
     {
@@ -56,6 +61,7 @@ class Wrapper extends Template
         $this->storage         = $storage;
         $this->registry        = $registry;
         $this->checkoutSession = $checkoutSession;
+        $this->orderRepository = $orderRepository;
     }
 
 
@@ -84,7 +90,7 @@ class Wrapper extends Template
 
             /** Checkout success page. */
             if (!$orderId) {
-                $orderId = $this->getLastOrder()->getId();
+                $orderId = $this->getOrder()->getId();
             }
 
             if ($orderId) {
@@ -101,12 +107,38 @@ class Wrapper extends Template
 
 
     /**
+     * @return bool
+     */
+    public function canDisplayWrapper()
+    {
+        $zpayOrderId = $this->getZpayOrder()->getId();
+        return (bool) $zpayOrderId;
+    }
+
+
+    /**
      * @return \Magento\Sales\Model\Order
      *
      * @throws \Exception
      */
-    public function getLastOrder()
+    public function getOrder()
     {
+        $key = 'current_magento_order';
+
+        if ($this->registry->registry($key)) {
+            return $this->registry->registry($key);
+        }
+
+        if ($orderId = $this->getRequest()->getParam('order_id')) {
+            /** @var \Magento\Sales\Model\Order $order */
+            $order = $this->orderRepository->get($orderId);
+
+            $this->registry->register($key, $order, true);
+
+            return $order;
+        }
+
+        
         /** @var \Magento\Sales\Model\Order $lastOrder */
         $lastOrder = $this->checkoutSession->getLastRealOrder();
         return $lastOrder;
@@ -150,7 +182,7 @@ class Wrapper extends Template
     public function getBtcRate()
     {
         try {
-            $grandTotal = (float) $this->getLastOrder()->getGrandTotal();
+            $grandTotal = (float) $this->getOrder()->getGrandTotal();
             $amountTo   = (float) $this->getZpayOrder()->getZpayAmountTo();
 
             return  (float) ($grandTotal/$amountTo);

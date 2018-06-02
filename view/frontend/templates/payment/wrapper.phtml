@@ -3,7 +3,10 @@
  * @var \ZPay\Standard\Block\Payment\Wrapper $block
  * @var \Magento\Sales\Model\Order           $order
  */
-$order      = $block->getLastOrder();
+
+if ($block->canDisplayWrapper()):
+
+$order      = $block->getOrder();
 $orderId    = $order->getRealOrderId();
 $grandTotal = $order->getGrandTotal();
 
@@ -78,3 +81,4 @@ $zTimestamp = $block->getZpayOrder()->getZpayTimestamp();
         });
     </script>
 </div>
+<?php endif; ?>
