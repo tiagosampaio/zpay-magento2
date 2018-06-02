@@ -73,6 +73,64 @@ class Api
 
 
     /**
+     * @param string $contractId
+     *
+     * @return $this
+     */
+    public function setContractId($contractId)
+    {
+        $this->contractId = (string) $contractId;
+        return $this;
+    }
+
+
+    /**
+     * @param string $username
+     *
+     * @return $this
+     */
+    public function setUsername($username)
+    {
+        $this->username = $username;
+        return $this;
+    }
+
+
+    /**
+     * @param string $password
+     *
+     * @return $this
+     */
+    public function setPassword($password)
+    {
+        $this->password = $password;
+        return $this;
+    }
+
+
+    /**
+     * @param string $environment
+     *
+     * @return $this
+     */
+    public function setEnvironment($environment = Environment::PRODUCTION)
+    {
+        $this->environment = $environment;
+        return $this;
+    }
+
+
+    /**
+     * @return mixed
+     */
+    public function getToken()
+    {
+        $this->init();
+        return $this->token;
+    }
+
+
+    /**
      * @param Order $order
      *
      * @return \stdClass
@@ -204,6 +262,8 @@ class Api
 
     /**
      * @return $this
+     *
+     * @throws ServiceApiResponseException
      */
     protected function prepareToken()
     {
@@ -227,22 +287,11 @@ class Api
 
         if (!isset($result['token'])) {
             /** @todo Throw an exception here. */
+            throw new ServiceApiResponseException(__('Invalid credentials.'));
         }
 
         $this->token = (string) $result['token'];
 
-        return $this;
-    }
-
-
-    /**
-     * @param string $environment
-     *
-     * @return $this
-     */
-    protected function setEnvironment($environment = Environment::PRODUCTION)
-    {
-        $this->environment = $environment;
         return $this;
     }
 
