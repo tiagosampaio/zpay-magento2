@@ -9,7 +9,9 @@ class Verify extends PaymentAbstract
 {
 
     /**
-     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface
+     * @return bool|\Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface
+     *
+     * @throws \ZPay\Standard\Exception\ServiceApiResponseException
      */
     public function execute()
     {

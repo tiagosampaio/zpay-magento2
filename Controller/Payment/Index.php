@@ -5,7 +5,7 @@ namespace ZPay\Standard\Controller\Payment;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\Controller\ResultFactory;
 
-class Pay extends Action
+class Index extends Action
 {
 
     /**
@@ -15,5 +15,4 @@ class Pay extends Action
     {
         return $this->resultFactory->create(ResultFactory::TYPE_PAGE);
     }
-
 }

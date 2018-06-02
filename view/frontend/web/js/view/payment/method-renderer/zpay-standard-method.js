@@ -2,16 +2,19 @@
  * @author Tiago Sampaio <tiago@tiagosampaio.com>
  */
 define([
+    'jquery',
     'Magento_Checkout/js/view/payment/default'
-], function (Component) {
+], function ($, Component) {
     'use strict';
 
     return Component.extend({
+        redirectAfterPlaceOrder: false,
         defaults: {
             template: 'ZPay_Standard/payment/standard'
         },
-        // afterPlaceOrder: function () {
-        //     window.location = '/zpay/standard/redirect';
-        // }
+        afterPlaceOrder: function () {
+            $.mage.redirect('/zpay/payment');
+            return false;
+        }
     });
 });

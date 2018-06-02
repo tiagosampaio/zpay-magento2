@@ -18,7 +18,7 @@
         </referenceBlock>
         <referenceContainer name="content">
             <container name="zpay.standard.payment.wrapper" htmlTag="div" htmlClass="zpay-standard-payment-wrapper">
-                <block class="ZPay\Standard\Block\Payment\Wrapper" name="zpay.standard.payment.wrapper.pay"/>
+                <block class="ZPay\Standard\Block\Payment\Wrapper" name="zpay.standard.payment.wrapper.pay" cacheable="false"/>
             </container>
         </referenceContainer>
     </body>

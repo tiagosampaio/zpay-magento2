@@ -61,6 +61,7 @@ class Api
 
     /**
      * @return $this
+     * @throws ServiceApiResponseException
      */
     public function init()
     {
@@ -122,6 +123,7 @@ class Api
 
     /**
      * @return mixed
+     * @throws ServiceApiResponseException
      */
     public function getToken()
     {
@@ -179,6 +181,8 @@ class Api
      * @param string $orderId
      *
      * @return bool|\stdClass
+     *
+     * @throws ServiceApiResponseException
      */
     public function renewOrder($orderId)
     {
@@ -209,9 +213,11 @@ class Api
 
 
     /**
-     * @param $zpayOrderId
+     * @param string $zpayOrderId
      *
      * @return \stdClass
+     *
+     * @throws ServiceApiResponseException
      */
     public function getOrderStatus($zpayOrderId)
     {
@@ -272,6 +278,8 @@ class Api
             'password' => $this->password
         ];
 
+        $this->prepareBaseUrl($this->environment);
+
         /** @var HttpClient $client */
         $client = $this->getHttpClient($this->getServiceUrl('auth'), self::TYPE_APPLICATION_FORM_URLENCODED);
         $client->setRawBody(http_build_query($parameters));
@@ -319,5 +327,4 @@ class Api
 
         return $this;
     }
-
 }

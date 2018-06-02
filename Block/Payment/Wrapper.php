@@ -33,18 +33,10 @@ class Wrapper extends Template
     /** @var Registry */
     protected $registry = null;
 
+    /** @var CheckoutSession */
+    protected $checkoutSession;
 
-    /**
-     * Wrapper constructor.
-     *
-     * @param Context                $context
-     * @param ObjectManagerInterface $objectManager
-     * @param HelperData             $helperData
-     * @param HelperPricing          $helperPricing
-     * @param StorageInterface       $storage
-     * @param Registry               $registry
-     * @param array                  $data
-     */
+
     public function __construct(
         Context $context,
         ObjectManagerInterface $objectManager,
@@ -52,16 +44,18 @@ class Wrapper extends Template
         HelperPricing $helperPricing,
         StorageInterface $storage,
         Registry $registry,
+        CheckoutSession $checkoutSession,
         array $data = []
     )
     {
         parent::__construct($context, $data);
 
-        $this->helperData    = $helperData;
-        $this->helperPricing = $helperPricing;
-        $this->objectManager = $objectManager;
-        $this->storage       = $storage;
-        $this->registry      = $registry;
+        $this->helperData      = $helperData;
+        $this->helperPricing   = $helperPricing;
+        $this->objectManager   = $objectManager;
+        $this->storage         = $storage;
+        $this->registry        = $registry;
+        $this->checkoutSession = $checkoutSession;
     }
 
 
@@ -113,23 +107,9 @@ class Wrapper extends Template
      */
     public function getLastOrder()
     {
-        // $this->getCheckoutSession()->setLastRealOrderId('000000052');
-
         /** @var \Magento\Sales\Model\Order $lastOrder */
-        $lastOrder = $this->getCheckoutSession()->getLastRealOrder();
-
+        $lastOrder = $this->checkoutSession->getLastRealOrder();
         return $lastOrder;
-    }
-
-
-    /**
-     * @return CheckoutSession
-     */
-    public function getCheckoutSession()
-    {
-        /** @var CheckoutSession $checkoutSession */
-        $checkoutSession = $this->objectManager->get(CheckoutSession::class);
-        return $checkoutSession;
     }
 
 

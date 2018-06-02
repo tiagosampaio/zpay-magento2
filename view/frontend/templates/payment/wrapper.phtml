@@ -1,18 +1,18 @@
 <?php
 /**
- * @var \ZPay\Standard\Block\Payment\Wrapper $this
+ * @var \ZPay\Standard\Block\Payment\Wrapper $block
  * @var \Magento\Sales\Model\Order           $order
  */
-$order      = $this->getLastOrder();
+$order      = $block->getLastOrder();
 $orderId    = $order->getRealOrderId();
 $grandTotal = $order->getGrandTotal();
 
-$zOrderId   = $this->getZpayOrder()->getZpayOrderId();
-$zQuoteId   = $this->getZpayOrder()->getZpayQuoteId();
-$zAddress   = $this->getZpayOrder()->getZpayAddress();
-$zAmountTo  = $this->getZpayOrder()->getZpayAmountTo();
-$zTime      = $this->getZpayOrder()->getZpayTime();
-$zTimestamp = $this->getZpayOrder()->getZpayTimestamp();
+$zOrderId   = $block->getZpayOrder()->getZpayOrderId();
+$zQuoteId   = $block->getZpayOrder()->getZpayQuoteId();
+$zAddress   = $block->getZpayOrder()->getZpayAddress();
+$zAmountTo  = $block->getZpayOrder()->getZpayAmountTo();
+$zTime      = $block->getZpayOrder()->getZpayTime();
+$zTimestamp = $block->getZpayOrder()->getZpayTimestamp();
 ?>
 
 <div class="zpay-wrapper">
