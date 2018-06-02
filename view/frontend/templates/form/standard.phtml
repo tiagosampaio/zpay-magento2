@@ -7,7 +7,7 @@
     <dt class="title"><?php echo $block->escapeHtml(__('Make Check payable to:')) ?></dt>
     <dd class="content">
         <div class="label">
-            <p><?php echo $this->__('You will see a QR code to make the payment after you place the order.'); ?></p>
+            <p><?php echo __('You will see a QR code to make the payment after you place the order.'); ?></p>
         </div>
         <?php if ($message = $this->getMethod()->getConfigData('message')): ?>
             <div class="additional-message">
