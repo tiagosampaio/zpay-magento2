@@ -49,44 +49,50 @@ class Order
 
 
     /**
-     * @return bool
+     * @return bool|array
      */
     public function validate()
     {
+        $errors = array();
+        
         if (!$this->getOrder()) {
-            return false;
+            $errors[] = __('There is no order available');
         }
 
         if (!$this->getOrder()->getShippingAddress()) {
-            return false;
+            $errors[] = __('Shipping address is not available');
         }
 
         if (!$this->getOrder()->getShippingAddress()->getCountryId()) {
-            return false;
+            $errors[] = __('Country ID is not set to shipping address');
         }
 
         if (!$this->extractCustomerTaxvat()) {
-            return false;
+            $errors[] = __('Customer taxvat is not set in order neither in the customer data');
         }
 
         if (!$this->getOrder()->getCustomerFirstname()) {
-            return false;
+            $errors[] = __("Customer's first name is not set");
         }
 
         if (!$this->getOrder()->getCustomerLastname()) {
-            return false;
+            $errors[] = __("Customer's lastname is not set");
         }
 
         if (!$this->getOrder()->getCustomerEmail()) {
-            return false;
+            $errors[] = __("Customer's e-mail is not set");
         }
 
         if (!$this->getOrder()->getRealOrderId()) {
-            return false;
+            $errors[] = __('The order does not have an Increment ID');
         }
 
         if (!$this->configHelper->getContractId()) {
-            return false;
+            $errors[] = __('The contract ID is missing for this order');
+        }
+        
+        if (!empty($errors)) {
+            return $errors;
         }
 
         return true;

@@ -148,10 +148,13 @@ class Api
         /** @var OrderRequestBody $orderBody */
         $orderBody = $this->objectManager->create(OrderRequestBody::class);
         $orderBody->setOrder($order);
-
-        if (!$orderBody->validate()) {
-            /** @todo Throw an exception */
-            throw new InvalidObjectException(__('Order object is lacking some required information.'));
+    
+        $errors = $orderBody->validate();
+        
+        if (is_array($errors) && !empty($errors)) {
+            throw new InvalidObjectException(
+                __('Order object is lacking some required information. Errors: %1.', implode(', ', $errors))
+            );
         }
 
         /** @var HttpClient $client */
