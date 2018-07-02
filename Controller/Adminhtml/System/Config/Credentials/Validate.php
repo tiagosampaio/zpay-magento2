@@ -18,8 +18,11 @@ class Validate extends Action
         parent::__construct($context);
         $this->api = $api;
     }
-
-
+    
+    
+    /**
+     * Execute the configuration validation.
+     */
     public function execute()
     {
         $environment = $this->getRequest()->getPost('environment');

@@ -16,7 +16,7 @@
                 <field id="active" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
                     <label>Enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <comment>Whether if this method is enabled or not.</comment>
+                    <comment>Whether this method is enabled or not.</comment>
                 </field>
                 <field id="order_status" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
                     <label>New Order Status</label>
@@ -25,18 +25,22 @@
                 <field id="environment" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Environment</label>
                     <source_model>ZPay\Standard\Model\Config\Source\Environment</source_model>
+                    <frontend_class>zpay-environment</frontend_class>
                     <comment>Choose the environment: Sandbox or Production mode.</comment>
                 </field>
                 <field id="username" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>ZPay Username</label>
+                    <frontend_class>zpay-username</frontend_class>
                     <comment>Your ZPay's account username.</comment>
                 </field>
                 <field id="password" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>ZPay Password</label>
+                    <frontend_class>zpay-password</frontend_class>
                     <comment>Your ZPay's account password.</comment>
                 </field>
                 <field id="contract_id" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>ZPay Contract ID</label>
+                    <frontend_class>zpay-contract-id</frontend_class>
                     <comment>Your ZPay's account contract ID.</comment>
                 </field>
                 <field id="validate_credentials" translate="label" type="button" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
