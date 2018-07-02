@@ -139,7 +139,7 @@ class Api
      *
      * @throws InvalidObjectException
      * @throws ServiceApiResponseException
-     * @throws \Exception
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function createOrder(Order $order)
     {
@@ -152,7 +152,7 @@ class Api
         $errors = $orderBody->validate();
         
         if (is_array($errors) && !empty($errors)) {
-            throw new InvalidObjectException(
+            throw new \Magento\Framework\Exception\LocalizedException(
                 __('Order object is lacking some required information. Errors: %1.', implode(', ', $errors))
             );
         }
