@@ -37,8 +37,7 @@ class OrderRepository implements TransactionOrderRepositoryInterface
         TransactionOrderModelFactory $transactionOrderModelFactory,
         TransactionOrderCollectionFactory $transactionOrderCollectionFactory,
         SearchResultsFactory $searchResultsFactory
-    )
-    {
+    ) {
         $this->searchResultsFactory              = $searchResultsFactory;
         $this->collectionProcessor               = $collectionProcessor;
         $this->transactionOrderResourceFactory   = $transactionOrderResourceFactory;

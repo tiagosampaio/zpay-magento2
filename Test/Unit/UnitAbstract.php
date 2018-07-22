@@ -73,5 +73,4 @@ abstract class UnitAbstract extends TestCase
     {
         return $this->getObjectManager()->get($class);
     }
-
 }

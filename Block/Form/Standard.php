@@ -14,5 +14,4 @@ class Standard extends Form
      * @var string
      */
     protected $_template = 'ZPay_Standard::form/standard.phtml';
-    
 }

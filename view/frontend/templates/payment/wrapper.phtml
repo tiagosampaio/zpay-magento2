@@ -4,18 +4,17 @@
  * @var \Magento\Sales\Model\Order           $order
  */
 
-if ($block->canDisplayWrapper()):
+if ($block->canDisplayWrapper()) :
+    $order      = $block->getOrder();
+    $orderId    = $order->getRealOrderId();
+    $grandTotal = $order->getGrandTotal();
 
-$order      = $block->getOrder();
-$orderId    = $order->getRealOrderId();
-$grandTotal = $order->getGrandTotal();
-
-$zOrderId   = $block->getZpayOrder()->getZpayOrderId();
-$zQuoteId   = $block->getZpayOrder()->getZpayQuoteId();
-$zAddress   = $block->getZpayOrder()->getZpayAddress();
-$zAmountTo  = $block->getZpayOrder()->getZpayAmountTo();
-$zTime      = $block->getZpayOrder()->getZpayTime();
-$zTimestamp = $block->getZpayOrder()->getZpayTimestamp();
+    $zOrderId   = $block->getZpayOrder()->getZpayOrderId();
+    $zQuoteId   = $block->getZpayOrder()->getZpayQuoteId();
+    $zAddress   = $block->getZpayOrder()->getZpayAddress();
+    $zAmountTo  = $block->getZpayOrder()->getZpayAmountTo();
+    $zTime      = $block->getZpayOrder()->getZpayTime();
+    $zTimestamp = $block->getZpayOrder()->getZpayTimestamp();
 ?>
 
 <div class="zpay-wrapper">

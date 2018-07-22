@@ -25,7 +25,7 @@ class RegisterNewOrder implements ObserverInterface
      * @param Registry               $registry
      * @param ObjectManagerInterface $objectManager
      */
-    public function __construct(Registry $registry ,ObjectManagerInterface $objectManager)
+    public function __construct(Registry $registry, ObjectManagerInterface $objectManager)
     {
         $this->_registry = $registry;
         $this->_objectManager = $objectManager;
@@ -102,5 +102,4 @@ class RegisterNewOrder implements ObserverInterface
 
         return $zOrder;
     }
-
 }

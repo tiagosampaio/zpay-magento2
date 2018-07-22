@@ -53,7 +53,7 @@ class Order
      */
     public function validate()
     {
-        $errors = array();
+        $errors = [];
         
         if (!$this->getOrder()) {
             $errors[] = __('There is no order available');
@@ -158,5 +158,4 @@ class Order
 
         return $taxvat;
     }
-
 }

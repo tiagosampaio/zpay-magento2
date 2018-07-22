@@ -16,5 +16,4 @@ class Order extends AbstractDb
     {
         $this->_init(self::MAIN_TABLE, 'id');
     }
-
 }

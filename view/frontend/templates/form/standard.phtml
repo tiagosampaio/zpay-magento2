@@ -9,7 +9,7 @@
         <div class="label">
             <p><?php echo __('You will see a QR code to make the payment after you place the order.'); ?></p>
         </div>
-        <?php if ($message = $this->getMethod()->getConfigData('message')): ?>
+        <?php if ($message = $this->getMethod()->getConfigData('message')) : ?>
             <div class="additional-message">
                 <?php echo $message; ?>
             </div>

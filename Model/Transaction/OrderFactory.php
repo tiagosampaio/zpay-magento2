@@ -2,7 +2,6 @@
 
 namespace ZPay\Standard\Model\Transaction;
 
-
 use Magento\Framework\ObjectManagerInterface;
 use ZPay\Standard\Model\AbstractFactory;
 

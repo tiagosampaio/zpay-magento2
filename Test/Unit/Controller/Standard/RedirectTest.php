@@ -16,5 +16,4 @@ class Redirect extends ControllerAbstract
 //        $controller = $this->createObject(\ZPay\Standard\Controller\Standard\Redirect::class);
 //        $result     = $controller->execute();
     }
-
 }

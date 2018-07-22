@@ -49,7 +49,6 @@ class Verify extends PaymentAbstract
 
             return $this->resultFactory->create(ResultFactory::TYPE_JSON)->setData((array) $data);
         } catch (\Exception $e) {
-
         }
     }
 
@@ -95,5 +94,4 @@ class Verify extends PaymentAbstract
 
         return true;
     }
-
 }

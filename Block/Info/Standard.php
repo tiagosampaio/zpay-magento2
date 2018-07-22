@@ -23,8 +23,7 @@ class Standard extends Info
         ObjectManagerInterface $objectManager,
         \Magento\Framework\View\Element\Template\Context $context,
         array $data = []
-    )
-    {
+    ) {
         $this->objectManager = $objectManager;
         parent::__construct($context, $data);
     }
@@ -49,5 +48,4 @@ class Standard extends Info
 
         return $zOrder;
     }
-
 }

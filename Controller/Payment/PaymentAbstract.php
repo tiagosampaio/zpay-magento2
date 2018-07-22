@@ -159,5 +159,4 @@ abstract class PaymentAbstract extends Action
 
         return true;
     }
-
 }

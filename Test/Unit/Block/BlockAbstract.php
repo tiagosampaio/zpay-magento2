@@ -23,5 +23,4 @@ abstract class BlockAbstract extends UnitAbstract
 
         return $block;
     }
-
 }

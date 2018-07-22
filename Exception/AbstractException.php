@@ -28,5 +28,4 @@ abstract class AbstractException extends \Exception
         $this->phrase = $phrase;
         parent::__construct($phrase->render(), intval($code), $cause);
     }
-
 }

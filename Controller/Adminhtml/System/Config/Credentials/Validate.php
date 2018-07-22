@@ -40,8 +40,7 @@ class Validate extends Action
                 ->setUsername($username)
                 ->setPassword($password)
                 ->setEnvironment($environment)
-                ->getToken()
-            ;
+                ->getToken();
 
             if (!$token) {
                 return $this->sendJsonResponse(false, __('Invalid credentials.'));

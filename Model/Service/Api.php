@@ -204,7 +204,6 @@ class Api implements \ZPay\Standard\Api\ServiceApiInterface
 
             return $result;
         } catch (\Exception $e) {
-
         }
 
         return false;

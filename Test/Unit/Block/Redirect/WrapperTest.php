@@ -41,5 +41,4 @@ class WrapperTest extends BlockAbstract
         $block = $this->getBlock(Wrapper::class);
         $this->assertInstanceOf(Order::class, $block->getLastOrder());
     }
-
 }

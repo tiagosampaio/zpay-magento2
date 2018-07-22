@@ -51,8 +51,7 @@ class Wrapper extends Template
         CheckoutSession $checkoutSession,
         OrderRepositoryInterface $orderRepository,
         array $data = []
-    )
-    {
+    ) {
         parent::__construct($context, $data);
 
         $this->helperData      = $helperData;
@@ -99,7 +98,6 @@ class Wrapper extends Template
 
             $this->registry->register($key, $order);
         } catch (\Exception $e) {
-
         }
 
         return $order;
@@ -187,10 +185,8 @@ class Wrapper extends Template
 
             return  (float) ($grandTotal/$amountTo);
         } catch (\Exception $e) {
-
         }
 
         return 0;
     }
-
 }

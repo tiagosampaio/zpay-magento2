@@ -80,5 +80,4 @@ class Config extends AbstractHelper
 
         return (string) $this->scopeConfig->getValue("payment/zpay_standard/service_url_{$environment}");
     }
-
 }

@@ -17,5 +17,4 @@ class StandardTest extends BlockAbstract
         $block = $this->getBlock(Standard::class);
         $this->assertNotEmpty($block->getTemplate());
     }
-
 }

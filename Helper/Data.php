@@ -61,5 +61,4 @@ class Data extends AbstractHelper
     {
         return $this->_getUrl('zpay/standard/checkback');
     }
-
 }

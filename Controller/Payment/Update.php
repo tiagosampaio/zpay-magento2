@@ -47,7 +47,6 @@ class Update extends PaymentAbstract
 
             return $this->resultFactory->create(ResultFactory::TYPE_JSON)->setData((array) $data);
         } catch (\Exception $e) {
-
         }
     }
 
@@ -77,5 +76,4 @@ class Update extends PaymentAbstract
 
         return true;
     }
-
 }

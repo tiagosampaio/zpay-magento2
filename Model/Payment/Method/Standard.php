@@ -90,12 +90,19 @@ class Standard extends AbstractMethod
         \Magento\Framework\UrlInterface $urlBuilder,
         \Magento\Framework\App\RequestInterface $request,
         \Magento\Framework\Session\StorageInterface $storage,
-        array $data = array()
-    )
-    {
+        array $data = []
+    ) {
         parent::__construct(
-            $context, $registry, $extensionFactory, $customAttributeFactory,
-            $paymentData, $scopeConfig, $logger, null, null, $data
+            $context,
+            $registry,
+            $extensionFactory,
+            $customAttributeFactory,
+            $paymentData,
+            $scopeConfig,
+            $logger,
+            null,
+            null,
+            $data
         );
 
         $this->_urlBuilder = $urlBuilder;
@@ -245,5 +252,4 @@ class Standard extends AbstractMethod
 
         return $this;
     }
-    
 }
