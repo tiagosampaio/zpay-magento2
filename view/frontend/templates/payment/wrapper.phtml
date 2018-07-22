@@ -40,7 +40,7 @@ if ($block->canDisplayWrapper()) :
         </tr>
         <tr>
             <td>R$:</td>
-            <td><span class="brl"><?php echo $this->currency($order->getGrandTotal()) ?></span></td>
+            <td><span class="brl"><?php echo $block->currency($order->getGrandTotal()) ?></span></td>
         </tr>
         <tr>
             <td>BTC:</td>
@@ -48,7 +48,7 @@ if ($block->canDisplayWrapper()) :
         </tr>
         <tr>
             <td><?php echo __('BTC/BRL Rate:') ?></td>
-            <td><span class="rate"><?php echo $this->currency($this->getBtcRate()) ?></span></td>
+            <td><span class="rate"><?php echo $block->currency($block->getBtcRate()) ?></span></td>
         </tr>
         </tbody>
     </table>
@@ -60,9 +60,9 @@ if ($block->canDisplayWrapper()) :
             ZPay.setup(
                 jQuery('#zpay-code'),
                 jQuery('.force-refresh'),
-                '<?php echo $this->dataHelper()->getUpdateUrl() ?>',
-                '<?php echo $this->dataHelper()->getVerifyUrl() ?>',
-                '<?php echo $this->dataHelper()->getVerifiedUrl() ?>',
+                '<?php echo $block->dataHelper()->getUpdateUrl() ?>',
+                '<?php echo $block->dataHelper()->getVerifyUrl() ?>',
+                '<?php echo $block->dataHelper()->getVerifiedUrl() ?>',
                 10000,
                 function (api) {
                     jQuery('.code-text').text(api.ZOrder.address);
