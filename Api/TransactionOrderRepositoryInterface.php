@@ -16,14 +16,12 @@ interface TransactionOrderRepositoryInterface
      */
     public function save(TransactionOrderInterface $order);
 
-
     /**
      * @param string $zpayOrderId
      *
      * @return TransactionOrderInterface
      */
     public function get($zpayOrderId);
-
 
     /**
      * @param string $transactionOrderId
@@ -32,14 +30,12 @@ interface TransactionOrderRepositoryInterface
      */
     public function getById($transactionOrderId);
 
-
     /**
      * @param string $orderId
      *
      * @return TransactionOrderInterface
      */
     public function getByZPayOrderId($orderId);
-
 
     /**
      * @param string $orderId
@@ -48,7 +44,6 @@ interface TransactionOrderRepositoryInterface
      */
     public function getByOrderId($orderId);
 
-
     /**
      * @param TransactionOrderInterface $order
      *
@@ -56,14 +51,12 @@ interface TransactionOrderRepositoryInterface
      */
     public function delete(TransactionOrderInterface $order);
 
-
     /**
      * @param $transactionOrderId
      *
      * @return $this
      */
     public function deleteById($transactionOrderId);
-
 
     /**
      * @param SearchCriteriaInterface $searchCriteria

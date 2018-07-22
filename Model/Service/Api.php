@@ -50,10 +50,9 @@ class Api implements \ZPay\Standard\Api\ServiceApiInterface
         $this->prepareBaseUrl($helperConfig->getEnvironment());
 
         $this->contractId = $helperConfig->getContractId();
-        $this->username   = $helperConfig->getUsername();
-        $this->password   = $helperConfig->getPassword();
+        $this->username = $helperConfig->getUsername();
+        $this->password = $helperConfig->getPassword();
     }
-
 
     /**
      * @return $this
@@ -68,7 +67,6 @@ class Api implements \ZPay\Standard\Api\ServiceApiInterface
         return $this;
     }
 
-
     /**
      * @param string $contractId
      *
@@ -79,7 +77,6 @@ class Api implements \ZPay\Standard\Api\ServiceApiInterface
         $this->contractId = (string) $contractId;
         return $this;
     }
-
 
     /**
      * @param string $username
@@ -92,7 +89,6 @@ class Api implements \ZPay\Standard\Api\ServiceApiInterface
         return $this;
     }
 
-
     /**
      * @param string $password
      *
@@ -103,7 +99,6 @@ class Api implements \ZPay\Standard\Api\ServiceApiInterface
         $this->password = $password;
         return $this;
     }
-
 
     /**
      * @param string $environment
@@ -116,7 +111,6 @@ class Api implements \ZPay\Standard\Api\ServiceApiInterface
         return $this;
     }
 
-
     /**
      * @return mixed
      * @throws ServiceApiResponseException
@@ -126,7 +120,6 @@ class Api implements \ZPay\Standard\Api\ServiceApiInterface
         $this->init();
         return $this->token;
     }
-
 
     /**
      * @param \Magento\Sales\Api\Data\OrderInterface $order
@@ -144,9 +137,9 @@ class Api implements \ZPay\Standard\Api\ServiceApiInterface
         /** @var OrderRequestBody $orderBody */
         $orderBody = $this->objectManager->create(OrderRequestBody::class);
         $orderBody->setOrder($order);
-    
+
         $errors = $orderBody->validate();
-        
+
         if (is_array($errors) && !empty($errors)) {
             throw new \Magento\Framework\Exception\LocalizedException(
                 __('Order object is lacking some required information. Errors: %1.', implode(', ', $errors))
@@ -174,7 +167,6 @@ class Api implements \ZPay\Standard\Api\ServiceApiInterface
 
         return $result;
     }
-
 
     /**
      * @param string $orderId
@@ -209,7 +201,6 @@ class Api implements \ZPay\Standard\Api\ServiceApiInterface
         return false;
     }
 
-
     /**
      * @param string $zpayOrderId
      *
@@ -233,7 +224,6 @@ class Api implements \ZPay\Standard\Api\ServiceApiInterface
 
         return $result;
     }
-
 
     /**
      * @param string $uri
@@ -262,7 +252,6 @@ class Api implements \ZPay\Standard\Api\ServiceApiInterface
 
         return $client;
     }
-
 
     /**
      * @return $this
@@ -301,7 +290,6 @@ class Api implements \ZPay\Standard\Api\ServiceApiInterface
         return $this;
     }
 
-
     /**
      * @param null|string $urlPath
      *
@@ -311,7 +299,6 @@ class Api implements \ZPay\Standard\Api\ServiceApiInterface
     {
         return $this->baseUrl . $urlPath;
     }
-
 
     /**
      * @param $environment

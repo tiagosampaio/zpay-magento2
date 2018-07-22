@@ -2,6 +2,7 @@
 /**
  * @author Tiago Sampaio <tiago@tiagosampaio.com>
  */
+
 namespace ZPay\Standard\Setup;
 
 use Magento\Framework\DB\Ddl\Table;

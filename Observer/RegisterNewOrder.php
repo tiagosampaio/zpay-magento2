@@ -18,7 +18,6 @@ class RegisterNewOrder implements ObserverInterface
     /** @var ObjectManagerInterface */
     protected $_objectManager;
 
-
     /**
      * RegisterNewOrder constructor.
      *
@@ -30,7 +29,6 @@ class RegisterNewOrder implements ObserverInterface
         $this->_registry = $registry;
         $this->_objectManager = $objectManager;
     }
-
 
     /**
      * @param Observer $observer
@@ -65,7 +63,6 @@ class RegisterNewOrder implements ObserverInterface
         /** @var \ZPay\Standard\Model\Transaction\Order $zOrder */
         $zOrder = $this->updateOrder($order, $result);
     }
-
 
     /**
      * @param Order     $salesOrder

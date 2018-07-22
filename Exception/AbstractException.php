@@ -17,11 +17,10 @@ abstract class AbstractException extends \Exception
      */
     protected $logMessage;
 
-
     /**
      * @param \Magento\Framework\Phrase $phrase
-     * @param \Exception $cause
-     * @param int $code
+     * @param \Exception                $cause
+     * @param int                       $code
      */
     public function __construct(Phrase $phrase, \Exception $cause = null, $code = 0)
     {

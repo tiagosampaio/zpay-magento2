@@ -33,5 +33,4 @@ namespace ZPay\Standard\Api\Data;
  */
 interface TransactionOrderInterface
 {
-
 }

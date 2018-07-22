@@ -2,6 +2,7 @@
 /**
  * @author Tiago Sampaio <tiago@tiagosampaio.com>
  */
+
 namespace ZPay\Standard\Block\Info;
 
 use Magento\Framework\ObjectManagerInterface;
@@ -9,7 +10,7 @@ use Magento\Payment\Block\Info;
 
 class Standard extends Info
 {
-    
+
     /**
      * @var string
      */

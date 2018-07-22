@@ -26,7 +26,7 @@ abstract class AbstractFactory
      *
      * @param ObjectManagerInterface $objectManager
      *
-     * @param string $instanceName
+     * @param string                 $instanceName
      */
     public function __construct(ObjectManagerInterface $objectManager, $instanceName = null)
     {

@@ -2,6 +2,7 @@
 /**
  * @author Tiago Sampaio <tiago@tiagosampaio.com>
  */
+
 namespace ZPay\Standard\Model\Config\Source;
 
 use Magento\Framework\Option\ArrayInterface;
@@ -16,7 +17,6 @@ class Environment implements ArrayInterface
 
     const PRODUCTION = 'production';
     const SANDBOX    = 'sandbox';
-
 
     /**
      * Options getter

@@ -21,7 +21,6 @@ abstract class PaymentAbstract extends Action
     const ORDER_STATUS_PAID      = 'PAID';
     const ORDER_STATUS_UNPAID    = 'UNPAID';
 
-
     /** @var \ZPay\Standard\Model\Service\Api */
     protected $api;
 
@@ -72,7 +71,6 @@ abstract class PaymentAbstract extends Action
         parent::__construct($context);
     }
 
-
     /**
      * @return bool|Order
      */
@@ -82,7 +80,6 @@ abstract class PaymentAbstract extends Action
 
         return $this->loadZPayOrder($orderId);
     }
-
 
     /**
      * @return bool|Order
@@ -94,7 +91,6 @@ abstract class PaymentAbstract extends Action
 
         return $this->loadZPayOrder($orderId);
     }
-
 
     /**
      * @param string $orderId
@@ -118,7 +114,6 @@ abstract class PaymentAbstract extends Action
         return $order;
     }
 
-
     /**
      * @param string $orderId
      *
@@ -132,7 +127,6 @@ abstract class PaymentAbstract extends Action
 
         return true;
     }
-
 
     /**
      * @param \stdClass $object

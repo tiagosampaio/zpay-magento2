@@ -52,7 +52,6 @@ class Verify extends PaymentAbstract
         }
     }
 
-
     /**
      * @param \stdClass $object
      *

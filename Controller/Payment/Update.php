@@ -39,17 +39,16 @@ class Update extends PaymentAbstract
             /** @var \Magento\Sales\Model\Order $salesOrder */
             $salesOrder = $this->orderRepository->get($order->getOrderId());
 
-            $grandTotal  = (float) $salesOrder->getGrandTotal();
-            $bitcoinRate = (float) ($grandTotal/$order->getZpayAmountTo());
+            $grandTotal = (float) $salesOrder->getGrandTotal();
+            $bitcoinRate = (float) ($grandTotal / $order->getZpayAmountTo());
 
             $data->total_brl = $this->helperPricing->currency($grandTotal, true, false);
-            $data->rate      = $this->helperPricing->currency($bitcoinRate, true, false);
+            $data->rate = $this->helperPricing->currency($bitcoinRate, true, false);
 
             return $this->resultFactory->create(ResultFactory::TYPE_JSON)->setData((array) $data);
         } catch (\Exception $e) {
         }
     }
-
 
     /**
      * @param \stdClass $object

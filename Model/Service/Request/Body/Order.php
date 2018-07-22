@@ -19,13 +19,11 @@ class Order
     /** @var ObjectManagerInterface */
     protected $objectManager;
 
-
     public function __construct(Config $helperConfig, ObjectManagerInterface $objectManager)
     {
         $this->configHelper = $helperConfig;
         $this->objectManager = $objectManager;
     }
-
 
     /**
      * @param SalesOrder $order
@@ -38,7 +36,6 @@ class Order
         return $this;
     }
 
-
     /**
      * @return SalesOrder
      */
@@ -47,14 +44,13 @@ class Order
         return $this->order;
     }
 
-
     /**
      * @return bool|array
      */
     public function validate()
     {
         $errors = [];
-        
+
         if (!$this->getOrder()) {
             $errors[] = __('There is no order available');
         }
@@ -90,14 +86,13 @@ class Order
         if (!$this->configHelper->getContractId()) {
             $errors[] = __('The contract ID is missing for this order');
         }
-        
+
         if (!empty($errors)) {
             return $errors;
         }
 
         return true;
     }
-
 
     /**
      * @return array
@@ -122,7 +117,6 @@ class Order
         return $orderData;
     }
 
-
     /**
      * @return string
      */
@@ -131,7 +125,6 @@ class Order
         return json_encode($this->toArray());
     }
 
-
     /**
      * @return string
      */
@@ -139,7 +132,6 @@ class Order
     {
         return $this->toJson();
     }
-
 
     /**
      * @return mixed|null|string

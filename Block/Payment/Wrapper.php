@@ -40,7 +40,6 @@ class Wrapper extends Template
     /** @var OrderRepositoryInterface */
     protected $orderRepository;
 
-
     public function __construct(
         Context $context,
         ObjectManagerInterface $objectManager,
@@ -51,18 +50,18 @@ class Wrapper extends Template
         CheckoutSession $checkoutSession,
         OrderRepositoryInterface $orderRepository,
         array $data = []
-    ) {
+    )
+    {
         parent::__construct($context, $data);
 
-        $this->helperData      = $helperData;
-        $this->helperPricing   = $helperPricing;
-        $this->objectManager   = $objectManager;
-        $this->storage         = $storage;
-        $this->registry        = $registry;
+        $this->helperData = $helperData;
+        $this->helperPricing = $helperPricing;
+        $this->objectManager = $objectManager;
+        $this->storage = $storage;
+        $this->registry = $registry;
         $this->checkoutSession = $checkoutSession;
         $this->orderRepository = $orderRepository;
     }
-
 
     /**
      * @return ZPayOrder
@@ -103,7 +102,6 @@ class Wrapper extends Template
         return $order;
     }
 
-
     /**
      * @return bool
      */
@@ -112,7 +110,6 @@ class Wrapper extends Template
         $zpayOrderId = $this->getZpayOrder()->getId();
         return (bool) $zpayOrderId;
     }
-
 
     /**
      * @return \Magento\Sales\Model\Order
@@ -136,12 +133,10 @@ class Wrapper extends Template
             return $order;
         }
 
-        
         /** @var \Magento\Sales\Model\Order $lastOrder */
         $lastOrder = $this->checkoutSession->getLastRealOrder();
         return $lastOrder;
     }
-
 
     /**
      * @return HelperData
@@ -151,7 +146,6 @@ class Wrapper extends Template
         return $this->helperData;
     }
 
-
     /**
      * @return string
      */
@@ -159,7 +153,6 @@ class Wrapper extends Template
     {
         return (string) $this->storage->getData('address');
     }
-
 
     /**
      * @param float $value
@@ -173,7 +166,6 @@ class Wrapper extends Template
         return $this->helperPricing->currency($value, $format, $includeContainer);
     }
 
-
     /**
      * @return float|int
      */
@@ -181,9 +173,9 @@ class Wrapper extends Template
     {
         try {
             $grandTotal = (float) $this->getOrder()->getGrandTotal();
-            $amountTo   = (float) $this->getZpayOrder()->getZpayAmountTo();
+            $amountTo = (float) $this->getZpayOrder()->getZpayAmountTo();
 
-            return  (float) ($grandTotal/$amountTo);
+            return (float) ($grandTotal / $amountTo);
         } catch (\Exception $e) {
         }
 

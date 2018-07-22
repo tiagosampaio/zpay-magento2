@@ -21,7 +21,6 @@ class Config extends AbstractHelper
         ];
     }
 
-
     /**
      * @return string
      */
@@ -29,7 +28,6 @@ class Config extends AbstractHelper
     {
         return (string) $this->scopeConfig->getValue('payment/zpay_standard/username');
     }
-
 
     /**
      * @return string
@@ -39,7 +37,6 @@ class Config extends AbstractHelper
         return (string) $this->scopeConfig->getValue('payment/zpay_standard/password');
     }
 
-
     /**
      * @return string
      */
@@ -47,7 +44,6 @@ class Config extends AbstractHelper
     {
         return (string) $this->scopeConfig->getValue('payment/zpay_standard/environment');
     }
-
 
     /**
      * @return string
@@ -57,7 +53,6 @@ class Config extends AbstractHelper
         return (string) $this->scopeConfig->getValue('payment/zpay_standard/contract_id');
     }
 
-
     /**
      * @return string
      */
@@ -65,7 +60,6 @@ class Config extends AbstractHelper
     {
         return (string) $this->_getUrl('zpay/standard/callback');
     }
-
 
     /**
      * @param null|string $environment

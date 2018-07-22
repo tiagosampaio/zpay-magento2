@@ -12,23 +12,21 @@ class Validate extends Action
     /** @var Api */
     protected $api;
 
-
     public function __construct(Action\Context $context, Api $api)
     {
         parent::__construct($context);
         $this->api = $api;
     }
-    
-    
+
     /**
      * Execute the configuration validation.
      */
     public function execute()
     {
         $environment = $this->getRequest()->getPost('environment');
-        $username    = $this->getRequest()->getPost('username');
-        $password    = $this->getRequest()->getPost('password');
-        $contractId  = $this->getRequest()->getPost('contract_id');
+        $username = $this->getRequest()->getPost('username');
+        $password = $this->getRequest()->getPost('password');
+        $contractId = $this->getRequest()->getPost('contract_id');
 
         if (!$this->validateParameters($environment, $username, $password, $contractId)) {
             return $this->sendJsonResponse(false, __('All the parameters are required.'));
@@ -52,7 +50,6 @@ class Validate extends Action
         return $this->sendJsonResponse(true, __('Your credentials are valid!'));
     }
 
-
     /**
      * @param bool        $success
      * @param null|string $message
@@ -70,7 +67,6 @@ class Validate extends Action
 
         return $resultJson;
     }
-
 
     /**
      * @param null|string $environment

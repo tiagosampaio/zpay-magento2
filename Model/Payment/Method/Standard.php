@@ -2,6 +2,7 @@
 /**
  * @author Tiago Sampaio <tiago.sampaio@e-smart.com.br>
  */
+
 namespace ZPay\Standard\Model\Payment\Method;
 
 use Magento\Payment\Model\Method\AbstractMethod;
@@ -19,9 +20,9 @@ use ZPay\Standard\Model\Service\Api;
  */
 class Standard extends AbstractMethod
 {
-    
+
     const PAYMENT_METHOD_CODE = 'zpay_standard';
-    
+
     /**
      * Payment method code
      *
@@ -31,18 +32,18 @@ class Standard extends AbstractMethod
 
     /** @var bool */
     protected $_canOrder = true;
-    
+
     /** @var string */
     protected $_formBlockType = \ZPay\Standard\Block\Form\Standard::class;
-    
+
     /** @var string */
     protected $_infoBlockType = \ZPay\Standard\Block\Info\Standard::class;
 
     /** @var \Magento\Framework\UrlInterface */
-    protected $_urlBuilder    = null;
+    protected $_urlBuilder = null;
 
     /** @var \Magento\Framework\App\RequestInterface */
-    protected $_request       = null;
+    protected $_request = null;
 
     /** @var \Magento\Framework\Session\StorageInterface */
     protected $storage = null;
@@ -52,7 +53,6 @@ class Standard extends AbstractMethod
 
     /** @var Api */
     protected $api;
-
 
     /**
      * Standard constructor.
@@ -106,12 +106,11 @@ class Standard extends AbstractMethod
         );
 
         $this->_urlBuilder = $urlBuilder;
-        $this->_request    = $request;
-        $this->helper      = $helper;
-        $this->api         = $api;
-        $this->storage     = $storage;
+        $this->_request = $request;
+        $this->helper = $helper;
+        $this->api = $api;
+        $this->storage = $storage;
     }
-
 
     /**
      * @param DataObject $data
@@ -126,8 +125,7 @@ class Standard extends AbstractMethod
 
         return $this;
     }
-    
-    
+
     /**
      * Authorize payment abstract method
      *
@@ -144,11 +142,10 @@ class Standard extends AbstractMethod
         if (!$this->canAuthorize()) {
             throw new LocalizedException(__('The authorize action is not available.'));
         }
-        
+
         return $this;
     }
-    
-    
+
     /**
      * Capture payment abstract method
      *
@@ -165,11 +162,10 @@ class Standard extends AbstractMethod
         if (!$this->canCapture()) {
             throw new LocalizedException(__('The capture action is not available.'));
         }
-        
+
         return $this;
     }
-    
-    
+
     /**
      * Refund specified amount for payment
      *
@@ -186,10 +182,9 @@ class Standard extends AbstractMethod
         if (!$this->canRefund()) {
             throw new LocalizedException(__('The refund action is not available.'));
         }
-        
+
         return $this;
     }
-
 
     /**
      * @param InfoInterface $payment
@@ -222,7 +217,6 @@ class Standard extends AbstractMethod
         return $this;
     }
 
-
     /**
      * @return string
      */
@@ -232,7 +226,6 @@ class Standard extends AbstractMethod
             '_secure' => $this->_request->isSecure()
         ]);
     }
-
 
     /**
      * @param \stdClass $result
