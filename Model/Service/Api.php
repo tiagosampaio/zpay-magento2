@@ -3,7 +3,6 @@
 namespace ZPay\Standard\Model\Service;
 
 use Magento\Framework\ObjectManagerInterface;
-use Magento\Sales\Model\Order;
 use Zend\Http\Request;
 use Zend\Http\Response;
 use ZPay\Standard\Exception\ServiceApiResponseException;
@@ -130,7 +129,7 @@ class Api implements \ZPay\Standard\Api\ServiceApiInterface
 
 
     /**
-     * @param Order $order
+     * @param \Magento\Sales\Api\Data\OrderInterface $order
      *
      * @return \stdClass
      *
@@ -138,7 +137,7 @@ class Api implements \ZPay\Standard\Api\ServiceApiInterface
      * @throws ServiceApiResponseException
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function createOrder(Order $order)
+    public function createOrder(\Magento\Sales\Api\Data\OrderInterface $order)
     {
         $this->init();
 
