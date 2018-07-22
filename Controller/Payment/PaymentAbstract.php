@@ -7,8 +7,10 @@ use Magento\Framework\App\Action\Context;
 use Magento\Framework\Session\Storage;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Service\InvoiceService;
+use Magento\Sales\Api\InvoiceRepositoryInterface;
 use Magento\Framework\DB\Transaction;
 use Magento\Framework\Pricing\Helper\Data as HelperPricing;
+use ZPay\Standard\Api\TransactionOrderRepositoryInterface;
 use ZPay\Standard\Model\Service\Api;
 use ZPay\Standard\Model\Transaction\Order;
 
@@ -38,11 +40,14 @@ abstract class PaymentAbstract extends Action
     /** @var Transaction */
     protected $transaction;
 
+    /** @var TransactionOrderRepositoryInterface */
+    protected $transactionOrderRepository;
+
+    /** @var InvoiceRepositoryInterface */
+    protected $invoiceRepository;
+
     /**
      * PaymentAbstract constructor.
-     *
-     * @param Context $context
-     * @param Api     $api
      */
     public function __construct(
         Context $context,
@@ -51,15 +56,18 @@ abstract class PaymentAbstract extends Action
         HelperPricing $helperPricing,
         OrderRepositoryInterface $orderRepository,
         InvoiceService $invoiceService,
-        Transaction $transaction
-    )
-    {
+        Transaction $transaction,
+        TransactionOrderRepositoryInterface $transactionOrderRepository,
+        InvoiceRepositoryInterface $invoiceRepository
+    ) {
         $this->api = $api;
         $this->storage = $storage;
         $this->helperPricing = $helperPricing;
         $this->orderRepository = $orderRepository;
         $this->invoiceService = $invoiceService;
         $this->transaction = $transaction;
+        $this->transactionOrderRepository = $transactionOrderRepository;
+        $this->invoiceRepository = $invoiceRepository;
 
         parent::__construct($context);
     }
