@@ -19,12 +19,11 @@ use ZPay\Standard\Model\Service\Request\Body\Order as OrderRequestBody;
  *
  * @package ZPay\Standard\Model\Service
  */
-class Api
+class Api implements \ZPay\Standard\Api\ServiceApiInterface
 {
 
     const TYPE_APPLICATION_JSON            = 'application/json';
     const TYPE_APPLICATION_FORM_URLENCODED = 'application/x-www-form-urlencoded';
-
 
     protected $baseUrl;
     protected $api;
@@ -36,7 +35,6 @@ class Api
     protected $configHelper;
     protected $objectManager;
 
-
     /**
      * Api constructor.
      *
@@ -46,8 +44,7 @@ class Api
     public function __construct(
         ConfigHelper $helperConfig,
         ObjectManagerInterface $objectManager
-    )
-    {
+    ) {
         $this->configHelper = $helperConfig;
         $this->objectManager = $objectManager;
 

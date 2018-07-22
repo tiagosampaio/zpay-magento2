@@ -7,4 +7,5 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="ZPay\Standard\Api\Data\TransactionOrderInterface" type="ZPay\Standard\Model\Transaction\Order" />
     <preference for="ZPay\Standard\Api\TransactionOrderRepositoryInterface" type="ZPay\Standard\Model\Transaction\OrderRepository" />
+    <preference for="ZPay\Standard\Api\ServiceApiInterface" type="ZPay\Standard\Model\Service\Api"/>
 </config>

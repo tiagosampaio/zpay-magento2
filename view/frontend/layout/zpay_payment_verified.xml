@@ -10,14 +10,14 @@
         <css src="ZPay_Standard::css/styles.css"/>
     </head>
     <body>
+        <block class="ZPay\Standard\Block\Payment\Wrapper" cacheable="false"/>
         <referenceBlock name="page.main.title">
             <action method="setPageTitle">
-                <argument translate="true" name="title" xsi:type="string">Your Payment is Confirmed!</argument>
+                <argument translate="true" name="title" xsi:type="string">Your payment is being confirmed.</argument>
             </action>
         </referenceBlock>
         <referenceContainer name="content">
             <container name="zpay.standard.payment.wrapper" htmlTag="div" htmlClass="zpay-standard-payment-wrapper">
-
             </container>
         </referenceContainer>
     </body>

@@ -39,3 +39,6 @@
 "Customer's e-mail is not set","O e-mail do cliente é obrigatório"
 "The order does not have an Increment ID","O pedido não tem um ID de incremento"
 "The contract ID is missing for this order","Não existe um ID de contrato para este pedido"
+"Your payment is being confirmed.","Seu pagamento está sendo confirmado."
+"The order was confirmed by ZPay. Payment is being confirmed.","O pedido foi confirmado pela ZPay. O Pagamento está sendo confirmado."
+"Order was invoiced by ZPay callback.","O pedido foi faturado pelo retorno automático da ZPay."

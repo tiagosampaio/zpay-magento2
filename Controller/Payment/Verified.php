@@ -32,12 +32,20 @@ class Verified extends Verify
         }
 
         $paymentStatus = (string) $object->payment_status;
+        // $paymentStatus = self::ORDER_STATUS_PAID; /** @todo Remove it. */
         $order->setZpayPayoutStatus($paymentStatus);
 
         $this->transactionOrderRepository->save($order);
 
         /** @var \Magento\Sales\Model\Order $salesOrder */
         $salesOrder = $this->orderRepository->get($order->getOrderId());
+
+        /**
+         * Order was already set to PAYMENT REVIEW state.
+         */
+        if ($salesOrder->getState() == \Magento\Sales\Model\Order::STATE_PAYMENT_REVIEW) {
+            return $this->_redirect('customer/account');
+        }
 
         if ($paymentStatus !== self::ORDER_STATUS_PAID) {
             $this->storage->setData('current_order_id', $salesOrder->getId());
@@ -54,21 +62,8 @@ class Verified extends Verify
          * It takes about 30 minutes to confirm so when it happens a callback is called.
          */
         $salesOrder->setState(\Magento\Sales\Model\Order::STATE_PAYMENT_REVIEW);
+        $salesOrder->addStatusHistoryComment(__('The order was confirmed by ZPay. Payment is being confirmed.'), true);
         $this->orderRepository->save($salesOrder);
-
-//        if ($salesOrder->canInvoice()) {
-//            /** @var \Magento\Sales\Model\Order\Invoice $invoice */
-//            $invoice = $this->invoiceService->prepareInvoice($salesOrder);
-//            $invoice->register();
-//
-//            $this->invoiceRepository->save($invoice);
-//
-//            $transaction = $this->transaction
-//                ->addObject($salesOrder)
-//                ->addObject($invoice);
-//
-//            $transaction->save();
-//        }
 
         $this->storage->unsetData(self::CONFIRMED_ORDER_ID_KEY);
         return $this->resultFactory->create(ResultFactory::TYPE_PAGE);

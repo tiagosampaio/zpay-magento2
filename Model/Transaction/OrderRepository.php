@@ -62,32 +62,41 @@ class OrderRepository implements TransactionOrderRepositoryInterface
 
 
     /**
-     * @param int $transactionOrderId
+     * @param int $id
      *
      * @return TransactionOrderInterface
      */
-    public function get($transactionOrderId)
+    public function get($id)
     {
         /** @var TransactionOrderInterface $transactionOrder */
-        $transactionOrder = $this->modelInstance()->setId($transactionOrderId);
-        $this->getResource()->load($transactionOrder, $transactionOrderId);
+        $transactionOrder = $this->modelInstance()->setId($id);
+        $this->getResource()->load($transactionOrder, $id);
 
         return $transactionOrder;
     }
 
 
     /**
-     * @param string $transactionOrderId
+     * @param string $id
      *
      * @return TransactionOrderInterface
      */
-    public function getById($transactionOrderId)
+    public function getById($id)
+    {
+        return $this->get($id);
+    }
+
+    /**
+     * @param $orderId
+     * @return TransactionOrderInterface
+     */
+    public function getByZPayOrderId($orderId)
     {
         /** @var TransactionOrderInterface $transactionOrder */
-        $transactionOrder = $this->modelInstance()->setId($transactionOrderId);
-        $this->getResource()->load($transactionOrder, $transactionOrderId);
+        $order = $this->modelInstance()->setZpayOrderId($orderId);
+        $this->getResource()->load($order, $orderId, 'zpay_order_id');
 
-        return $transactionOrder;
+        return $order;
     }
 
 

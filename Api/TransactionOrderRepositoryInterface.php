@@ -34,6 +34,14 @@ interface TransactionOrderRepositoryInterface
 
 
     /**
+     * @param string $orderId
+     *
+     * @return TransactionOrderInterface
+     */
+    public function getByZPayOrderId($orderId);
+
+
+    /**
      * @param TransactionOrderInterface $order
      *
      * @return $this

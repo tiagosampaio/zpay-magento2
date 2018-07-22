@@ -31,6 +31,7 @@ class Verify extends PaymentAbstract
 
         try {
             $paymentStatus = (string) $object->payment_status;
+            //$paymentStatus = self::ORDER_STATUS_PAID; /** @todo Remove it. */
             //$orderStatus  = (string) $object->order_status;
 
             $data = [];

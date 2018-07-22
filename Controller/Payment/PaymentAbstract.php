@@ -11,7 +11,7 @@ use Magento\Sales\Api\InvoiceRepositoryInterface;
 use Magento\Framework\DB\Transaction;
 use Magento\Framework\Pricing\Helper\Data as HelperPricing;
 use ZPay\Standard\Api\TransactionOrderRepositoryInterface;
-use ZPay\Standard\Model\Service\Api;
+use ZPay\Standard\Api\ServiceApiInterface;
 use ZPay\Standard\Model\Transaction\Order;
 
 abstract class PaymentAbstract extends Action
@@ -22,7 +22,7 @@ abstract class PaymentAbstract extends Action
     const ORDER_STATUS_UNPAID    = 'UNPAID';
 
 
-    /** @var Api */
+    /** @var \ZPay\Standard\Model\Service\Api */
     protected $api;
 
     /** @var Storage */
@@ -51,7 +51,7 @@ abstract class PaymentAbstract extends Action
      */
     public function __construct(
         Context $context,
-        Api $api,
+        ServiceApiInterface $api,
         Storage $storage,
         HelperPricing $helperPricing,
         OrderRepositoryInterface $orderRepository,
