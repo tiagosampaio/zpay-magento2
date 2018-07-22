@@ -5,4 +5,4 @@
 
 <p><?php echo __('Reference ID: %1', $block->getZPayOrder()->getZpayOrderId())?></p>
 <p><?php echo __('Address: %1', $block->getZPayOrder()->getZpayAddress())?></p>
-<p><?php echo __('BTC: %1', (float) $block->getZPayOrder()->getZpayAmountTo())?></p>
+<p><?php echo __('BTC: %1', number_format((float) $block->getZPayOrder()->getZpayAmountTo(), 8))?></p>
