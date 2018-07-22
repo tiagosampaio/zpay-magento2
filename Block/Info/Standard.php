@@ -15,19 +15,17 @@ class Standard extends Info
      */
     protected $_template = 'ZPay_Standard::info/standard.phtml';
 
-    /** @var ObjectManagerInterface */
-    protected $objectManager;
-
+    /** @var \ZPay\Standard\Api\TransactionOrderRepositoryInterface */
+    private $orderRepository;
 
     public function __construct(
-        ObjectManagerInterface $objectManager,
+        \ZPay\Standard\Api\TransactionOrderRepositoryInterface $orderRepository,
         \Magento\Framework\View\Element\Template\Context $context,
         array $data = []
     ) {
-        $this->objectManager = $objectManager;
+        $this->orderRepository = $orderRepository;
         parent::__construct($context, $data);
     }
-
 
     /**
      * @return \ZPay\Standard\Model\Transaction\Order
@@ -43,8 +41,7 @@ class Standard extends Info
         $order = $payment->getOrder();
 
         /** @var \ZPay\Standard\Model\Transaction\Order $zOrder */
-        $zOrder = $this->objectManager->create(\ZPay\Standard\Model\Transaction\Order::class);
-        $zOrder->load($order->getId(), 'order_id');
+        $zOrder = $this->orderRepository->getByOrderId($order->getId());
 
         return $zOrder;
     }

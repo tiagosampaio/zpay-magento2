@@ -30,7 +30,6 @@ class OrderRepository implements TransactionOrderRepositoryInterface
     /** @var TransactionOrderCollectionFactory */
     protected $transactionOrderCollectionFactory;
 
-
     public function __construct(
         CollectionProcessorInterface $collectionProcessor,
         TransactionOrderResourceModelFactory $transactionOrderResourceFactory,
@@ -45,7 +44,6 @@ class OrderRepository implements TransactionOrderRepositoryInterface
         $this->transactionOrderCollectionFactory = $transactionOrderCollectionFactory;
     }
 
-
     /**
      * @param TransactionOrderInterface $order
      *
@@ -58,7 +56,6 @@ class OrderRepository implements TransactionOrderRepositoryInterface
         $this->getResource()->save($order);
         return $order;
     }
-
 
     /**
      * @param int $id
@@ -73,7 +70,6 @@ class OrderRepository implements TransactionOrderRepositoryInterface
 
         return $transactionOrder;
     }
-
 
     /**
      * @param string $id
@@ -98,6 +94,18 @@ class OrderRepository implements TransactionOrderRepositoryInterface
         return $order;
     }
 
+    /**
+     * @param $orderId
+     * @return TransactionOrderInterface
+     */
+    public function getByOrderId($orderId)
+    {
+        /** @var TransactionOrderInterface $transactionOrder */
+        $order = $this->modelInstance()->setZpayOrderId($orderId);
+        $this->getResource()->load($order, $orderId, 'order_id');
+
+        return $order;
+    }
 
     /**
      * @param TransactionOrderInterface $order
@@ -111,7 +119,6 @@ class OrderRepository implements TransactionOrderRepositoryInterface
         $this->getResource()->delete($order);
         return $this;
     }
-
 
     /**
      * @param int $transactionOrderId
@@ -146,7 +153,6 @@ class OrderRepository implements TransactionOrderRepositoryInterface
         return $searchResults;
     }
 
-
     /**
      * @return \ZPay\Standard\Model\ResourceModel\Transaction\Order
      */
@@ -155,7 +161,6 @@ class OrderRepository implements TransactionOrderRepositoryInterface
         return $this->transactionOrderResourceFactory->create();
     }
 
-
     /**
      * @return TransactionOrderInterface
      */
@@ -163,7 +168,6 @@ class OrderRepository implements TransactionOrderRepositoryInterface
     {
         return $this->transactionOrderModelFactory->create();
     }
-
 
     /**
      * @return \ZPay\Standard\Model\ResourceModel\Transaction\Order\Collection

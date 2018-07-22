@@ -10,12 +10,13 @@ class ValidateCredentials extends Field
 
     protected $_template = 'ZPay_Standard::system/config/credentials/validate.phtml';
 
-
+    /**
+     * @return string
+     */
     public function getAjaxValidateUrl()
     {
         return $this->getUrl('zpay_standard/system_config_credentials/validate');
     }
-
 
     /**
      * @param \Magento\Framework\Data\Form\Element\AbstractElement $element
@@ -27,7 +28,6 @@ class ValidateCredentials extends Field
         return parent::render($element);
     }
 
-
     /**
      * @param \Magento\Framework\Data\Form\Element\AbstractElement $element
      *
@@ -37,7 +37,6 @@ class ValidateCredentials extends Field
     {
         return $this->_toHtml();
     }
-
 
     /**
      * Generate the button HTML.

@@ -42,6 +42,14 @@ interface TransactionOrderRepositoryInterface
 
 
     /**
+     * @param string $orderId
+     *
+     * @return TransactionOrderInterface
+     */
+    public function getByOrderId($orderId);
+
+
+    /**
      * @param TransactionOrderInterface $order
      *
      * @return $this
