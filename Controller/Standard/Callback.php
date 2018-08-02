@@ -73,9 +73,9 @@ class Callback extends \Magento\Framework\App\Action\Action
         }
 
         $paymentStatus = (string) $object->payment_status;
-        // $paymentStatus = \ZPay\Standard\Controller\Payment\PaymentAbstract::ORDER_STATUS_PAID;
+        // $paymentStatus = \ZPay\Standard\Controller\Payment\PaymentAbstract::PAYMENT_STATUS_COMPLETED;
 
-        if ($paymentStatus !== \ZPay\Standard\Controller\Payment\PaymentAbstract::ORDER_STATUS_PAID) {
+        if ($paymentStatus !== \ZPay\Standard\Controller\Payment\PaymentAbstract::PAYMENT_STATUS_COMPLETED) {
             /** @var \Magento\Framework\Controller\Result\Raw $result */
             $result = $this->resultFactory->create(\Magento\Framework\Controller\ResultFactory::TYPE_RAW);
             $result->setHttpResponseCode(204);

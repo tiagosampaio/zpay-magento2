@@ -17,9 +17,29 @@ use ZPay\Standard\Model\Transaction\Order;
 abstract class PaymentAbstract extends Action
 {
 
+    /** @var string */
     const CONFIRMED_ORDER_ID_KEY = 'just_confirmed_order_id';
-    const ORDER_STATUS_PAID      = 'PAID';
-    const ORDER_STATUS_UNPAID    = 'UNPAID';
+
+    /** @var string */
+    const ORDER_STATUS_PAID = 'PAID';
+
+    /** @var string */
+    const ORDER_STATUS_UNPAID = 'UNPAID';
+
+    /** @var string */
+    const PAYMENT_STATUS_CREATED = 'CREATED';
+
+    /** @var string */
+    const PAYMENT_STATUS_PROCESSING = 'PROCESSING';
+
+    /** @var string */
+    const PAYMENT_STATUS_FAILED = 'FAILED';
+
+    /** @var string */
+    const PAYMENT_STATUS_CANCELED = 'CANCELED';
+
+    /** @var string */
+    const PAYMENT_STATUS_COMPLETED = 'COMPLETED';
 
     /** @var \ZPay\Standard\Model\Service\Api */
     protected $api;
