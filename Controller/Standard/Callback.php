@@ -65,21 +65,24 @@ class Callback extends \Magento\Framework\App\Action\Action
             throw new \Magento\Framework\Exception\NotFoundException(__('Order not found.'));
         }
 
+        /** @var \Magento\Framework\Controller\Result\Raw $result */
+        $result = $this->resultFactory->create(\Magento\Framework\Controller\ResultFactory::TYPE_RAW);
+
         try {
             /** @var \stdClass $object */
             $object = $this->api->getOrderStatus($zPayOrderId);
         } catch (\Exception $e) {
-            return false;
+            $result->setContents(__('Some error has occurred.'));
+            $result->setHttpResponseCode(204);
+            return $result;
         }
 
         $paymentStatus = (string) $object->payment_status;
         // $paymentStatus = \ZPay\Standard\Controller\Payment\PaymentAbstract::PAYMENT_STATUS_COMPLETED;
 
         if ($paymentStatus !== \ZPay\Standard\Controller\Payment\PaymentAbstract::PAYMENT_STATUS_COMPLETED) {
-            /** @var \Magento\Framework\Controller\Result\Raw $result */
-            $result = $this->resultFactory->create(\Magento\Framework\Controller\ResultFactory::TYPE_RAW);
+            $result->setContents(__('Payment status is not completed yet.'));
             $result->setHttpResponseCode(204);
-
             return $result;
         }
 
@@ -91,7 +94,9 @@ class Callback extends \Magento\Framework\App\Action\Action
         }
 
         if (!$order || !$order->canInvoice()) {
-            return false;
+            $result->setContents(__('This order cannot be invoiced.'));
+            $result->setHttpResponseCode(204);
+            return $result;
         }
 
         try {
@@ -109,11 +114,11 @@ class Callback extends \Magento\Framework\App\Action\Action
 
             $transaction->save();
         } catch (\Exception $e) {
-            return false;
+            $result->setContents(__('Some problem has occurred when trying to register a new invoice.'));
+            $result->setHttpResponseCode(204);
+            return $result;
         }
 
-        /** @var \Magento\Framework\Controller\Result\Raw $result */
-        $result = $this->resultFactory->create(\Magento\Framework\Controller\ResultFactory::TYPE_RAW);
         $result->setHttpResponseCode(200);
 
         return $result;
