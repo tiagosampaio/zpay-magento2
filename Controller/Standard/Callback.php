@@ -81,7 +81,7 @@ class Callback extends \Magento\Framework\App\Action\Action
         // $paymentStatus = \ZPay\Standard\Controller\Payment\PaymentAbstract::PAYMENT_STATUS_COMPLETED;
 
         if ($paymentStatus !== \ZPay\Standard\Controller\Payment\PaymentAbstract::PAYMENT_STATUS_COMPLETED) {
-            $result->setContents(__('Payment status is not completed yet.'));
+            $result->setContents((string) __('Payment status is not completed yet.'));
             $result->setHttpResponseCode(204);
             return $result;
         }

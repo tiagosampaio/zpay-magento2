@@ -3,17 +3,17 @@
 namespace ZPay\Standard\Controller\Payment;
 
 use Magento\Framework\Controller\ResultFactory;
-use ZPay\Standard\Model\Transaction\Order;
 
 class Update extends PaymentAbstract
 {
 
     /**
      * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface
+     * @throws \ZPay\Standard\Exception\ServiceApiResponseException
      */
     public function execute()
     {
-        /** @var Order $order */
+        /** @var \ZPay\Standard\Model\Transaction\Order $order */
         $order = $this->getZPayOrder();
 
         if (!$order || !$order->getId()) {
@@ -33,8 +33,9 @@ class Update extends PaymentAbstract
                 ->setZpayAmountTo((float) $data->amount_to)
                 ->setZpayAddress((string) $data->address)
                 ->setZpayTime((int) $data->time)
-                ->setZpayTimestamp($data->timestamp)
-                ->save();
+                ->setZpayTimestamp($data->timestamp);
+
+            $this->transactionOrderRepository->save($order);
 
             /** @var \Magento\Sales\Model\Order $salesOrder */
             $salesOrder = $this->orderRepository->get($order->getOrderId());
@@ -45,7 +46,10 @@ class Update extends PaymentAbstract
             $data->total_brl = $this->helperPricing->currency($grandTotal, true, false);
             $data->rate = $this->helperPricing->currency($bitcoinRate, true, false);
 
-            return $this->resultFactory->create(ResultFactory::TYPE_JSON)->setData((array) $data);
+            $data = (array) $data;
+            unset($data['refresh_token']);
+
+            return $this->resultFactory->create(ResultFactory::TYPE_JSON)->setData($data);
         } catch (\Exception $e) {
         }
     }
