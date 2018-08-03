@@ -55,7 +55,7 @@ class Callback extends \Magento\Framework\App\Action\Action
 
     public function execute()
     {
-        $zPayOrderId = $this->getRequest()->getParam('order_id');
+        $zPayOrderId = $this->getOrderId();
         // $referenceId = $this->getRequest()->getParam('reference_id');
 
         /** @var \ZPay\Standard\Api\Data\TransactionOrderInterface $zPayOrder */
@@ -81,7 +81,7 @@ class Callback extends \Magento\Framework\App\Action\Action
         // $paymentStatus = \ZPay\Standard\Controller\Payment\PaymentAbstract::PAYMENT_STATUS_COMPLETED;
 
         if ($paymentStatus !== \ZPay\Standard\Controller\Payment\PaymentAbstract::PAYMENT_STATUS_COMPLETED) {
-            $result->setContents((string) __('Payment status is not completed yet.'));
+            $result->setContents(__('Payment status is not completed yet.'));
             $result->setHttpResponseCode(204);
             return $result;
         }
@@ -122,5 +122,35 @@ class Callback extends \Magento\Framework\App\Action\Action
         $result->setHttpResponseCode(200);
 
         return $result;
+    }
+    
+    /**
+     * @return string|null
+     */
+    private function getOrderId() : string
+    {
+        $orderId = $this->getRequest()->getParam('order_id');
+        
+        if (!empty($orderId)) {
+            return $orderId;
+        }
+        
+        $content = $this->getRequest()->getContent();
+        
+        if (empty($content)) {
+            return null;
+        }
+    
+        try {
+            $data = json_decode($content, true);
+        } catch (\Exception $e) {
+            return null;
+        }
+        
+        if (!isset($data['order_id'])) {
+            return null;
+        }
+        
+        return $data['order_id'];
     }
 }
