@@ -127,7 +127,7 @@ class Callback extends \Magento\Framework\App\Action\Action
     /**
      * @return string|null
      */
-    private function getOrderId() : string
+    private function getOrderId()
     {
         $orderId = $this->getRequest()->getParam('order_id');
         
