@@ -23,6 +23,9 @@ class Callback extends \Magento\Framework\App\Action\Action
     /** @var \ZPay\Standard\Model\Service\Api */
     private $api;
 
+    /** @var \ZPay\Standard\Api\TransactionVerification */
+    private $transactionVerification;
+
     /**
      * Callback constructor.
      *
@@ -33,6 +36,7 @@ class Callback extends \Magento\Framework\App\Action\Action
      * @param \Magento\Framework\DB\Transaction                      $transaction
      * @param \ZPay\Standard\Api\TransactionOrderRepositoryInterface $transactionOrderRepository
      * @param \ZPay\Standard\Api\ServiceApiInterface                 $api
+     * @param \ZPay\Standard\Api\TransactionVerification             $transactionVerification
      */
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
@@ -41,7 +45,8 @@ class Callback extends \Magento\Framework\App\Action\Action
         \Magento\Sales\Api\InvoiceRepositoryInterface $invoiceRepository,
         \Magento\Framework\DB\Transaction $transaction,
         \ZPay\Standard\Api\TransactionOrderRepositoryInterface $transactionOrderRepository,
-        \ZPay\Standard\Api\ServiceApiInterface $api
+        \ZPay\Standard\Api\ServiceApiInterface $api,
+        \ZPay\Standard\Api\TransactionVerification $transactionVerification
     ) {
         $this->orderRepository = $orderRepository;
         $this->invoiceService = $invoiceService;
@@ -49,6 +54,7 @@ class Callback extends \Magento\Framework\App\Action\Action
         $this->transaction = $transaction;
         $this->transactionOrderRepository = $transactionOrderRepository;
         $this->api = $api;
+        $this->transactionVerification = $transactionVerification;
 
         parent::__construct($context);
     }
@@ -56,7 +62,6 @@ class Callback extends \Magento\Framework\App\Action\Action
     public function execute()
     {
         $zPayOrderId = $this->getOrderId();
-        // $referenceId = $this->getRequest()->getParam('reference_id');
 
         /** @var \ZPay\Standard\Api\Data\TransactionOrderInterface $zPayOrder */
         $zPayOrder = $this->transactionOrderRepository->getByZPayOrderId($zPayOrderId);
@@ -78,9 +83,19 @@ class Callback extends \Magento\Framework\App\Action\Action
         }
 
         $paymentStatus = (string) $object->payment_status;
-        // $paymentStatus = \ZPay\Standard\Controller\Payment\PaymentAbstract::PAYMENT_STATUS_COMPLETED;
+        $orderStatus   = (string) $object->order_status;
 
-        if ($paymentStatus !== \ZPay\Standard\Controller\Payment\PaymentAbstract::PAYMENT_STATUS_COMPLETED) {
+        /** @todo Remove these lines below. It's for simulation tests only. */
+        // $paymentStatus = \ZPay\Standard\Controller\Payment\PaymentAbstract::PAYMENT_STATUS_PAID;
+        // $orderStatus   = \ZPay\Standard\Controller\Payment\PaymentAbstract::ORDER_STATUS_COMPLETED;
+
+        if (!$this->transactionVerification->isPaid($zPayOrder, $paymentStatus)) {
+            $result->setContents(__('Order is not paid yet.'));
+            $result->setHttpResponseCode(204);
+            return $result;
+        }
+
+        if (!$this->transactionVerification->isCompleted($zPayOrder, $orderStatus)) {
             $result->setContents(__('Payment status is not completed yet.'));
             $result->setHttpResponseCode(204);
             return $result;

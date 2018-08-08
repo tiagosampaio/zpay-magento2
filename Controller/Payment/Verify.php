@@ -29,27 +29,25 @@ class Verify extends PaymentAbstract
             return false;
         }
 
+        $data = [];
+
         try {
             $paymentStatus = (string) $object->payment_status;
-            //$paymentStatus = self::ORDER_STATUS_PAID; /** @todo Remove it. */
-            //$orderStatus  = (string) $object->order_status;
+            // $paymentStatus = self::PAYMENT_STATUS_PAID; /** @todo Remove it. */
 
-            $data = [];
-
-            switch ($paymentStatus) {
-                case self::ORDER_STATUS_PAID:
-                    $data['status'] = $paymentStatus;
-                    $this->storage->setData(self::CONFIRMED_ORDER_ID_KEY, $order->getZpayOrderId());
-                    break;
-                case self::ORDER_STATUS_UNPAID:
-                default:
-                    $data['status'] = $paymentStatus;
-                    break;
+            if ($this->transactionVerification->isPaid($order, $paymentStatus)) {
+                $data['status'] = $paymentStatus;
+                $this->storage->setData(self::CONFIRMED_ORDER_ID_KEY, $order->getZpayOrderId());
             }
 
-            return $this->resultFactory->create(ResultFactory::TYPE_JSON)->setData((array) $data);
+            if (!$this->transactionVerification->isPaid($order, $paymentStatus)) {
+                $data['status'] = $paymentStatus;
+            }
+
         } catch (\Exception $e) {
         }
+
+        return $this->resultFactory->create(ResultFactory::TYPE_JSON)->setData((array) $data);
     }
 
     /**

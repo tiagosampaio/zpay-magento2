@@ -32,7 +32,7 @@ class Verified extends Verify
         }
 
         $paymentStatus = (string) $object->payment_status;
-        // $paymentStatus = self::ORDER_STATUS_PAID; /** @todo Remove it. */
+        // $paymentStatus = self::PAYMENT_STATUS_PAID; /** @todo Remove it. */
         $order->setZpayPayoutStatus($paymentStatus);
 
         $this->transactionOrderRepository->save($order);
@@ -47,7 +47,7 @@ class Verified extends Verify
             return $this->_redirect('customer/account');
         }
 
-        if ($paymentStatus !== self::ORDER_STATUS_PAID) {
+        if (!$this->transactionVerification->isPaid($order, $paymentStatus)) {
             $this->storage->setData('current_order_id', $salesOrder->getId());
 
             /** @var \Magento\Framework\Controller\Result\Redirect $resultRedirect */

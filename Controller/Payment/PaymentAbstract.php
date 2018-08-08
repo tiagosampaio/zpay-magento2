@@ -21,25 +21,31 @@ abstract class PaymentAbstract extends Action
     const CONFIRMED_ORDER_ID_KEY = 'just_confirmed_order_id';
 
     /** @var string */
-    const ORDER_STATUS_PAID = 'PAID';
+    const PAYMENT_STATUS_PAID = 'PAID';
 
     /** @var string */
-    const ORDER_STATUS_UNPAID = 'UNPAID';
+    const PAYMENT_STATUS_UNPAID = 'UNPAID';
 
     /** @var string */
-    const PAYMENT_STATUS_CREATED = 'CREATED';
+    const PAYMENT_STATUS_OVERPAID = 'OVERPAID';
 
     /** @var string */
-    const PAYMENT_STATUS_PROCESSING = 'PROCESSING';
+    const PAYMENT_STATUS_UNDERPAID = 'UNDERPAID';
 
     /** @var string */
-    const PAYMENT_STATUS_FAILED = 'FAILED';
+    const ORDER_STATUS_CREATED = 'CREATED';
 
     /** @var string */
-    const PAYMENT_STATUS_CANCELED = 'CANCELED';
+    const ORDER_STATUS_PROCESSING = 'PROCESSING';
 
     /** @var string */
-    const PAYMENT_STATUS_COMPLETED = 'COMPLETED';
+    const ORDER_STATUS_FAILED = 'FAILED';
+
+    /** @var string */
+    const ORDER_STATUS_CANCELED = 'CANCELED';
+
+    /** @var string */
+    const ORDER_STATUS_COMPLETED = 'COMPLETED';
 
     /** @var \ZPay\Standard\Model\Service\Api */
     protected $api;
@@ -65,6 +71,9 @@ abstract class PaymentAbstract extends Action
     /** @var InvoiceRepositoryInterface */
     protected $invoiceRepository;
 
+    /** @var \ZPay\Standard\Api\TransactionVerification */
+    protected $transactionVerification;
+
     /**
      * PaymentAbstract constructor.
      */
@@ -77,7 +86,8 @@ abstract class PaymentAbstract extends Action
         InvoiceService $invoiceService,
         Transaction $transaction,
         TransactionOrderRepositoryInterface $transactionOrderRepository,
-        InvoiceRepositoryInterface $invoiceRepository
+        InvoiceRepositoryInterface $invoiceRepository,
+        \ZPay\Standard\Api\TransactionVerification $transactionVerification
     ) {
         $this->api = $api;
         $this->storage = $storage;
@@ -87,6 +97,7 @@ abstract class PaymentAbstract extends Action
         $this->transaction = $transaction;
         $this->transactionOrderRepository = $transactionOrderRepository;
         $this->invoiceRepository = $invoiceRepository;
+        $this->transactionVerification = $transactionVerification;
 
         parent::__construct($context);
     }
