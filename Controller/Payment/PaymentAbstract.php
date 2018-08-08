@@ -20,33 +20,6 @@ abstract class PaymentAbstract extends Action
     /** @var string */
     const CONFIRMED_ORDER_ID_KEY = 'just_confirmed_order_id';
 
-    /** @var string */
-    const PAYMENT_STATUS_PAID = 'PAID';
-
-    /** @var string */
-    const PAYMENT_STATUS_UNPAID = 'UNPAID';
-
-    /** @var string */
-    const PAYMENT_STATUS_OVERPAID = 'OVERPAID';
-
-    /** @var string */
-    const PAYMENT_STATUS_UNDERPAID = 'UNDERPAID';
-
-    /** @var string */
-    const ORDER_STATUS_CREATED = 'CREATED';
-
-    /** @var string */
-    const ORDER_STATUS_PROCESSING = 'PROCESSING';
-
-    /** @var string */
-    const ORDER_STATUS_FAILED = 'FAILED';
-
-    /** @var string */
-    const ORDER_STATUS_CANCELED = 'CANCELED';
-
-    /** @var string */
-    const ORDER_STATUS_COMPLETED = 'COMPLETED';
-
     /** @var \ZPay\Standard\Model\Service\Api */
     protected $api;
 
@@ -71,11 +44,21 @@ abstract class PaymentAbstract extends Action
     /** @var InvoiceRepositoryInterface */
     protected $invoiceRepository;
 
-    /** @var \ZPay\Standard\Api\TransactionVerification */
-    protected $transactionVerification;
+    /** @var \ZPay\Standard\Api\TransactionStatusVerification */
+    protected $statusVerification;
 
     /**
      * PaymentAbstract constructor.
+     * @param Context                                          $context
+     * @param ServiceApiInterface                              $api
+     * @param Storage                                          $storage
+     * @param HelperPricing                                    $helperPricing
+     * @param OrderRepositoryInterface                         $orderRepository
+     * @param InvoiceService                                   $invoiceService
+     * @param Transaction                                      $transaction
+     * @param TransactionOrderRepositoryInterface              $transactionOrderRepository
+     * @param InvoiceRepositoryInterface                       $invoiceRepository
+     * @param \ZPay\Standard\Api\TransactionStatusVerification $statusVerification
      */
     public function __construct(
         Context $context,
@@ -87,7 +70,7 @@ abstract class PaymentAbstract extends Action
         Transaction $transaction,
         TransactionOrderRepositoryInterface $transactionOrderRepository,
         InvoiceRepositoryInterface $invoiceRepository,
-        \ZPay\Standard\Api\TransactionVerification $transactionVerification
+        \ZPay\Standard\Api\TransactionStatusVerification $statusVerification
     ) {
         $this->api = $api;
         $this->storage = $storage;
@@ -97,7 +80,7 @@ abstract class PaymentAbstract extends Action
         $this->transaction = $transaction;
         $this->transactionOrderRepository = $transactionOrderRepository;
         $this->invoiceRepository = $invoiceRepository;
-        $this->transactionVerification = $transactionVerification;
+        $this->statusVerification = $statusVerification;
 
         parent::__construct($context);
     }
@@ -108,7 +91,6 @@ abstract class PaymentAbstract extends Action
     protected function getZPayOrder()
     {
         $orderId = (string) $this->_request->getParam('order');
-
         return $this->loadZPayOrder($orderId);
     }
 
@@ -118,8 +100,6 @@ abstract class PaymentAbstract extends Action
     protected function getConfirmedZPayOrder()
     {
         $orderId = $this->storage->getData(self::CONFIRMED_ORDER_ID_KEY);
-        // $orderId = 'cee5a106-0d77-4e25-9920-91f061a39003';
-
         return $this->loadZPayOrder($orderId);
     }
 

@@ -8,5 +8,5 @@
     <preference for="ZPay\Standard\Api\Data\TransactionOrderInterface" type="ZPay\Standard\Model\Transaction\Order" />
     <preference for="ZPay\Standard\Api\TransactionOrderRepositoryInterface" type="ZPay\Standard\Model\Transaction\OrderRepository" />
     <preference for="ZPay\Standard\Api\ServiceApiInterface" type="ZPay\Standard\Model\Service\Api"/>
-    <preference for="ZPay\Standard\Api\TransactionVerification" type="ZPay\Standard\Model\Transaction\Verification"/>
+    <preference for="ZPay\Standard\Api\TransactionStatusVerification" type="ZPay\Standard\Model\Transaction\StatusVerification"/>
 </config>

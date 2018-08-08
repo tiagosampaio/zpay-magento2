@@ -33,14 +33,16 @@ class Verify extends PaymentAbstract
 
         try {
             $paymentStatus = (string) $object->payment_status;
-            // $paymentStatus = self::PAYMENT_STATUS_PAID; /** @todo Remove it. */
 
-            if ($this->transactionVerification->isPaid($order, $paymentStatus)) {
+            /** @todo Remove it. */
+            // $paymentStatus = \ZPay\Standard\Api\TransactionStatusVerification::PAYMENT_STATUS_PAID;
+
+            if ($this->statusVerification->isPaid($order, $paymentStatus)) {
                 $data['status'] = $paymentStatus;
                 $this->storage->setData(self::CONFIRMED_ORDER_ID_KEY, $order->getZpayOrderId());
             }
 
-            if (!$this->transactionVerification->isPaid($order, $paymentStatus)) {
+            if (!$this->statusVerification->isPaid($order, $paymentStatus)) {
                 $data['status'] = $paymentStatus;
             }
 
