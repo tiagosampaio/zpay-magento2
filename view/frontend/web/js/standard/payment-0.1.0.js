@@ -3,7 +3,7 @@ define([
     'jquery-qrcode',
     'moment',
     'mage/translate'
-], function (jQuery, QRCode, moment, translate) {
+], function (jQuery, QRCode, moment) {
     return ZPay = {
         magentoAmount:null,
         QRCodeElement:null,
