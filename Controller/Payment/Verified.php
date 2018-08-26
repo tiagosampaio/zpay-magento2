@@ -32,8 +32,10 @@ class Verified extends Verify
         }
 
         $paymentStatus = (string) $object->payment_status;
-        /** @todo Remove it. */
+
+        /** @todo Remove it. It's used only to simulate paid transactions. */
         // $paymentStatus = \ZPay\Standard\Api\TransactionStatusVerification::PAYMENT_STATUS_PAID;
+
         $order->setZpayPayoutStatus($paymentStatus);
 
         $this->transactionOrderRepository->save($order);
@@ -67,6 +69,20 @@ class Verified extends Verify
         $this->orderRepository->save($salesOrder);
 
         $this->storage->unsetData(self::CONFIRMED_ORDER_ID_KEY);
-        return $this->resultFactory->create(ResultFactory::TYPE_PAGE);
+
+        /** @var \Magento\Framework\View\Result\Page $page */
+        $page    = $this->resultFactory->create(ResultFactory::TYPE_PAGE);
+        $message = $this->scopeConfig->getValue(
+            'payment/zpay_standard/success_page_message',
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORES
+        );
+
+        if (!$message) {
+            $message = __('Your payment is being confirmed.');
+        }
+
+        $page->getConfig()->getTitle()->set($message);
+
+        return $page;
     }
 }

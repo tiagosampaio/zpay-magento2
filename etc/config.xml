@@ -14,6 +14,7 @@
                 <title>ZPay (pague com BitCoin)</title>
                 <allowspecific>0</allowspecific>
                 <group>zpay</group>
+                <success_page_message>Your payment is being confirmed.</success_page_message>
                 <sort_order>90</sort_order>
                 <payment_action>order</payment_action>
                 <service_url_production>https://api.zpay.ws/</service_url_production>

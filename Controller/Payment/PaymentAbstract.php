@@ -47,18 +47,22 @@ abstract class PaymentAbstract extends Action
     /** @var \ZPay\Standard\Api\TransactionStatusVerification */
     protected $statusVerification;
 
+    /** @var \Magento\Framework\App\Config\ScopeConfigInterface */
+    protected $scopeConfig;
+
     /**
      * PaymentAbstract constructor.
-     * @param Context                                          $context
-     * @param ServiceApiInterface                              $api
-     * @param Storage                                          $storage
-     * @param HelperPricing                                    $helperPricing
-     * @param OrderRepositoryInterface                         $orderRepository
-     * @param InvoiceService                                   $invoiceService
-     * @param Transaction                                      $transaction
-     * @param TransactionOrderRepositoryInterface              $transactionOrderRepository
-     * @param InvoiceRepositoryInterface                       $invoiceRepository
-     * @param \ZPay\Standard\Api\TransactionStatusVerification $statusVerification
+     * @param Context                                            $context
+     * @param ServiceApiInterface                                $api
+     * @param Storage                                            $storage
+     * @param HelperPricing                                      $helperPricing
+     * @param OrderRepositoryInterface                           $orderRepository
+     * @param InvoiceService                                     $invoiceService
+     * @param Transaction                                        $transaction
+     * @param TransactionOrderRepositoryInterface                $transactionOrderRepository
+     * @param InvoiceRepositoryInterface                         $invoiceRepository
+     * @param \ZPay\Standard\Api\TransactionStatusVerification   $statusVerification
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
      */
     public function __construct(
         Context $context,
@@ -70,7 +74,8 @@ abstract class PaymentAbstract extends Action
         Transaction $transaction,
         TransactionOrderRepositoryInterface $transactionOrderRepository,
         InvoiceRepositoryInterface $invoiceRepository,
-        \ZPay\Standard\Api\TransactionStatusVerification $statusVerification
+        \ZPay\Standard\Api\TransactionStatusVerification $statusVerification,
+        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
     ) {
         $this->api = $api;
         $this->storage = $storage;
@@ -81,6 +86,7 @@ abstract class PaymentAbstract extends Action
         $this->transactionOrderRepository = $transactionOrderRepository;
         $this->invoiceRepository = $invoiceRepository;
         $this->statusVerification = $statusVerification;
+        $this->scopeConfig = $scopeConfig;
 
         parent::__construct($context);
     }
