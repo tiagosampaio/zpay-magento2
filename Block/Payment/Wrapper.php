@@ -11,6 +11,7 @@ use Magento\Framework\Session\StorageInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use ZPay\Standard\Helper\Data as HelperData;
 use Magento\Framework\Pricing\Helper\Data as HelperPricing;
+use ZPay\Standard\Api\TransactionStatusVerification;
 
 class Wrapper extends Template
 {
@@ -205,5 +206,17 @@ class Wrapper extends Template
         return $this->timezone
             ->date($timestamp, $this->getTimezone()->getDefaultTimezonePath())
             ->format($format ?: \Magento\Framework\Stdlib\DateTime::DATETIME_PHP_FORMAT);
+    }
+
+    /**
+     * @return string
+     */
+    protected function _toHtml()
+    {
+        if ($this->getZpayOrder()->getZpayPayoutStatus() == TransactionStatusVerification::PAYMENT_STATUS_PAID) {
+            return null;
+        }
+
+        return parent::_toHtml();
     }
 }
