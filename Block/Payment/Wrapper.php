@@ -9,7 +9,6 @@ use Magento\Framework\ObjectManagerInterface;
 use Magento\Checkout\Model\Session as CheckoutSession;
 use Magento\Framework\Session\StorageInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
-use ZPay\Standard\Model\Transaction\Order as ZPayOrder;
 use ZPay\Standard\Helper\Data as HelperData;
 use Magento\Framework\Pricing\Helper\Data as HelperPricing;
 
@@ -40,6 +39,12 @@ class Wrapper extends Template
     /** @var OrderRepositoryInterface */
     protected $orderRepository;
 
+    /** @var \ZPay\Standard\Api\TransactionOrderRepositoryInterface */
+    protected $transactionOrderRepository;
+
+    /** @var \Magento\Framework\Stdlib\DateTime\TimezoneInterface */
+    protected $timezone;
+
     public function __construct(
         Context $context,
         ObjectManagerInterface $objectManager,
@@ -49,6 +54,8 @@ class Wrapper extends Template
         Registry $registry,
         CheckoutSession $checkoutSession,
         OrderRepositoryInterface $orderRepository,
+        \ZPay\Standard\Api\TransactionOrderRepositoryInterface $transactionOrderRepository,
+        \Magento\Framework\Stdlib\DateTime\TimezoneInterface $timezone,
         array $data = []
     )
     {
@@ -61,10 +68,12 @@ class Wrapper extends Template
         $this->registry = $registry;
         $this->checkoutSession = $checkoutSession;
         $this->orderRepository = $orderRepository;
+        $this->transactionOrderRepository = $transactionOrderRepository;
+        $this->timezone = $timezone;
     }
 
     /**
-     * @return ZPayOrder
+     * @return \ZPay\Standard\Model\Transaction\Order
      */
     public function getZpayOrder()
     {
@@ -73,9 +82,6 @@ class Wrapper extends Template
         if ($this->registry->registry($key)) {
             return $this->registry->registry($key);
         }
-
-        /** @var ZPayOrder $order */
-        $order = $this->objectManager->create(ZPayOrder::class);
 
         try {
             /** After verified action */
@@ -91,9 +97,8 @@ class Wrapper extends Template
                 $orderId = $this->getOrder()->getId();
             }
 
-            if ($orderId) {
-                $order->load($orderId, 'order_id');
-            }
+            /** @var \ZPay\Standard\Model\Transaction\Order $order */
+            $order = $this->transactionOrderRepository->getByOrderId($orderId);
 
             $this->registry->register($key, $order);
         } catch (\Exception $e) {
@@ -180,5 +185,25 @@ class Wrapper extends Template
         }
 
         return 0;
+    }
+
+    /**
+     * @return \Magento\Framework\Stdlib\DateTime\TimezoneInterface
+     */
+    public function getTimezone()
+    {
+        return $this->timezone;
+    }
+
+    /**
+     * @param      $timestamp
+     * @param null $format
+     * @return string
+     */
+    public function convertDate($timestamp, $format = null)
+    {
+        return $this->timezone
+            ->date($timestamp, $this->getTimezone()->getDefaultTimezonePath())
+            ->format($format ?: \Magento\Framework\Stdlib\DateTime::DATETIME_PHP_FORMAT);
     }
 }

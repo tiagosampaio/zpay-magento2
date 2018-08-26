@@ -1,4 +1,4 @@
-define(['jquery', 'jquery-qrcode'], function (jQuery) {
+define(['jquery', 'jquery-qrcode', 'moment'], function (jQuery, QRCode, moment) {
     return ZPay = {
         magentoAmount:null,
         QRCodeElement:null,
@@ -151,38 +151,13 @@ define(['jquery', 'jquery-qrcode'], function (jQuery) {
             return this;
         },
         updateQuote: function () {
-            var object = this;
+            let object = this;
 
             jQuery.ajax(object.urlUpdate, {
                 method:'GET',
                 data:{order:object.ZOrder.orderId},
                 dataType:'json',
-                success: function (data) {
-                    if (!data) {
-                        return this;
-                    }
-                    
-                    object.ZOrder.orderId   = data.order_id;
-                    object.ZOrder.quoteId   = data.quote_id;
-                    object.ZOrder.amount    = data.amount_to;
-                    object.ZOrder.address   = data.address;
-                    object.ZOrder.time      = data.time;
-                    object.ZOrder.timestamp = data.timestamp;
-
-                    jQuery('table.values .code-text').html(object.ZOrder.address);
-                    jQuery('table.values .btc').html(object.ZOrder.amount);
-                    jQuery('table.values .brl .price').html(data.total_brl);
-                    jQuery('table.values .rate .price').html(data.rate);
-
-                    object.generateQRCode();
-
-                    if (object.updateCallback) {
-                        object.updateCallback(object);
-                    }
-
-                    object.restartTimer();
-                    // console.log('success', data);
-                },
+                success: this.updateQuoteSuccess.bind(this),
                 error: function (data) {
                     // console.log('updateQuote Error', data);
                 },
@@ -193,39 +168,57 @@ define(['jquery', 'jquery-qrcode'], function (jQuery) {
 
             return this;
         },
+        updateQuoteSuccess: function (data) {
+            if (!data) {
+                return this;
+            }
+
+            this.ZOrder.orderId   = data.order_id;
+            this.ZOrder.quoteId   = data.quote_id;
+            this.ZOrder.amount    = data.amount_to;
+            this.ZOrder.address   = data.address;
+            this.ZOrder.time      = parseInt(data.time);
+            this.ZOrder.timestamp = data.timestamp;
+
+            jQuery('table.values .code-text').html(this.ZOrder.address);
+            jQuery('table.values .btc').html(this.ZOrder.amount);
+            jQuery('table.values .brl .price').html(data.total_brl);
+            jQuery('table.values .rate .price').html(data.rate);
+
+            this.generateQRCode();
+
+            if (this.updateCallback) {
+                this.updateCallback(this);
+            }
+
+            this.restartTimer();
+        },
         startTimer: function () {
-            var countDownDate = new Date(this.ZOrder.timestamp).getTime();
+            let limitTime = moment(this.ZOrder.timestamp).add(this.ZOrder.time, 'milliseconds');
+            let now       = moment();
+
+            let duration  = moment.duration(limitTime.diff(now));
 
             // Update the count down every 1 second
             this.timer = setInterval(function(object) {
-                // Get todays date and time
-                var now = new Date().getTime();
+                duration.subtract(moment.duration(1, 'seconds'));
 
-                // Find the distance between now an the count down date
-                var distance = countDownDate - now;
-
-                // Time calculations for days, hours, minutes and seconds
-                var days    = Math.floor(distance / (1000 * 60 * 60 * 24));
-                var hours   = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-                if (distance >= 0) {
-                    object.updateTimer(days, hours, minutes, seconds);
+                if (duration.asMilliseconds() > 0) {
+                    object.updateTimer(duration.days(), duration.hours(), duration.minutes(), duration.seconds());
                     return;
                 }
 
                 // If the count down is finished, write some text
-                if (distance < 0) {
-                    // object.stopTimer()
-                    //     .updateQuote();
+                if (duration.asMilliseconds() <= 0) {
+                    object.stopTimer()
+                        .updateQuote();
                 }
             }, 1000, this);
 
             return this;
         },
         stopTimer: function () {
-            // clearInterval(this.timer);
+            clearInterval(this.timer);
             return this;
         },
         restartTimer: function () {

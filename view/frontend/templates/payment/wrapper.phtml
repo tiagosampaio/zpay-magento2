@@ -14,7 +14,7 @@ if ($block->canDisplayWrapper()) :
     $zAddress   = $block->getZpayOrder()->getZpayAddress();
     $zAmountTo  = $block->getZpayOrder()->getZpayAmountTo();
     $zTime      = $block->getZpayOrder()->getZpayTime();
-    $zTimestamp = $block->getZpayOrder()->getZpayTimestamp();
+    $zTimestamp = $block->convertDate($block->getZpayOrder()->getZpayTimestamp());
 ?>
 
 <div class="zpay-wrapper">
