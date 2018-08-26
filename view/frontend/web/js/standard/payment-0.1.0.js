@@ -1,4 +1,9 @@
-define(['jquery', 'jquery-qrcode', 'moment'], function (jQuery, QRCode, moment) {
+define([
+    'jquery',
+    'jquery-qrcode',
+    'moment',
+    'mage/translate'
+], function (jQuery, QRCode, moment, translate) {
     return ZPay = {
         magentoAmount:null,
         QRCodeElement:null,
@@ -151,19 +156,17 @@ define(['jquery', 'jquery-qrcode', 'moment'], function (jQuery, QRCode, moment) 
             return this;
         },
         updateQuote: function () {
-            let object = this;
+            jQuery(this.updateButton).text(jQuery.mage.__('Please wait while the quote is updated...'));
 
-            jQuery.ajax(object.urlUpdate, {
+            jQuery.ajax(this.urlUpdate, {
                 method:'GET',
-                data:{order:object.ZOrder.orderId},
+                data:{order:this.ZOrder.orderId},
                 dataType:'json',
                 success: this.updateQuoteSuccess.bind(this),
                 error: function (data) {
                     // console.log('updateQuote Error', data);
                 },
-                complete: function (data) {
-                    // console.log('updateQuote Complete', data);
-                }
+                complete: this.updateQuoteComplete.bind(this)
             });
 
             return this;
@@ -192,6 +195,9 @@ define(['jquery', 'jquery-qrcode', 'moment'], function (jQuery, QRCode, moment) 
             }
 
             this.restartTimer();
+        },
+        updateQuoteComplete: function (data) {
+            jQuery(this.updateButton).text(jQuery.mage.__('Update Quote'));
         },
         startTimer: function () {
             let limitTime = moment(this.ZOrder.timestamp).add(this.ZOrder.time, 'milliseconds');
