@@ -54,6 +54,11 @@
                     <label>Sort Order</label>
                     <frontend_class>validate-number</frontend_class>
                 </field>
+                <field id="logs_enabled" translate="label" type="select" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+                    <label>Logs Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>If enabled every request will be logged in Magento's log directory. If your application is in production you probably want this option deactivated.</comment>
+                </field>
                 <field id="allowspecific" translate="label" type="allowspecific" sortOrder="200" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
                     <label>Payment from Applicable Countries</label>
                     <source_model>Magento\Payment\Model\Config\Source\Allspecificcountries</source_model>

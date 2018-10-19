@@ -25,6 +25,9 @@ class Callback extends \Magento\Framework\App\Action\Action
 
     /** @var \ZPay\Standard\Api\TransactionStatusVerification */
     private $statusVerification;
+    
+    /** @var \ZPay\Standard\Model\Logger\LoggerInterface */
+    private $logger;
 
     /**
      * Callback constructor.
@@ -34,6 +37,7 @@ class Callback extends \Magento\Framework\App\Action\Action
      * @param \Magento\Sales\Api\InvoiceManagementInterface          $invoiceService
      * @param \Magento\Sales\Api\InvoiceRepositoryInterface          $invoiceRepository
      * @param \Magento\Framework\DB\Transaction                      $transaction
+     * @param \ZPay\Standard\Model\Logger\LoggerInterface            $logger
      * @param \ZPay\Standard\Api\TransactionOrderRepositoryInterface $transactionOrderRepository
      * @param \ZPay\Standard\Api\ServiceApiInterface                 $api
      * @param \ZPay\Standard\Api\TransactionStatusVerification       $statusVerification
@@ -44,6 +48,7 @@ class Callback extends \Magento\Framework\App\Action\Action
         \Magento\Sales\Api\InvoiceManagementInterface $invoiceService,
         \Magento\Sales\Api\InvoiceRepositoryInterface $invoiceRepository,
         \Magento\Framework\DB\Transaction $transaction,
+        \ZPay\Standard\Model\Logger\LoggerInterface $logger,
         \ZPay\Standard\Api\TransactionOrderRepositoryInterface $transactionOrderRepository,
         \ZPay\Standard\Api\ServiceApiInterface $api,
         \ZPay\Standard\Api\TransactionStatusVerification $statusVerification
@@ -52,15 +57,22 @@ class Callback extends \Magento\Framework\App\Action\Action
         $this->invoiceService = $invoiceService;
         $this->invoiceRepository = $invoiceRepository;
         $this->transaction = $transaction;
+        $this->logger = $logger;
         $this->transactionOrderRepository = $transactionOrderRepository;
         $this->api = $api;
         $this->statusVerification = $statusVerification;
 
         parent::__construct($context);
     }
-
+    
+    /**
+     * @return \Magento\Framework\Controller\ResultInterface
+     * @throws \Magento\Framework\Exception\NotFoundException
+     */
     public function execute()
     {
+        $this->prepareRequestLogging();
+        
         $zPayOrderId = $this->getOrderId();
 
         /** @var \ZPay\Standard\Api\Data\TransactionOrderInterface $zPayOrder */
@@ -167,5 +179,14 @@ class Callback extends \Magento\Framework\App\Action\Action
         }
         
         return $data['order_id'];
+    }
+    
+    /**
+     * @return $this
+     */
+    private function prepareRequestLogging()
+    {
+        $this->logger->info($this->getRequest()->getContent());
+        return $this;
     }
 }

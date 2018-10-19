@@ -17,6 +17,7 @@
                 <success_page_message>Your payment is being confirmed.</success_page_message>
                 <sort_order>90</sort_order>
                 <payment_action>order</payment_action>
+                <logs_enabled>0</logs_enabled>
                 <service_url_production>https://api.zpay.ws/</service_url_production>
                 <service_url_sandbox>https://sandbox-api.zpay.ws/</service_url_sandbox>
             </zpay_standard>
