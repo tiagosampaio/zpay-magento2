@@ -115,11 +115,18 @@ class Callback extends \Magento\Framework\App\Action\Action
 
         /** @var \Magento\Sales\Model\Order $order */
         $order = $this->orderRepository->get($zPayOrder->getOrderId());
-
-        if ($order->getState() == \Magento\Sales\Model\Order::STATE_PAYMENT_REVIEW) {
+    
+        /**
+         * Let's check if the order is in payment review first.
+         * If so we need to set the state to processing because of the verification below.
+         */
+        if ($order->isPaymentReview()) {
             $order->setState(\Magento\Sales\Model\Order::STATE_PROCESSING);
         }
-
+    
+        /**
+         * If the order cannot be invoiced that's because it's not ready for invoice.
+         */
         if (!$order || !$order->canInvoice()) {
             $result->setContents(__('This order cannot be invoiced.'));
             $result->setHttpResponseCode(204);
@@ -131,13 +138,11 @@ class Callback extends \Magento\Framework\App\Action\Action
             $invoice = $this->invoiceService->prepareInvoice($order);
             $invoice->register();
 
-            $this->invoiceRepository->save($invoice);
-
             $transaction = $this->transaction
                 ->addObject($order)
                 ->addObject($invoice);
-
-            $order->addStatusHistoryComment(__('Order was invoiced by ZPay callback.'), true);
+            
+            $order->addCommentToStatusHistory(__('Order was invoiced by ZPay callback.'), true);
 
             $transaction->save();
         } catch (\Exception $e) {
@@ -152,16 +157,20 @@ class Callback extends \Magento\Framework\App\Action\Action
     }
     
     /**
+     * Retrieve the order ID from request object.
+     *
      * @return string|null
      */
     private function getOrderId()
     {
+        /** @var string $orderId */
         $orderId = $this->getRequest()->getParam('order_id');
         
         if (!empty($orderId)) {
             return $orderId;
         }
         
+        /** @var string $content */
         $content = $this->getRequest()->getContent();
         
         if (empty($content)) {
