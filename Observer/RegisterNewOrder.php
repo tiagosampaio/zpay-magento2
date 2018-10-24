@@ -10,23 +10,29 @@ class RegisterNewOrder implements ObserverInterface
 {
 
     /** @var \Magento\Framework\Registry */
-    protected $_registry;
+    private $_registry;
 
     /** @var \ZPay\Standard\Api\TransactionOrderRepositoryInterface */
     private $orderTransactionRepository;
+
+    /** @var \Magento\Sales\Api\TransactionRepositoryInterface */
+    private $transactionRepository;
 
     /**
      * RegisterNewOrder constructor.
      *
      * @param \Magento\Framework\Registry                            $registry
      * @param \ZPay\Standard\Api\TransactionOrderRepositoryInterface $orderTransactionRepository
+     * @param \Magento\Sales\Api\TransactionRepositoryInterface      $transactionRepository
      */
     public function __construct(
         \Magento\Framework\Registry $registry,
-        \ZPay\Standard\Api\TransactionOrderRepositoryInterface $orderTransactionRepository
+        \ZPay\Standard\Api\TransactionOrderRepositoryInterface $orderTransactionRepository,
+        \Magento\Sales\Api\TransactionRepositoryInterface $transactionRepository
     ) {
         $this->_registry = $registry;
         $this->orderTransactionRepository = $orderTransactionRepository;
+        $this->transactionRepository = $transactionRepository;
     }
 
     /**
@@ -55,8 +61,9 @@ class RegisterNewOrder implements ObserverInterface
             return;
         }
 
-        /** @var \ZPay\Standard\Model\Transaction\Order $zOrder */
-        $zOrder = $this->updateOrder($order, $result);
+        /** @var \ZPay\Standard\Model\Transaction\Order $transaction */
+        $transaction = $this->updateOrder($order, $result);
+        $this->createOrderTransaction($order, $transaction);
     }
 
     /**
@@ -67,7 +74,7 @@ class RegisterNewOrder implements ObserverInterface
      *
      * @throws \Exception
      */
-    protected function updateOrder(Order $salesOrder, \stdClass $data)
+    private function updateOrder(Order $salesOrder, \stdClass $data)
     {
         /**
          * @var \ZPay\Standard\Model\Transaction\Order               $orderTransaction
@@ -87,5 +94,36 @@ class RegisterNewOrder implements ObserverInterface
         $this->orderTransactionRepository->save($orderTransaction);
 
         return $orderTransaction;
+    }
+
+    /**
+     * @param Order                                  $salesOrder
+     * @param \ZPay\Standard\Model\Transaction\Order $orderTransaction
+     *
+     * @return Order\Payment\Transaction
+     *
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    private function createOrderTransaction(Order $salesOrder, \ZPay\Standard\Model\Transaction\Order $orderTransaction)
+    {
+        /** @var \Magento\Sales\Model\Order\Payment\Transaction $paymentTransaction */
+        $paymentTransaction = $this->transactionRepository->create();
+        $paymentTransaction->setOrder($salesOrder)
+            ->setTxnId($orderTransaction->getZpayOrderId());
+
+        $paymentTransaction->setData('additional_information', $orderTransaction->toArray([
+            'quote_id',
+            'order_id',
+            'zpay_order_id',
+            'zpay_quote_id',
+            'zpay_address',
+            'zpay_amount_to',
+            'zpay_order_status',
+            'zpay_payout_status'
+        ]));
+
+        $this->transactionRepository->save($paymentTransaction);
+
+        return $paymentTransaction;
     }
 }
