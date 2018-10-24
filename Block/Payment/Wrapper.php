@@ -2,16 +2,7 @@
 
 namespace ZPay\Standard\Block\Payment;
 
-use Magento\Framework\Registry;
 use Magento\Framework\View\Element\Template;
-use Magento\Framework\View\Element\Template\Context;
-use Magento\Framework\ObjectManagerInterface;
-use Magento\Checkout\Model\Session as CheckoutSession;
-use Magento\Framework\Session\StorageInterface;
-use Magento\Sales\Api\OrderRepositoryInterface;
-use ZPay\Standard\Helper\Data as HelperData;
-use Magento\Framework\Pricing\Helper\Data as HelperPricing;
-use ZPay\Standard\Api\TransactionStatusVerification;
 
 class Wrapper extends Template
 {
@@ -19,57 +10,56 @@ class Wrapper extends Template
     /** @var string */
     protected $_template = 'ZPay_Standard::payment/wrapper.phtml';
 
-    /** @var ObjectManagerInterface */
-    protected $objectManager = null;
+    /** @var null|\ZPay\Standard\Helper\Data */
+    private $helperData = null;
 
-    /** @var null|HelperData */
-    protected $helperData = null;
-
-    /** @var null|HelperPricing */
-    protected $helperPricing = null;
+    /** @var null|\Magento\Framework\Pricing\Helper\Data */
+    private $helperPricing = null;
 
     /** @var \Magento\Framework\Session\Storage */
-    protected $storage = null;
+    private $storage = null;
 
-    /** @var Registry */
-    protected $registry = null;
+    /** @var \Magento\Framework\Registry */
+    private $registry = null;
 
-    /** @var CheckoutSession */
-    protected $checkoutSession;
+    /** @var \Magento\Checkout\Model\Session */
+    private $checkoutSession;
 
-    /** @var OrderRepositoryInterface */
-    protected $orderRepository;
-
+    /** @var \Magento\Sales\Api\OrderRepositoryInterface */
+    private $orderRepository;
+    
     /** @var \ZPay\Standard\Api\TransactionOrderRepositoryInterface */
-    protected $transactionOrderRepository;
+    private $transactionOrderRepository;
+    
+    /** @var \ZPay\Standard\Api\TransactionStatusVerification */
+    private $statusVerification;
 
     /** @var \Magento\Framework\Stdlib\DateTime\TimezoneInterface */
-    protected $timezone;
+    private $timezone;
 
     public function __construct(
-        Context $context,
-        ObjectManagerInterface $objectManager,
-        HelperData $helperData,
-        HelperPricing $helperPricing,
-        StorageInterface $storage,
-        Registry $registry,
-        CheckoutSession $checkoutSession,
-        OrderRepositoryInterface $orderRepository,
-        \ZPay\Standard\Api\TransactionOrderRepositoryInterface $transactionOrderRepository,
+        \Magento\Framework\View\Element\Template\Context $context,
+        \Magento\Framework\Pricing\Helper\Data $helperPricing,
+        \Magento\Framework\Session\StorageInterface $storage,
+        \Magento\Framework\Registry $registry,
+        \Magento\Checkout\Model\Session $checkoutSession,
+        \Magento\Sales\Api\OrderRepositoryInterface $orderRepository,
         \Magento\Framework\Stdlib\DateTime\TimezoneInterface $timezone,
+        \ZPay\Standard\Api\TransactionOrderRepositoryInterface $transactionOrderRepository,
+        \ZPay\Standard\Api\TransactionStatusVerification $statusVerification,
+        \ZPay\Standard\Helper\Data $helperData,
         array $data = []
-    )
-    {
+    ) {
         parent::__construct($context, $data);
 
         $this->helperData = $helperData;
         $this->helperPricing = $helperPricing;
-        $this->objectManager = $objectManager;
         $this->storage = $storage;
         $this->registry = $registry;
         $this->checkoutSession = $checkoutSession;
         $this->orderRepository = $orderRepository;
         $this->transactionOrderRepository = $transactionOrderRepository;
+        $this->statusVerification = $statusVerification;
         $this->timezone = $timezone;
     }
 
@@ -145,7 +135,7 @@ class Wrapper extends Template
     }
 
     /**
-     * @return HelperData
+     * @return \ZPay\Standard\Helper\Data
      */
     public function dataHelper()
     {
@@ -213,7 +203,7 @@ class Wrapper extends Template
      */
     protected function _toHtml()
     {
-        if ($this->getZpayOrder()->getZpayPayoutStatus() == TransactionStatusVerification::PAYMENT_STATUS_PAID) {
+        if ($this->statusVerification->isPaid($this->getZpayOrder())) {
             return null;
         }
 

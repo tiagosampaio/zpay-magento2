@@ -35,65 +35,58 @@ interface TransactionStatusVerification
     const ORDER_STATUS_COMPLETED = 'COMPLETED';
 
     /**
-     * @param TransactionOrderInterface $transactionOrder
-     * @param                           $paymentStatus
+     * @param TransactionOrderInterface|string $paymentStatus
      * @return boolean
      */
-    public function isPaid(TransactionOrderInterface $transactionOrder, $paymentStatus);
+    public function isPaid($paymentStatus);
+
+    /**
+     * @param TransactionOrderInterface|string $paymentStatus
+     * @return boolean
+     */
+    public function isUnpaid($paymentStatus);
 
     /**
      * @param TransactionOrderInterface $transactionOrder
      * @param                           $paymentStatus
      * @return boolean
      */
-    public function isUnpaid(TransactionOrderInterface $transactionOrder, $paymentStatus);
+    public function isOverpaid($paymentStatus);
 
     /**
      * @param TransactionOrderInterface $transactionOrder
      * @param                           $paymentStatus
      * @return boolean
      */
-    public function isOverpaid(TransactionOrderInterface $transactionOrder, $paymentStatus);
+    public function isUnderpaid($paymentStatus);
 
     /**
-     * @param TransactionOrderInterface $transactionOrder
-     * @param                           $paymentStatus
+     * @param TransactionOrderInterface|string $orderStatus
      * @return boolean
      */
-    public function isUnderpaid(TransactionOrderInterface $transactionOrder, $paymentStatus);
+    public function isCompleted($orderStatus);
 
     /**
-     * @param TransactionOrderInterface $transactionOrder
-     * @param                           $orderStatus
+     * @param TransactionOrderInterface|string $orderStatus
      * @return boolean
      */
-    public function isCompleted(TransactionOrderInterface $transactionOrder, $orderStatus);
+    public function isCreated($orderStatus);
 
     /**
-     * @param TransactionOrderInterface $transactionOrder
-     * @param                           $orderStatus
+     * @param TransactionOrderInterface|string $orderStatus
      * @return boolean
      */
-    public function isCreated(TransactionOrderInterface $transactionOrder, $orderStatus);
+    public function isFailed($orderStatus);
 
     /**
-     * @param TransactionOrderInterface $transactionOrder
-     * @param                           $orderStatus
+     * @param TransactionOrderInterface|string $orderStatus
      * @return boolean
      */
-    public function isFailed(TransactionOrderInterface $transactionOrder, $orderStatus);
+    public function isProcessing($orderStatus);
 
     /**
-     * @param TransactionOrderInterface $transactionOrder
-     * @param                           $orderStatus
+     * @param TransactionOrderInterface|string $orderStatus
      * @return boolean
      */
-    public function isProcessing(TransactionOrderInterface $transactionOrder, $orderStatus);
-
-    /**
-     * @param TransactionOrderInterface $transactionOrder
-     * @param                           $orderStatus
-     * @return boolean
-     */
-    public function isCanceled(TransactionOrderInterface $transactionOrder, $orderStatus);
+    public function isCanceled($orderStatus);
 }

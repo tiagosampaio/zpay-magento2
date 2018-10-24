@@ -8,73 +8,57 @@ class StatusVerification implements \ZPay\Standard\Api\TransactionStatusVerifica
 {
 
     /**
-     * @param TransactionOrderInterface $transactionOrder
-     * @param                           $paymentStatus
+     * @param TransactionOrderInterface|string $paymentStatus
      * @return boolean
      */
-    public function isPaid(TransactionOrderInterface $transactionOrder, $paymentStatus)
+    public function isPaid($paymentStatus)
     {
-        if (self::PAYMENT_STATUS_PAID == $paymentStatus) {
-            return true;
-        }
-
-        return false;
+        return $this->compareStatus($this->getPaymentStatus($paymentStatus), self::PAYMENT_STATUS_PAID);
     }
 
     /**
-     * @param TransactionOrderInterface $transactionOrder
-     * @param                           $paymentStatus
+     * @param TransactionOrderInterface|string $paymentStatus
      * @return boolean
      */
-    public function isUnpaid(TransactionOrderInterface $transactionOrder, $paymentStatus)
+    public function isUnpaid($paymentStatus)
     {
-        if (self::PAYMENT_STATUS_UNPAID == $paymentStatus) {
-            return true;
-        }
-
-        return false;
+        return $this->compareStatus($this->getPaymentStatus($paymentStatus), self::PAYMENT_STATUS_UNPAID);
     }
 
     /**
-     * @param TransactionOrderInterface $transactionOrder
-     * @param                           $paymentStatus
+     * @param TransactionOrderInterface|string $paymentStatus
      * @return boolean
      */
-    public function isOverpaid(TransactionOrderInterface $transactionOrder, $paymentStatus)
+    public function isOverpaid($paymentStatus)
     {
-        if (self::PAYMENT_STATUS_OVERPAID == $paymentStatus) {
-            return true;
-        }
-
-        return false;
+        return $this->compareStatus($this->getPaymentStatus($paymentStatus), self::PAYMENT_STATUS_OVERPAID);
     }
 
     /**
-     * @param TransactionOrderInterface $transactionOrder
-     * @param                           $paymentStatus
+     * @param TransactionOrderInterface|string $paymentStatus
      * @return boolean
      */
-    public function isUnderpaid(TransactionOrderInterface $transactionOrder, $paymentStatus)
+    public function isUnderpaid($paymentStatus)
     {
-        if (self::PAYMENT_STATUS_UNDERPAID == $paymentStatus) {
-            return true;
-        }
-
-        return false;
+        return $this->compareStatus($this->getPaymentStatus($paymentStatus), self::PAYMENT_STATUS_UNDERPAID);
     }
 
     /**
-     * @param TransactionOrderInterface $transactionOrder
-     * @param                           $orderStatus
+     * @param TransactionOrderInterface|string $orderStatus
      * @return boolean
      */
-    public function isCompleted(TransactionOrderInterface $transactionOrder, $orderStatus)
+    public function isCompleted($orderStatus)
     {
-        if (self::ORDER_STATUS_COMPLETED == $orderStatus) {
-            return true;
-        }
+        return $this->compareStatus($this->getOrderStatus($orderStatus), self::ORDER_STATUS_COMPLETED);
+    }
 
-        return false;
+    /**
+     * @param TransactionOrderInterface|string $orderStatus
+     * @return boolean
+     */
+    public function isCreated($orderStatus)
+    {
+        return $this->compareStatus($this->getOrderStatus($orderStatus), self::ORDER_STATUS_CREATED);
     }
 
     /**
@@ -82,54 +66,69 @@ class StatusVerification implements \ZPay\Standard\Api\TransactionStatusVerifica
      * @param                           $orderStatus
      * @return boolean
      */
-    public function isCreated(TransactionOrderInterface $transactionOrder, $orderStatus)
+    public function isFailed($orderStatus)
     {
-        if (self::ORDER_STATUS_CREATED == $orderStatus) {
+        return $this->compareStatus($this->getOrderStatus($orderStatus), self::ORDER_STATUS_FAILED);
+    }
+
+    /**
+     * @param TransactionOrderInterface|string $orderStatus
+     * @return boolean
+     */
+    public function isProcessing($orderStatus)
+    {
+        return $this->compareStatus($this->getOrderStatus($orderStatus), self::ORDER_STATUS_PROCESSING);
+    }
+
+    /**
+     * @param TransactionOrderInterface|string $orderStatus
+     * @return boolean
+     */
+    public function isCanceled($orderStatus)
+    {
+        if (self::ORDER_STATUS_CANCELED == $this->getOrderStatus($orderStatus)) {
             return true;
         }
 
         return false;
     }
-
+    
     /**
-     * @param TransactionOrderInterface $transactionOrder
-     * @param                           $orderStatus
-     * @return boolean
+     * @param string $status
+     * @param string $comparedStatus
+     *
+     * @return bool
      */
-    public function isFailed(TransactionOrderInterface $transactionOrder, $orderStatus)
+    private function compareStatus($status, $comparedStatus)
     {
-        if (self::ORDER_STATUS_FAILED == $orderStatus) {
-            return true;
-        }
-
-        return false;
+        return $status === $comparedStatus;
     }
-
+    
     /**
-     * @param TransactionOrderInterface $transactionOrder
-     * @param                           $orderStatus
-     * @return boolean
+     * @param TransactionOrderInterface|string $object
+     *
+     * @return string
      */
-    public function isProcessing(TransactionOrderInterface $transactionOrder, $orderStatus)
+    private function getPaymentStatus($object)
     {
-        if (self::ORDER_STATUS_PROCESSING == $orderStatus) {
-            return true;
+        if ($object instanceof TransactionOrderInterface) {
+            return $object->getZpayPayoutStatus();
         }
-
-        return false;
+        
+        return (string) $object;
     }
-
+    
     /**
-     * @param TransactionOrderInterface $transactionOrder
-     * @param                           $orderStatus
-     * @return boolean
+     * @param TransactionOrderInterface|string $object
+     *
+     * @return string
      */
-    public function isCanceled(TransactionOrderInterface $transactionOrder, $orderStatus)
+    private function getOrderStatus($object)
     {
-        if (self::ORDER_STATUS_CANCELED == $orderStatus) {
-            return true;
+        if ($object instanceof TransactionOrderInterface) {
+            return $object->getZpayOrderStatus();
         }
-
-        return false;
+        
+        return (string) $object;
     }
 }

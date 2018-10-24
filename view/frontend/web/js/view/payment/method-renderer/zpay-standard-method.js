@@ -3,8 +3,9 @@
  */
 define([
     'jquery',
-    'Magento_Checkout/js/view/payment/default'
-], function ($, Component) {
+    'Magento_Checkout/js/view/payment/default',
+    'mage/translate'
+], function ($, Component, $t) {
     'use strict';
 
     return Component.extend({

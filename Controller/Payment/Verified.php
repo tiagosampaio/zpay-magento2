@@ -50,7 +50,7 @@ class Verified extends Verify
             return $this->_redirect('customer/account');
         }
 
-        if (!$this->statusVerification->isPaid($order, $paymentStatus)) {
+        if (!$this->statusVerification->isPaid($paymentStatus)) {
             $this->storage->setData('current_order_id', $salesOrder->getId());
 
             /** @var \Magento\Framework\Controller\Result\Redirect $resultRedirect */
@@ -65,7 +65,9 @@ class Verified extends Verify
          * It takes about 30 minutes to confirm so when it happens a callback is called.
          */
         $salesOrder->setState(\Magento\Sales\Model\Order::STATE_PAYMENT_REVIEW);
-        $salesOrder->addStatusHistoryComment(__('The order was confirmed by ZPay. Payment is being confirmed.'), true);
+        $salesOrder->addCommentToStatusHistory(
+            __('The order was confirmed by ZPay. Payment is being confirmed.'), true
+        );
         $this->orderRepository->save($salesOrder);
 
         $this->storage->unsetData(self::CONFIRMED_ORDER_ID_KEY);

@@ -101,13 +101,13 @@ class Callback extends \Magento\Framework\App\Action\Action
         // $paymentStatus = \ZPay\Standard\Api\TransactionStatusVerification::PAYMENT_STATUS_PAID;
         // $orderStatus   = \ZPay\Standard\Api\TransactionStatusVerification::ORDER_STATUS_COMPLETED;
 
-        if (!$this->statusVerification->isPaid($zPayOrder, $paymentStatus)) {
+        if (!$this->statusVerification->isPaid($paymentStatus)) {
             $result->setContents(__('Order is not paid yet.'));
             $result->setHttpResponseCode(204);
             return $result;
         }
 
-        if (!$this->statusVerification->isCompleted($zPayOrder, $orderStatus)) {
+        if (!$this->statusVerification->isCompleted($orderStatus)) {
             $result->setContents(__('Payment status is not completed yet.'));
             $result->setHttpResponseCode(204);
             return $result;
