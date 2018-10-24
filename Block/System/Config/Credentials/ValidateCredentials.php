@@ -32,6 +32,8 @@ class ValidateCredentials extends Field
      * @param \Magento\Framework\Data\Form\Element\AbstractElement $element
      *
      * @return string
+     * 
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
     protected function _getElementHtml(\Magento\Framework\Data\Form\Element\AbstractElement $element)
     {

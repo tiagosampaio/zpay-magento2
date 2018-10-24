@@ -66,9 +66,6 @@ class Standard extends AbstractMethod
      * @param \Magento\Payment\Helper\Data                         $paymentData
      * @param \Magento\Framework\App\Config\ScopeConfigInterface   $scopeConfig
      * @param \Magento\Payment\Model\Method\Logger                 $logger
-     * @param \Magento\Framework\Module\ModuleListInterface        $moduleList
-     * @param \Magento\Framework\Stdlib\DateTime\TimezoneInterface $localeDate
-     * @param \Magento\Directory\Model\CountryFactory              $countryFactory
      * @param \Magento\Framework\UrlInterface                      $urlBuilder
      * @param \Magento\Framework\App\RequestInterface              $request
      * @param \Magento\Framework\Session\StorageInterface          $storage
@@ -84,9 +81,6 @@ class Standard extends AbstractMethod
         \Magento\Payment\Helper\Data $paymentData,
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \Magento\Payment\Model\Method\Logger $logger,
-        \Magento\Framework\Module\ModuleListInterface $moduleList,
-        \Magento\Framework\Stdlib\DateTime\TimezoneInterface $localeDate,
-        \Magento\Directory\Model\CountryFactory $countryFactory,
         \Magento\Framework\UrlInterface $urlBuilder,
         \Magento\Framework\App\RequestInterface $request,
         \Magento\Framework\Session\StorageInterface $storage,
@@ -193,6 +187,8 @@ class Standard extends AbstractMethod
      * @return $this
      *
      * @throws \Exception
+     *
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
     public function order(InfoInterface $payment, $amount)
     {

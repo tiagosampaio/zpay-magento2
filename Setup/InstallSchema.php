@@ -24,6 +24,8 @@ class InstallSchema implements InstallSchemaInterface
      * @param ModuleContextInterface $context
      *
      * @throws \Zend_Db_Exception
+     *
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
     public function install(SchemaSetupInterface $setup, ModuleContextInterface $context)
     {
