@@ -4,30 +4,29 @@ namespace ZPay\Standard\Observer;
 
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Event\Observer;
-use Magento\Framework\ObjectManagerInterface;
-use Magento\Framework\Registry;
-use Magento\Quote\Model\Quote;
 use Magento\Sales\Model\Order;
 
 class RegisterNewOrder implements ObserverInterface
 {
 
-    /** @var Registry */
+    /** @var \Magento\Framework\Registry */
     protected $_registry;
 
-    /** @var ObjectManagerInterface */
-    protected $_objectManager;
+    /** @var \ZPay\Standard\Api\TransactionOrderRepositoryInterface */
+    private $orderTransactionRepository;
 
     /**
      * RegisterNewOrder constructor.
      *
-     * @param Registry               $registry
-     * @param ObjectManagerInterface $objectManager
+     * @param \Magento\Framework\Registry                            $registry
+     * @param \ZPay\Standard\Api\TransactionOrderRepositoryInterface $orderTransactionRepository
      */
-    public function __construct(Registry $registry, ObjectManagerInterface $objectManager)
-    {
+    public function __construct(
+        \Magento\Framework\Registry $registry,
+        \ZPay\Standard\Api\TransactionOrderRepositoryInterface $orderTransactionRepository
+    ) {
         $this->_registry = $registry;
-        $this->_objectManager = $objectManager;
+        $this->orderTransactionRepository = $orderTransactionRepository;
     }
 
     /**
@@ -39,12 +38,8 @@ class RegisterNewOrder implements ObserverInterface
      */
     public function execute(Observer $observer)
     {
-        /**
-         * @var Order $order
-         * @var Quote $quote
-         */
+        /** @var Order $order */
         $order = $observer->getData('order');
-        // $quote = $observer->getData('quote');
 
         /** @var \stdClass $result */
         $result = $order->getData('zpay_api_result');
@@ -75,18 +70,12 @@ class RegisterNewOrder implements ObserverInterface
     protected function updateOrder(Order $salesOrder, \stdClass $data)
     {
         /**
-         * @var \ZPay\Standard\Model\Transaction\Order               $zOrder
+         * @var \ZPay\Standard\Model\Transaction\Order               $orderTransaction
          * @var \ZPay\Standard\Model\ResourceModel\Transaction\Order $zResourceOrder
          */
-        $zOrder = $this->_objectManager->create(\ZPay\Standard\Model\Transaction\Order::class);
-        // $zResourceOrder = $this->objectManager->create(\ZPay\Standard\Model\ResourceModel\Transaction\Order::class);
+        $orderTransaction = $this->orderTransactionRepository->getByOrderId($salesOrder->getId());
 
-        /**
-         * @todo Use Service Contracts instead of entity load.
-         */
-        $zOrder->load($salesOrder->getId(), 'order_id');
-
-        $zOrder->setOrderId($salesOrder->getId())
+        $orderTransaction->setOrderId($salesOrder->getId())
             ->setQuoteId($salesOrder->getQuoteId())
             ->setZpayOrderId($data->order_id)
             ->setZpayQuoteId($data->quote_id)
@@ -95,8 +84,8 @@ class RegisterNewOrder implements ObserverInterface
             ->setZpayTime($data->time)
             ->setZpayTimestamp(date('Y-m-d H:i:s', strtotime($data->timestamp)));
 
-        $zOrder->save();
+        $this->orderTransactionRepository->save($orderTransaction);
 
-        return $zOrder;
+        return $orderTransaction;
     }
 }
