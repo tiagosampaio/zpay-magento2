@@ -6,5 +6,5 @@ Now your Magento 2 store is able to let your customer pay their orders with BitC
 <h3>Authors</h3>
 
 <h5>Tiago Sampaio<h5>
-<b>E-mail</b>: tiago@tiagosampaio.com\
+<b>E-mail</b>: tiago@tiagosampaio.com  
 <b>Website</b>: http://tiagosampaio.com
