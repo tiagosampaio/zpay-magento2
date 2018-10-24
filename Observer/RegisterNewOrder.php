@@ -109,7 +109,9 @@ class RegisterNewOrder implements ObserverInterface
         /** @var \Magento\Sales\Model\Order\Payment\Transaction $paymentTransaction */
         $paymentTransaction = $this->transactionRepository->create();
         $paymentTransaction->setOrder($salesOrder)
-            ->setTxnId($orderTransaction->getZpayOrderId());
+            ->setTxnId($orderTransaction->getZpayOrderId())
+            ->setTxnType(\Magento\Sales\Model\Order\Payment\Transaction::TYPE_ORDER)
+        ;
 
         $paymentTransaction->setData('additional_information', $orderTransaction->toArray([
             'quote_id',
