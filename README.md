@@ -9,7 +9,9 @@ Visit https://www.zpay.com.br/.
 
 To install this extension via composer use the following command in terminal:
 
-``> composer require tiagosampaio/zpay-magento2``
+```console
+composer require tiagosampaio/zpay-magento2
+```
 
 <h3>Authors</h3>
 
