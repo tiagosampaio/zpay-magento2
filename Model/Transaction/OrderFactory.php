@@ -2,14 +2,12 @@
 
 namespace ZPay\Standard\Model\Transaction;
 
-use Magento\Framework\ObjectManagerInterface;
-use ZPay\Standard\Model\AbstractFactory;
-
-class OrderFactory extends AbstractFactory
+class OrderFactory extends \ZPay\Standard\Model\AbstractFactory
 {
 
-    public function __construct(ObjectManagerInterface $objectManager)
-    {
+    public function __construct(
+        \Magento\Framework\ObjectManagerInterface $objectManager
+    ) {
         parent::__construct($objectManager, Order::class);
     }
 }

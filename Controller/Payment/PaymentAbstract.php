@@ -112,23 +112,21 @@ abstract class PaymentAbstract extends Action
     /**
      * @param string $orderId
      *
-     * @return bool|Order
+     * @return bool|\ZPay\Standard\Api\Data\TransactionOrderInterface
      */
     protected function loadZPayOrder($orderId)
     {
         if (!$this->validateOrderId($orderId)) {
             return false;
         }
+        
+        $transactionOrder = $this->transactionOrderRepository->getByZPayOrderId($orderId);
 
-        /** @var ORder $order */
-        $order = $this->_objectManager->create(Order::class);
-        $order->load($orderId, 'zpay_order_id');
-
-        if (!$order->getId()) {
+        if (!$transactionOrder->getId()) {
             return false;
         }
 
-        return $order;
+        return $transactionOrder;
     }
 
     /**

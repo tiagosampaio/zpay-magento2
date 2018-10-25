@@ -37,19 +37,19 @@ class Standard extends \Magento\Payment\Model\Method\AbstractMethod
     protected $_infoBlockType = \ZPay\Standard\Block\Info\Standard::class;
 
     /** @var \Magento\Framework\UrlInterface */
-    protected $_urlBuilder = null;
+    private $urlBuilder = null;
 
     /** @var \Magento\Framework\App\RequestInterface */
-    protected $_request = null;
+    private $request = null;
 
     /** @var \Magento\Framework\Session\StorageInterface */
-    protected $storage = null;
+    private $storage = null;
 
     /** @var null|\ZPay\Standard\Helper\Data */
-    protected $helper = null;
+    private $helper = null;
 
     /** @var \ZPay\Standard\Model\Service\Api */
-    protected $api;
+    private $api;
 
     /**
      * Standard constructor.
@@ -96,8 +96,8 @@ class Standard extends \Magento\Payment\Model\Method\AbstractMethod
             $data
         );
 
-        $this->_urlBuilder = $urlBuilder;
-        $this->_request = $request;
+        $this->urlBuilder = $urlBuilder;
+        $this->request = $request;
         $this->helper = $helper;
         $this->api = $api;
         $this->storage = $storage;
@@ -215,8 +215,8 @@ class Standard extends \Magento\Payment\Model\Method\AbstractMethod
      */
     public function getOrderPlaceRedirectUrl()
     {
-        return $this->_urlBuilder->getUrl('zpay/standard/redirect', [
-            '_secure' => $this->_request->isSecure()
+        return $this->urlBuilder->getUrl('zpay/standard/redirect', [
+            '_secure' => $this->request->isSecure()
         ]);
     }
 

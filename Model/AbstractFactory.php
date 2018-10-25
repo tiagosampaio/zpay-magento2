@@ -2,8 +2,6 @@
 
 namespace ZPay\Standard\Model;
 
-use Magento\Framework\ObjectManagerInterface;
-
 abstract class AbstractFactory
 {
 
@@ -12,26 +10,25 @@ abstract class AbstractFactory
      *
      * @var \Magento\Framework\ObjectManagerInterface
      */
-    protected $_objectManager = null;
+    protected $objectManager = null;
 
     /**
      * Instance name to create
      *
      * @var string
      */
-    protected $_instanceName = null;
+    protected $instanceName = null;
 
     /**
      * Factory constructor
      *
-     * @param ObjectManagerInterface $objectManager
-     *
+     * @param \Magento\Framework\ObjectManagerInterface $objectManager
      * @param string                 $instanceName
      */
-    public function __construct(ObjectManagerInterface $objectManager, $instanceName = null)
+    public function __construct(\Magento\Framework\ObjectManagerInterface $objectManager, $instanceName = null)
     {
-        $this->_objectManager = $objectManager;
-        $this->_instanceName = $instanceName;
+        $this->objectManager = $objectManager;
+        $this->instanceName = $instanceName;
     }
 
     /**
@@ -43,6 +40,6 @@ abstract class AbstractFactory
      */
     public function create(array $data = [])
     {
-        return $this->_objectManager->create($this->_instanceName, $data);
+        return $this->objectManager->create($this->instanceName, $data);
     }
 }

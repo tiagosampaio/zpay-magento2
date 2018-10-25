@@ -33,9 +33,6 @@ class Verified extends Verify
 
         $paymentStatus = (string) $object->payment_status;
 
-        /** @todo Remove it. It's used only to simulate paid transactions. */
-        // $paymentStatus = \ZPay\Standard\Api\TransactionStatusVerification::PAYMENT_STATUS_PAID;
-
         $order->setZpayPayoutStatus($paymentStatus);
 
         $this->transactionOrderRepository->save($order);

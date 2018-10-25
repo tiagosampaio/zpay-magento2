@@ -2,16 +2,9 @@
 
 namespace ZPay\Standard\Model\Service;
 
-use Magento\Framework\ObjectManagerInterface;
-use Zend\Http\Request;
-use Zend\Http\Response;
 use ZPay\Standard\Exception\ServiceApiResponseException;
-use ZPay\Standard\Helper\Config as ConfigHelper;
 use ZPay\Standard\Model\Config\Source\Environment;
-use Zend\Http\Client as HttpClient;
-use Zend\Http\Request as HttpRequest;
 use ZPay\Standard\Exception\InvalidObjectException;
-use ZPay\Standard\Model\Service\Request\Body\Order as OrderRequestBody;
 
 /**
  * Class Api
@@ -21,34 +14,50 @@ use ZPay\Standard\Model\Service\Request\Body\Order as OrderRequestBody;
 class Api implements \ZPay\Standard\Api\ServiceApiInterface
 {
 
+    /** @var string */
     const TYPE_APPLICATION_JSON            = 'application/json';
+    
+    /** @var string */
     const TYPE_APPLICATION_FORM_URLENCODED = 'application/x-www-form-urlencoded';
 
-    protected $baseUrl;
-    protected $api;
-    protected $token;
-    protected $username;
-    protected $password;
-    protected $contractId;
-    protected $environment;
-    protected $configHelper;
-    protected $objectManager;
-
-    /**
-     * Api constructor.
-     *
-     * @param ConfigHelper           $helperConfig
-     * @param ObjectManagerInterface $objectManager
-     */
+    /** @var string */
+    private $baseUrl;
+    
+    /** @todo Removed it further.  */
+    private $api;
+    
+    /** @var string */
+    private $token;
+    
+    /** @var string */
+    private $username;
+    
+    /** @var string */
+    private $password;
+    
+    /** @var string */
+    private $contractId;
+    
+    /** @var string */
+    private $environment;
+    
+    /** @var \ZPay\Standard\Helper\Config */
+    private $configHelper;
+    
+    /** @var \ZPay\Standard\Model\Service\Request\Body\OrderFactory */
+    private $orderBodyFactory;
+    
+    /** @var \Zend\Http\Client */
+    private $client;
+    
     public function __construct(
-        ConfigHelper $helperConfig,
-        ObjectManagerInterface $objectManager
+        \Zend\Http\Client $client,
+        \ZPay\Standard\Model\Service\Request\Body\OrderFactory $orderBodyFactory,
+        \ZPay\Standard\Helper\Config $helperConfig
     ) {
+        $this->client = $client;
         $this->configHelper = $helperConfig;
-        $this->objectManager = $objectManager;
-
-        $this->prepareBaseUrl($helperConfig->getEnvironment());
-
+        $this->orderBodyFactory = $orderBodyFactory;
         $this->contractId = $helperConfig->getContractId();
         $this->username = $helperConfig->getUsername();
         $this->password = $helperConfig->getPassword();
@@ -60,6 +69,8 @@ class Api implements \ZPay\Standard\Api\ServiceApiInterface
      */
     public function init()
     {
+        $this->prepareBaseUrl($this->configHelper->getEnvironment());
+        
         if (!$this->token) {
             $this->prepareToken();
         }
@@ -134,8 +145,8 @@ class Api implements \ZPay\Standard\Api\ServiceApiInterface
     {
         $this->init();
 
-        /** @var OrderRequestBody $orderBody */
-        $orderBody = $this->objectManager->create(OrderRequestBody::class);
+        /** @var \ZPay\Standard\Model\Service\Request\Body\Order $orderBody */
+        $orderBody = $this->orderBodyFactory->create();
         $orderBody->setOrder($order);
 
         $errors = $orderBody->validate();
@@ -146,12 +157,12 @@ class Api implements \ZPay\Standard\Api\ServiceApiInterface
             );
         }
 
-        /** @var HttpClient $client */
+        /** @var \Zend\Http\Client $client */
         $client = $this->getHttpClient($this->getServiceUrl('order'))
             ->setRawBody((string) $orderBody)
-            ->setMethod(Request::METHOD_POST);
+            ->setMethod(\Zend\Http\Request::METHOD_POST);
 
-        /** @var Response $response */
+        /** @var \Zend\Http\Response $response */
         $response = $client->send();
 
         /** @var \stdClass $result */
@@ -180,11 +191,11 @@ class Api implements \ZPay\Standard\Api\ServiceApiInterface
         $this->init();
 
         try {
-            /** @var HttpClient $client */
+            /** @var \Zend\Http\Client $client */
             $client = $this->getHttpClient($this->getServiceUrl("order/renew/{$orderId}"))
-                ->setMethod(Request::METHOD_GET);
+                ->setMethod(\Zend\Http\Request::METHOD_GET);
 
-            /** @var Response $response */
+            /** @var \Zend\Http\Response $response */
             $response = $client->send();
 
             /** @var \stdClass $result */
@@ -212,11 +223,11 @@ class Api implements \ZPay\Standard\Api\ServiceApiInterface
     {
         $this->init();
 
-        /** @var HttpClient $client */
+        /** @var \Zend\Http\Client $client */
         $client = $this->getHttpClient($this->getServiceUrl("order/{$zpayOrderId}"));
-        $client->setMethod(Request::METHOD_GET);
+        $client->setMethod(\Zend\Http\Request::METHOD_GET);
 
-        /** @var Response $response */
+        /** @var \Zend\Http\Response $response */
         $response = $client->send();
 
         /** @var \stdClass $result */
@@ -229,12 +240,12 @@ class Api implements \ZPay\Standard\Api\ServiceApiInterface
      * @param string $uri
      * @param string $contentType
      *
-     * @return HttpClient
+     * @return \Zend\Http\Client
      */
-    protected function getHttpClient($uri, $contentType = self::TYPE_APPLICATION_JSON)
+    private function getHttpClient($uri, $contentType = self::TYPE_APPLICATION_JSON)
     {
-        /** @var HttpClient $client */
-        $client = new HttpClient($uri, [
+        $this->client->setUri($uri);
+        $this->client->setOptions([
             'timeout' => 10
         ]);
 
@@ -246,11 +257,11 @@ class Api implements \ZPay\Standard\Api\ServiceApiInterface
         if ($this->token) {
             $headers['X-Auth-Token'] = $this->token;
         }
+    
+        $this->client->setHeaders($headers);
+        $this->client->setEncType('application/json');
 
-        $client->setHeaders($headers);
-        $client->setEncType('application/json');
-
-        return $client;
+        return $this->client;
     }
 
     /**
@@ -258,7 +269,7 @@ class Api implements \ZPay\Standard\Api\ServiceApiInterface
      *
      * @throws ServiceApiResponseException
      */
-    protected function prepareToken()
+    private function prepareToken()
     {
         $parameters = [
             'username' => $this->username,
@@ -267,10 +278,10 @@ class Api implements \ZPay\Standard\Api\ServiceApiInterface
 
         $this->prepareBaseUrl($this->environment);
 
-        /** @var HttpClient $client */
+        /** @var \Zend\Http\Client $client */
         $client = $this->getHttpClient($this->getServiceUrl('auth'), self::TYPE_APPLICATION_FORM_URLENCODED);
         $client->setRawBody(http_build_query($parameters));
-        $client->setMethod(HttpRequest::METHOD_POST);
+        $client->setMethod(\Zend\Http\Request::METHOD_POST);
 
         /** @var \Zend\Http\Response $response */
         $response = $client->send();
@@ -295,7 +306,7 @@ class Api implements \ZPay\Standard\Api\ServiceApiInterface
      *
      * @return string
      */
-    protected function getServiceUrl($urlPath = null)
+    private function getServiceUrl($urlPath = null)
     {
         return $this->baseUrl . $urlPath;
     }
@@ -305,7 +316,7 @@ class Api implements \ZPay\Standard\Api\ServiceApiInterface
      *
      * @return $this
      */
-    protected function prepareBaseUrl($environment = Environment::PRODUCTION)
+    private function prepareBaseUrl($environment = Environment::PRODUCTION)
     {
         $this->setEnvironment($environment);
         $this->baseUrl = $this->configHelper->getServiceUrl($environment);

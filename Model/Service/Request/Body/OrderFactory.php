@@ -1,6 +1,6 @@
 <?php
 
-namespace ZPay\Standard\Model\ResourceModel\Transaction;
+namespace ZPay\Standard\Model\Service\Request\Body;
 
 class OrderFactory extends \ZPay\Standard\Model\AbstractFactory
 {
