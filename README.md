@@ -3,6 +3,14 @@
 <h2>ZPay Payment for Magento 2</h2>
 Now your Magento 2 store is able to let your customers pay their orders with Bitcoins, the most popular crypto currency in the world.
 
+Visit https://www.zpay.com.br/.
+
+<h3>Installing via Composer</h3>
+
+To install this extension via composer use the following command in terminal:
+
+``> composer require tiagosampaio/zpay-magento2``
+
 <h3>Authors</h3>
 
 <h5>Tiago Sampaio<h5>
