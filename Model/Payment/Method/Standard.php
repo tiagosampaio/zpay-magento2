@@ -5,20 +5,17 @@
 
 namespace ZPay\Standard\Model\Payment\Method;
 
-use Magento\Payment\Model\Method\AbstractMethod;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Framework\DataObject;
 use Magento\Sales\Model\Order;
-use ZPay\Standard\Helper\Data as HelperData;
-use ZPay\Standard\Model\Service\Api;
 
 /**
  * Class Standard
  *
  * @package ZPay\Standard\Model\Payment\Method
  */
-class Standard extends AbstractMethod
+class Standard extends \Magento\Payment\Model\Method\AbstractMethod
 {
 
     const PAYMENT_METHOD_CODE = 'zpay_standard';
@@ -48,17 +45,17 @@ class Standard extends AbstractMethod
     /** @var \Magento\Framework\Session\StorageInterface */
     protected $storage = null;
 
-    /** @var null|HelperData */
+    /** @var null|\ZPay\Standard\Helper\Data */
     protected $helper = null;
 
-    /** @var Api */
+    /** @var \ZPay\Standard\Model\Service\Api */
     protected $api;
 
     /**
      * Standard constructor.
      *
-     * @param HelperData                                           $helper
-     * @param Api                                                  $api
+     * @param \ZPay\Standard\Helper\Data                           $helper
+     * @param \ZPay\Standard\Model\Service\Api                     $api
      * @param \Magento\Framework\Model\Context                     $context
      * @param \Magento\Framework\Registry                          $registry
      * @param \Magento\Framework\Api\ExtensionAttributesFactory    $extensionFactory
@@ -72,8 +69,8 @@ class Standard extends AbstractMethod
      * @param array                                                $data
      */
     public function __construct(
-        HelperData $helper,
-        Api $api,
+        \ZPay\Standard\Helper\Data $helper,
+        \ZPay\Standard\Model\Service\Api $api,
         \Magento\Framework\Model\Context $context,
         \Magento\Framework\Registry $registry,
         \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory,

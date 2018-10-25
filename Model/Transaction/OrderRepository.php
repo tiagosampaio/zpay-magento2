@@ -45,28 +45,29 @@ class OrderRepository implements TransactionOrderRepositoryInterface
     }
 
     /**
-     * @param TransactionOrderInterface $order
+     * @param TransactionOrderInterface $transactionOrder
      *
      * @return TransactionOrderInterface
      *
      * @throws \Magento\Framework\Exception\AlreadyExistsException
      */
-    public function save(TransactionOrderInterface $order)
+    public function save(TransactionOrderInterface $transactionOrder)
     {
-        $this->getResource()->save($order);
-        return $order;
+        /** @var \ZPay\Standard\Model\Transaction\Order $transactionOrder */
+        $this->getResource()->save($transactionOrder);
+        return $transactionOrder;
     }
 
     /**
-     * @param int $id
+     * @param int $transactionId
      *
      * @return TransactionOrderInterface
      */
-    public function get($id)
+    public function get($transactionId)
     {
-        /** @var TransactionOrderInterface $transactionOrder */
-        $transactionOrder = $this->modelInstance()->setId($id);
-        $this->getResource()->load($transactionOrder, $id);
+        /** @var \ZPay\Standard\Model\Transaction\Order $transactionOrder */
+        $transactionOrder = $this->modelInstance()->setId($transactionId);
+        $this->getResource()->load($transactionOrder, $transactionId);
 
         return $transactionOrder;
     }
@@ -76,47 +77,48 @@ class OrderRepository implements TransactionOrderRepositoryInterface
      *
      * @return TransactionOrderInterface
      */
-    public function getById($id)
+    public function getById($transactionId)
     {
-        return $this->get($id);
+        return $this->get($transactionId);
     }
 
     /**
-     * @param $orderId
+     * @param int $orderId
      * @return TransactionOrderInterface
      */
     public function getByZPayOrderId($orderId)
     {
-        /** @var TransactionOrderInterface $transactionOrder */
-        $order = $this->modelInstance()->setZpayOrderId($orderId);
-        $this->getResource()->load($order, $orderId, 'zpay_order_id');
+        /** @var \ZPay\Standard\Model\Transaction\Order $transactionOrder */
+        $transactionOrder = $this->modelInstance()->setZpayOrderId($orderId);
+        $this->getResource()->load($transactionOrder, $orderId, 'zpay_order_id');
 
-        return $order;
+        return $transactionOrder;
     }
 
     /**
-     * @param $orderId
+     * @param int $orderId
      * @return TransactionOrderInterface
      */
     public function getByOrderId($orderId)
     {
-        /** @var TransactionOrderInterface $transactionOrder */
-        $order = $this->modelInstance()->setZpayOrderId($orderId);
-        $this->getResource()->load($order, $orderId, 'order_id');
+        /** @var \ZPay\Standard\Model\Transaction\Order $transactionOrder */
+        $transactionOrder = $this->modelInstance()->setZpayOrderId($orderId);
+        $this->getResource()->load($transactionOrder, $orderId, 'order_id');
 
-        return $order;
+        return $transactionOrder;
     }
 
     /**
-     * @param TransactionOrderInterface $order
+     * @param TransactionOrderInterface $transactionOrder
      *
      * @return $this
      *
      * @throws \Exception
      */
-    public function delete(TransactionOrderInterface $order)
+    public function delete(TransactionOrderInterface $transactionOrder)
     {
-        $this->getResource()->delete($order);
+        /** @var \ZPay\Standard\Model\Transaction\Order $transactionOrder */
+        $this->getResource()->delete($transactionOrder);
         return $this;
     }
 

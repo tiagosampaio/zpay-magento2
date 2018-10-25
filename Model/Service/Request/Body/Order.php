@@ -2,42 +2,42 @@
 
 namespace ZPay\Standard\Model\Service\Request\Body;
 
-use Magento\Customer\Model\Customer;
-use Magento\Framework\ObjectManagerInterface;
-use Magento\Sales\Model\Order as SalesOrder;
-use ZPay\Standard\Helper\Config;
-
 class Order
 {
 
-    /** @var SalesOrder */
-    protected $order;
+    /** @var \Magento\Sales\Model\Order */
+    private $order;
 
-    /** @var Config */
-    protected $configHelper;
+    /** @var \ZPay\Standard\Helper\Config */
+    private $configHelper;
 
-    /** @var ObjectManagerInterface */
-    protected $objectManager;
+    /** @var \Magento\Customer\Api\CustomerRepositoryInterface */
+    private $customerRepository;
+    
+    /** @var array */
+    private $errors = [];
 
-    public function __construct(Config $helperConfig, ObjectManagerInterface $objectManager)
-    {
+    public function __construct(
+        \ZPay\Standard\Helper\Config $helperConfig,
+        \Magento\Customer\Api\CustomerRepositoryInterface $customerRepository
+    ) {
         $this->configHelper = $helperConfig;
-        $this->objectManager = $objectManager;
+        $this->customerRepository = $customerRepository;
     }
 
     /**
-     * @param SalesOrder $order
+     * @param \Magento\Sales\Model\Order $order
      *
      * @return $this
      */
-    public function setOrder(SalesOrder $order)
+    public function setOrder(\Magento\Sales\Model\Order $order)
     {
         $this->order = $order;
         return $this;
     }
 
     /**
-     * @return SalesOrder
+     * @return \Magento\Sales\Model\Order
      */
     public function getOrder()
     {
@@ -49,46 +49,14 @@ class Order
      */
     public function validate()
     {
-        $errors = [];
-
-        if (!$this->getOrder()) {
-            $errors[] = __('There is no order available');
-        }
-
-        if (!$this->getOrder()->getShippingAddress()) {
-            $errors[] = __('Shipping address is not available');
-        }
-
-        if (!$this->getOrder()->getShippingAddress()->getCountryId()) {
-            $errors[] = __('Country ID is not set to shipping address');
-        }
-
-        if (!$this->extractCustomerTaxvat()) {
-            $errors[] = __('Customer taxvat is not set in order neither in the customer data');
-        }
-
-        if (!$this->getOrder()->getCustomerFirstname()) {
-            $errors[] = __("Customer's first name is not set");
-        }
-
-        if (!$this->getOrder()->getCustomerLastname()) {
-            $errors[] = __("Customer's lastname is not set");
-        }
-
-        if (!$this->getOrder()->getCustomerEmail()) {
-            $errors[] = __("Customer's e-mail is not set");
-        }
-
-        if (!$this->getOrder()->getRealOrderId()) {
-            $errors[] = __('The order does not have an Increment ID');
-        }
-
-        if (!$this->configHelper->getContractId()) {
-            $errors[] = __('The contract ID is missing for this order');
-        }
-
-        if (!empty($errors)) {
-            return $errors;
+        $this->errors = [];
+        
+        $this->validateOrder();
+        $this->validateShippingAddress();
+        $this->validateCustomer();
+        
+        if (!empty($this->errors)) {
+            return $this->errors;
         }
 
         return true;
@@ -136,18 +104,89 @@ class Order
     /**
      * @return mixed|null|string
      */
-    protected function extractCustomerTaxvat()
+    private function extractCustomerTaxvat()
     {
         $taxvat = $this->getOrder()->getCustomerTaxvat();
 
-        if (!$taxvat) {
-            /** @var Customer $customer */
-            $customer = $this->objectManager->create(Customer::class);
-            $customer->load($this->getOrder()->getCustomerId());
-
+        if (!$taxvat && ($customer = $this->getCustomer())) {
             $taxvat = $customer->getTaxvat();
         }
 
         return $taxvat;
+    }
+    
+    /**
+     * @return $this
+     */
+    private function validateOrder()
+    {
+        if (!$this->getOrder()) {
+            $this->errors[] = __('There is no order available');
+        }
+        
+        if (!$this->getOrder()->getRealOrderId()) {
+            $this->errors[] = __('The order does not have an Increment ID');
+        }
+        
+        if (!$this->configHelper->getContractId()) {
+            $this->errors[] = __('The contract ID is missing for this order');
+        }
+        
+        return $this;
+    }
+    
+    /**
+     * @return $this
+     */
+    private function validateShippingAddress()
+    {
+        if (!$this->getOrder()->getShippingAddress()) {
+            $this->errors[] = __('Shipping address is not available');
+        }
+        
+        if (!$this->getOrder()->getShippingAddress()->getCountryId()) {
+            $this->errors[] = __('Country ID is not set to shipping address');
+        }
+        
+        return $this;
+    }
+    
+    /**
+     * @return $this
+     */
+    private function validateCustomer()
+    {
+        if (!$this->extractCustomerTaxvat()) {
+            $this->errors[] = __('Customer taxvat is not set in order neither in the customer data');
+        }
+        
+        if (!$this->getOrder()->getCustomerFirstname()) {
+            $this->errors[] = __("Customer's first name is not set");
+        }
+        
+        if (!$this->getOrder()->getCustomerLastname()) {
+            $this->errors[] = __("Customer's lastname is not set");
+        }
+        
+        if (!$this->getOrder()->getCustomerEmail()) {
+            $this->errors[] = __("Customer's e-mail is not set");
+        }
+        
+        return $this;
+    }
+    
+    /**
+     * @return \Magento\Customer\Api\Data\CustomerInterface
+     */
+    private function getCustomer()
+    {
+        try {
+            $customer = $this->customerRepository->getById((int) $this->getOrder()->getCustomerId());
+            return $customer;
+        } catch (\Exception $e) {
+            /** @todo Log the error at this point. */
+        }
+        
+        return null;
     }
 }
