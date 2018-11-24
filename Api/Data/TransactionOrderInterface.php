@@ -54,7 +54,7 @@ interface TransactionOrderInterface
     /**
      * @param int $orderId
      *
-     * @return string
+     * @return $this
      */
     public function setZpayOrderId($orderId);
     
