@@ -2,19 +2,33 @@
 
 namespace ZPay\Standard\Test\Unit\Block\Form;
 
-use ZPay\Standard\Block\Form\Standard;
-use ZPay\Standard\Test\Unit\Block\BlockAbstract;
-
-class StandardTest extends BlockAbstract
+class StandardTest extends \ZPay\Standard\Test\Unit\Block\BlockAbstract
 {
-
     /**
-     * @test
+     * @var \ZPay\Standard\Block\Form\Standard
      */
-    public function checkIfBlockTemplateExistsAndIsValid()
+    private $block;
+    
+    protected function setUp()
     {
-        /** @var Standard $block */
-        $block = $this->getBlock(Standard::class);
-        $this->assertNotEmpty($block->getTemplate());
+        $context = $this->getMockBuilder(\Magento\Framework\View\Element\Template\Context::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        
+        $this->block = $this->getObject(\ZPay\Standard\Block\Form\Standard::class, [
+            'context' => $context
+        ]);
+    }
+    
+    protected function tearDown()
+    {
+        $this->block = null;
+    }
+    
+    public function testGetTemplate()
+    {
+        $template = 'ZPay_Standard::form/standard.phtml';
+        $this->block->setTemplate($template);
+        $this->assertEquals($template, $this->block->getTemplate());
     }
 }

@@ -2,19 +2,34 @@
 
 namespace ZPay\Standard\Test\Unit\Block\Info;
 
-use ZPay\Standard\Block\Info\Standard;
-use ZPay\Standard\Test\Unit\Block\BlockAbstract;
-
-class StandardTest extends BlockAbstract
+class StandardTest extends \ZPay\Standard\Test\Unit\Block\BlockAbstract
 {
-
     /**
-     * @test
+     * @var \ZPay\Standard\Block\Info\Standard
      */
-    public function checkIfBlockTemplateExistsAndIsValid()
+    private $block;
+    
+    protected function setUp()
     {
-        /** @var Standard $block */
-        $block = $this->getBlock(Standard::class);
-        $this->assertNotEmpty($block->getTemplate());
+        $this->mockObjects();
+        
+        $this->block = $this->getMockBuilder(\ZPay\Standard\Block\Info\Standard::class)
+            ->setConstructorArgs([$this->orderRepository, $this->context])
+            ->getMock();
+    
+        $this->block
+            ->method('getInfo')
+            ->willReturn($this->payment);
+    }
+    
+    public function testGetSalesOrderId()
+    {
+        $orderId = 123;
+        
+        $this->order
+            ->method('getId')
+            ->willReturn($orderId);
+        
+        $this->assertEquals($orderId, $this->block->getInfo()->getOrder()->getId());
     }
 }

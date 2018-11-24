@@ -2,9 +2,8 @@
 
 namespace ZPay\Standard\Test\Unit;
 
-use Magento\Framework\App\Area;
-use Magento\Framework\App\Bootstrap;
 use PHPUnit\Framework\TestCase;
+use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
 
 /**
  * Class UnitAbstract
@@ -13,64 +12,80 @@ use PHPUnit\Framework\TestCase;
  */
 abstract class UnitAbstract extends TestCase
 {
-
-    /** @var Bootstrap */
-    protected $bootstrap = null;
-
-
     /**
-     * @return $this
+     * @var \PHPUnit_Framework_MockObject_MockObject
      */
-    protected function init()
-    {
-        $this->bootstrap = Bootstrap::create(BP, $_SERVER);
-        return $this;
-    }
-
-
+    protected $order;
+    
     /**
-     * @return string
+     * @var \PHPUnit_Framework_MockObject_MockObject
      */
-    protected function getModuleName()
-    {
-        return 'ZPay_Standard';
-    }
-
-
+    protected $payment;
+    
     /**
-     * @return \Magento\Framework\ObjectManagerInterface
+     * @var \PHPUnit_Framework_MockObject_MockObject
      */
-    protected function getObjectManager()
-    {
-        $this->init();
-
-        $objectManager = $this->bootstrap->getObjectManager();
-        $state         = $objectManager->create(\Magento\Framework\App\State::class);
-        $state->setAreaCode(Area::AREA_FRONTEND);
-
-        return $objectManager;
-    }
-
-
+    protected $orderRepository;
+    
     /**
-     * @param string $class
+     * @var \PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $context;
+    
+    /**
+     * @param string $className
      * @param array  $arguments
      *
-     * @return mixed
+     * @return object
      */
-    protected function createObject($class, array $arguments = [])
+    protected function getObject($className, array $arguments = [])
     {
-        return $this->getObjectManager()->create($class, $arguments);
+        return (new ObjectManager($this))->getObject($className, $arguments);
     }
-
-
-    /**
-     * @param string $class
-     *
-     * @return mixed
-     */
-    protected function getObject($class)
+    
+    protected function mockObjects()
     {
-        return $this->getObjectManager()->get($class);
+        $this->mockSalesOrderPayment();
+    
+        $this->orderRepository = $this->getMockBuilder(\ZPay\Standard\Model\Transaction\OrderRepository::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+    
+        $this->context = $this->getMockBuilder(\Magento\Framework\View\Element\Template\Context::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+    }
+    
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject
+     */
+    protected function getMockedSalesOrder()
+    {
+        $this->mockSalesOrder();
+        return $this->order;
+    }
+    
+    private function mockSalesOrder()
+    {
+        $this->order = $this->getMockBuilder(\Magento\Sales\Model\Order::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+    }
+    
+    protected function getMockedSalesOrderPayment()
+    {
+        $this->mockSalesOrderPayment();
+        return $this->payment;
+    }
+    
+    private function mockSalesOrderPayment()
+    {
+        $this->payment = $this->getMockBuilder(\Magento\Sales\Model\Order\Payment::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+    
+        $this->payment
+            ->method('getOrder')
+            ->willReturn($this->getMockedSalesOrder());
     }
 }
