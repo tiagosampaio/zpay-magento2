@@ -12,7 +12,7 @@ interface TransactionOrderInterface
     
     const ID = 'id';
     const QUOTE_ID = 'quote_id';
-    const ORDER_ID = 'order_od';
+    const ORDER_ID = 'order_id';
     const ZPAY_ORDER_ID = 'zpay_order_id';
     const ZPAY_QUOTE_ID = 'zpay_quote_id';
     const ZPAY_ADDRESS = 'zpay_address';
