@@ -1,4 +1,7 @@
 <?php
+/**
+ * @author Tiago Sampaio <tiago@tiagosampaio.com>
+ */
 
 namespace ZPay\Standard\Observer;
 
@@ -6,16 +9,26 @@ use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Event\Observer;
 use Magento\Sales\Model\Order;
 
+/**
+ * Class RegisterNewOrder
+ *
+ * @package ZPay\Standard\Observer
+ */
 class RegisterNewOrder implements ObserverInterface
 {
-
-    /** @var \Magento\Framework\Registry */
+    /**
+     * @var \Magento\Framework\Registry
+     */
     private $_registry;
 
-    /** @var \ZPay\Standard\Api\TransactionOrderRepositoryInterface */
+    /**
+     * @var \ZPay\Standard\Api\TransactionOrderRepositoryInterface
+     */
     private $orderTransactionRepository;
 
-    /** @var \Magento\Sales\Api\TransactionRepositoryInterface */
+    /**
+     * @var \Magento\Sales\Api\TransactionRepositoryInterface
+     */
     private $transactionRepository;
 
     /**
@@ -110,8 +123,7 @@ class RegisterNewOrder implements ObserverInterface
         $paymentTransaction = $this->transactionRepository->create();
         $paymentTransaction->setOrder($salesOrder)
             ->setTxnId($orderTransaction->getZpayOrderId())
-            ->setTxnType(\Magento\Sales\Model\Order\Payment\Transaction::TYPE_ORDER)
-        ;
+            ->setTxnType(\Magento\Sales\Model\Order\Payment\Transaction::TYPE_ORDER);
 
         $paymentTransaction->setData('additional_information', $orderTransaction->toArray([
             'quote_id',

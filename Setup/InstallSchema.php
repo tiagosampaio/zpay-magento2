@@ -18,7 +18,6 @@ use ZPay\Standard\Model\ResourceModel\Transaction\Order;
  */
 class InstallSchema implements InstallSchemaInterface
 {
-
     /**
      * @param SchemaSetupInterface   $setup
      * @param ModuleContextInterface $context
@@ -39,17 +38,17 @@ class InstallSchema implements InstallSchemaInterface
             ->addColumn('id', Table::TYPE_SMALLINT, null, [
                 'identity' => true,
                 'nullable' => false,
-                'primary'  => true
+                'primary' => true
             ], 'Transaction ID.')
             ->addColumn('quote_id', Table::TYPE_INTEGER, null, [
                 'unsigned' => true,
                 'nullable' => false,
-                'primary'  => true
+                'primary' => true
             ])
             ->addColumn('order_id', Table::TYPE_INTEGER, null, [
                 'unsigned' => true,
                 'nullable' => false,
-                'primary'  => true
+                'primary' => true
             ])
             ->addColumn('zpay_order_id', Table::TYPE_TEXT, 50, [
                 'nullable' => false,
