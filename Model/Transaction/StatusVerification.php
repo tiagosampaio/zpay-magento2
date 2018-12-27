@@ -1,13 +1,23 @@
 <?php
+/**
+ * @author Tiago Sampaio <tiago@tiagosampaio.com>
+ */
 
 namespace ZPay\Standard\Model\Transaction;
 
 use ZPay\Standard\Api\Data\TransactionOrderInterface;
+use ZPay\Standard\Api\TransactionStatusVerification;
 
-class StatusVerification implements \ZPay\Standard\Api\TransactionStatusVerification
+/**
+ * Class StatusVerification
+ *
+ * @package ZPay\Standard\Model\Transaction
+ */
+class StatusVerification implements TransactionStatusVerification
 {
     /**
      * @param TransactionOrderInterface|string $paymentStatus
+     *
      * @return boolean
      */
     public function isPaid($paymentStatus)
@@ -17,6 +27,7 @@ class StatusVerification implements \ZPay\Standard\Api\TransactionStatusVerifica
 
     /**
      * @param TransactionOrderInterface|string $paymentStatus
+     *
      * @return boolean
      */
     public function isUnpaid($paymentStatus)
@@ -26,6 +37,7 @@ class StatusVerification implements \ZPay\Standard\Api\TransactionStatusVerifica
 
     /**
      * @param TransactionOrderInterface|string $paymentStatus
+     *
      * @return boolean
      */
     public function isOverpaid($paymentStatus)
@@ -35,6 +47,7 @@ class StatusVerification implements \ZPay\Standard\Api\TransactionStatusVerifica
 
     /**
      * @param TransactionOrderInterface|string $paymentStatus
+     *
      * @return boolean
      */
     public function isUnderpaid($paymentStatus)
@@ -44,6 +57,7 @@ class StatusVerification implements \ZPay\Standard\Api\TransactionStatusVerifica
 
     /**
      * @param TransactionOrderInterface|string $orderStatus
+     *
      * @return boolean
      */
     public function isCompleted($orderStatus)
@@ -53,6 +67,7 @@ class StatusVerification implements \ZPay\Standard\Api\TransactionStatusVerifica
 
     /**
      * @param TransactionOrderInterface|string $orderStatus
+     *
      * @return boolean
      */
     public function isCreated($orderStatus)
@@ -63,6 +78,7 @@ class StatusVerification implements \ZPay\Standard\Api\TransactionStatusVerifica
     /**
      * @param TransactionOrderInterface $transactionOrder
      * @param                           $orderStatus
+     *
      * @return boolean
      */
     public function isFailed($orderStatus)
@@ -72,6 +88,7 @@ class StatusVerification implements \ZPay\Standard\Api\TransactionStatusVerifica
 
     /**
      * @param TransactionOrderInterface|string $orderStatus
+     *
      * @return boolean
      */
     public function isProcessing($orderStatus)
@@ -81,6 +98,7 @@ class StatusVerification implements \ZPay\Standard\Api\TransactionStatusVerifica
 
     /**
      * @param TransactionOrderInterface|string $orderStatus
+     *
      * @return boolean
      */
     public function isCanceled($orderStatus)
@@ -91,7 +109,7 @@ class StatusVerification implements \ZPay\Standard\Api\TransactionStatusVerifica
 
         return false;
     }
-    
+
     /**
      * @param string $status
      *
@@ -105,14 +123,14 @@ class StatusVerification implements \ZPay\Standard\Api\TransactionStatusVerifica
             self::PAYMENT_STATUS_UNDERPAID,
             self::PAYMENT_STATUS_UNPAID,
         ];
-        
+
         if (!in_array($status, $valid)) {
             return false;
         }
-        
+
         return true;
     }
-    
+
     /**
      * @param string $status
      *
@@ -127,14 +145,14 @@ class StatusVerification implements \ZPay\Standard\Api\TransactionStatusVerifica
             self::ORDER_STATUS_FAILED,
             self::ORDER_STATUS_PROCESSING,
         ];
-        
+
         if (!in_array($status, $valid)) {
             return false;
         }
-        
+
         return true;
     }
-    
+
     /**
      * @param string $status
      * @param string $comparedStatus
@@ -145,7 +163,7 @@ class StatusVerification implements \ZPay\Standard\Api\TransactionStatusVerifica
     {
         return $status === $comparedStatus;
     }
-    
+
     /**
      * @param TransactionOrderInterface|string $object
      *
@@ -156,10 +174,10 @@ class StatusVerification implements \ZPay\Standard\Api\TransactionStatusVerifica
         if ($object instanceof TransactionOrderInterface) {
             return $object->getZpayPayoutStatus();
         }
-        
+
         return (string) $object;
     }
-    
+
     /**
      * @param TransactionOrderInterface|string $object
      *
@@ -170,7 +188,7 @@ class StatusVerification implements \ZPay\Standard\Api\TransactionStatusVerifica
         if ($object instanceof TransactionOrderInterface) {
             return $object->getZpayOrderStatus();
         }
-        
+
         return (string) $object;
     }
 }

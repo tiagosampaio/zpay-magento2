@@ -18,12 +18,12 @@ abstract class AbstractException extends \Exception
      * @var \Magento\Framework\Phrase
      */
     protected $phrase;
-    
+
     /**
      * @var string
      */
     protected $logMessage;
-    
+
     /**
      * @param \Magento\Framework\Phrase $phrase
      * @param \Exception                $cause

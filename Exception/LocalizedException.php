@@ -20,7 +20,7 @@ class LocalizedException extends \Magento\Framework\Exception\LocalizedException
      * @var int
      */
     private $httpCode;
-    
+
     /**
      * LocalizedException constructor.
      *
@@ -34,7 +34,7 @@ class LocalizedException extends \Magento\Framework\Exception\LocalizedException
         $this->setHttpCode($httpCode);
         parent::__construct($phrase, $cause, $code);
     }
-    
+
     /**
      * @param int $httpCode
      */
@@ -43,10 +43,10 @@ class LocalizedException extends \Magento\Framework\Exception\LocalizedException
         if (!$httpCode) {
             return;
         }
-        
+
         $this->httpCode = (int) $httpCode;
     }
-    
+
     /**
      * @return int
      */

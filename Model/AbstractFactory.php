@@ -1,10 +1,17 @@
 <?php
+/**
+ * @author Tiago Sampaio <tiago@tiagosampaio.com>
+ */
 
 namespace ZPay\Standard\Model;
 
+/**
+ * Class AbstractFactory
+ *
+ * @package ZPay\Standard\Model
+ */
 abstract class AbstractFactory
 {
-
     /**
      * Object Manager instance
      *
@@ -23,10 +30,12 @@ abstract class AbstractFactory
      * Factory constructor
      *
      * @param \Magento\Framework\ObjectManagerInterface $objectManager
-     * @param string                 $instanceName
+     * @param string                                    $instanceName
      */
-    public function __construct(\Magento\Framework\ObjectManagerInterface $objectManager, $instanceName = null)
-    {
+    public function __construct(
+        \Magento\Framework\ObjectManagerInterface $objectManager,
+        $instanceName = null
+    ) {
         $this->objectManager = $objectManager;
         $this->instanceName = $instanceName;
     }

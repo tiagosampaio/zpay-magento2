@@ -21,13 +21,13 @@ class Config extends AbstractHelper
     public function getServiceConfiguration()
     {
         return [
-            'username' => $this->getUsername(),
-            'password' => $this->getPassword(),
+            'username'    => $this->getUsername(),
+            'password'    => $this->getPassword(),
             'contract_id' => $this->getContractId(),
             'environment' => $this->getEnvironment(),
         ];
     }
-    
+
     /**
      * @return string
      */
@@ -35,7 +35,7 @@ class Config extends AbstractHelper
     {
         return (string) $this->scopeConfig->getValue('payment/zpay_standard/username');
     }
-    
+
     /**
      * @return string
      */
@@ -43,7 +43,7 @@ class Config extends AbstractHelper
     {
         return (string) $this->scopeConfig->getValue('payment/zpay_standard/password');
     }
-    
+
     /**
      * @return string
      */
@@ -51,7 +51,7 @@ class Config extends AbstractHelper
     {
         return (string) $this->scopeConfig->getValue('payment/zpay_standard/environment');
     }
-    
+
     /**
      * @return string
      */
@@ -59,7 +59,7 @@ class Config extends AbstractHelper
     {
         return (string) $this->scopeConfig->getValue('payment/zpay_standard/contract_id');
     }
-    
+
     /**
      * @return string
      */
@@ -67,7 +67,7 @@ class Config extends AbstractHelper
     {
         return (string) $this->_getUrl('zpay/standard/callback', ['ajax' => true]);
     }
-    
+
     /**
      * @param null|string $environment
      *
@@ -78,7 +78,7 @@ class Config extends AbstractHelper
         if (empty($environment)) {
             $environment = Environment::PRODUCTION;
         }
-        
+
         return (string) $this->scopeConfig->getValue("payment/zpay_standard/service_url_{$environment}");
     }
 }

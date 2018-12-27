@@ -1,22 +1,37 @@
 <?php
+/**
+ * @author Tiago Sampaio <tiago@tiagosampaio.com>
+ */
 
 namespace ZPay\Standard\Model\Logger;
 
+/**
+ * Class Handler
+ *
+ * @package ZPay\Standard\Model\Logger
+ */
 class Handler extends \Magento\Framework\Logger\Handler\Base
 {
-    
-    /** @var string */
+    /**
+     * @var string
+     */
     const CONFIG_LOGGER_XPATH = 'payment/zpay_standard/logs_enabled';
-    
-    /** @var int */
+
+    /**
+     * @var int
+     */
     protected $loggerType = Logger::INFO;
-    
-    /** @var string */
+
+    /**
+     * @var string
+     */
     protected $fileName = 'var/log/zpay_standard_request.log';
-    
-    /** @var \Magento\Framework\App\Config\ScopeConfigInterface */
+
+    /**
+     * @var \Magento\Framework\App\Config\ScopeConfigInterface
+     */
     private $scopeConfig;
-    
+
     public function __construct(
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \Magento\Framework\Filesystem\DriverInterface $filesystem,
@@ -26,7 +41,7 @@ class Handler extends \Magento\Framework\Logger\Handler\Base
         $this->scopeConfig = $scopeConfig;
         parent::__construct($filesystem, $filePath, $fileName);
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -35,10 +50,10 @@ class Handler extends \Magento\Framework\Logger\Handler\Base
         if (!$this->isLogEnabled()) {
             return false;
         }
-        
+
         return parent::isHandling($record);
     }
-    
+
     /**
      * @return bool
      */

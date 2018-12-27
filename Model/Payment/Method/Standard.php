@@ -17,56 +17,72 @@ use Magento\Sales\Model\Order;
  */
 class Standard extends \Magento\Payment\Model\Method\AbstractMethod
 {
-
+    /**
+     * @var string
+     */
     const PAYMENT_METHOD_CODE = 'zpay_standard';
 
     /**
-     * Payment method code
-     *
      * @var string
      */
     protected $_code = self::PAYMENT_METHOD_CODE;
 
-    /** @var bool */
+    /**
+     * @var bool
+     */
     protected $_canOrder = true;
 
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $_formBlockType = \ZPay\Standard\Block\Form\Standard::class;
 
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $_infoBlockType = \ZPay\Standard\Block\Info\Standard::class;
 
-    /** @var \Magento\Framework\UrlInterface */
+    /**
+     * @var \Magento\Framework\UrlInterface
+     */
     private $urlBuilder = null;
 
-    /** @var \Magento\Framework\App\RequestInterface */
+    /**
+     * @var \Magento\Framework\App\RequestInterface
+     */
     private $request = null;
 
-    /** @var \Magento\Framework\Session\StorageInterface */
+    /**
+     * @var \Magento\Framework\Session\StorageInterface
+     */
     private $storage = null;
 
-    /** @var null|\ZPay\Standard\Helper\Data */
+    /**
+     * @var null|\ZPay\Standard\Helper\Data
+     */
     private $helper = null;
 
-    /** @var \ZPay\Standard\Model\Service\Api */
+    /**
+     * @var \ZPay\Standard\Model\Service\Api
+     */
     private $api;
 
     /**
      * Standard constructor.
      *
-     * @param \ZPay\Standard\Helper\Data                           $helper
-     * @param \ZPay\Standard\Model\Service\Api                     $api
-     * @param \Magento\Framework\Model\Context                     $context
-     * @param \Magento\Framework\Registry                          $registry
-     * @param \Magento\Framework\Api\ExtensionAttributesFactory    $extensionFactory
-     * @param \Magento\Framework\Api\AttributeValueFactory         $customAttributeFactory
-     * @param \Magento\Payment\Helper\Data                         $paymentData
-     * @param \Magento\Framework\App\Config\ScopeConfigInterface   $scopeConfig
-     * @param \Magento\Payment\Model\Method\Logger                 $logger
-     * @param \Magento\Framework\UrlInterface                      $urlBuilder
-     * @param \Magento\Framework\App\RequestInterface              $request
-     * @param \Magento\Framework\Session\StorageInterface          $storage
-     * @param array                                                $data
+     * @param \ZPay\Standard\Helper\Data                         $helper
+     * @param \ZPay\Standard\Model\Service\Api                   $api
+     * @param \Magento\Framework\Model\Context                   $context
+     * @param \Magento\Framework\Registry                        $registry
+     * @param \Magento\Framework\Api\ExtensionAttributesFactory  $extensionFactory
+     * @param \Magento\Framework\Api\AttributeValueFactory       $customAttributeFactory
+     * @param \Magento\Payment\Helper\Data                       $paymentData
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     * @param \Magento\Payment\Model\Method\Logger               $logger
+     * @param \Magento\Framework\UrlInterface                    $urlBuilder
+     * @param \Magento\Framework\App\RequestInterface            $request
+     * @param \Magento\Framework\Session\StorageInterface        $storage
+     * @param array                                              $data
      */
     public function __construct(
         \ZPay\Standard\Helper\Data $helper,
@@ -118,15 +134,7 @@ class Standard extends \Magento\Payment\Model\Method\AbstractMethod
     }
 
     /**
-     * Authorize payment abstract method
-     *
-     * @param \Magento\Framework\DataObject|InfoInterface $payment
-     * @param float                                       $amount
-     *
-     * @return $this
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @api
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * {@inheritdoc}
      */
     public function authorize(InfoInterface $payment, $amount)
     {
@@ -138,15 +146,7 @@ class Standard extends \Magento\Payment\Model\Method\AbstractMethod
     }
 
     /**
-     * Capture payment abstract method
-     *
-     * @param \Magento\Framework\DataObject|InfoInterface $payment
-     * @param float                                       $amount
-     *
-     * @return $this
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @api
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * {@inheritdoc}
      */
     public function capture(InfoInterface $payment, $amount)
     {
@@ -158,15 +158,7 @@ class Standard extends \Magento\Payment\Model\Method\AbstractMethod
     }
 
     /**
-     * Refund specified amount for payment
-     *
-     * @param \Magento\Framework\DataObject|InfoInterface $payment
-     * @param float                                       $amount
-     *
-     * @return $this
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @api
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * {@inheritdoc}
      */
     public function refund(InfoInterface $payment, $amount)
     {
@@ -178,14 +170,7 @@ class Standard extends \Magento\Payment\Model\Method\AbstractMethod
     }
 
     /**
-     * @param InfoInterface $payment
-     * @param float         $amount
-     *
-     * @return $this
-     *
-     * @throws \Exception
-     *
-     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+     * {@inheritdoc}
      */
     public function order(InfoInterface $payment, $amount)
     {
@@ -205,6 +190,7 @@ class Standard extends \Magento\Payment\Model\Method\AbstractMethod
          * @see \ZPay\Standard\Observer\RegisterNewOrder::execute()
          */
         $order->setData('zpay_api_result', $result);
+
         // $this->_registry->register('zpay_api_current_result', $result, true);
 
         return $this;

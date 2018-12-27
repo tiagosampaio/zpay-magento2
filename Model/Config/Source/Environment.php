@@ -14,9 +14,14 @@ use Magento\Framework\Option\ArrayInterface;
  */
 class Environment implements ArrayInterface
 {
-
+    /**
+     * @var string
+     */
     const PRODUCTION = 'production';
-    const SANDBOX    = 'sandbox';
+    /**
+     * @var string
+     */
+    const SANDBOX = 'sandbox';
 
     /**
      * Options getter

@@ -16,12 +16,11 @@ use ZPay\Standard\Model\ResourceModel\Transaction\Order as ResourceOrder;
  */
 class Order extends AbstractModel implements TransactionOrderInterface
 {
-
     protected function _construct()
     {
         $this->_init(ResourceOrder::class);
     }
-    
+
     /**
      * @return int
      */
@@ -29,7 +28,7 @@ class Order extends AbstractModel implements TransactionOrderInterface
     {
         return $this->getData(self::QUOTE_ID);
     }
-    
+
     /**
      * @param int $quoteId
      *
@@ -39,7 +38,7 @@ class Order extends AbstractModel implements TransactionOrderInterface
     {
         return $this->setData(self::QUOTE_ID, $quoteId);
     }
-    
+
     /**
      * @return int
      */
@@ -47,7 +46,7 @@ class Order extends AbstractModel implements TransactionOrderInterface
     {
         return $this->getData(self::ORDER_ID);
     }
-    
+
     /**
      * @param int $orderId
      *
@@ -57,7 +56,7 @@ class Order extends AbstractModel implements TransactionOrderInterface
     {
         return $this->setData(self::ORDER_ID, $orderId);
     }
-    
+
     /**
      * @return string
      */
@@ -65,7 +64,7 @@ class Order extends AbstractModel implements TransactionOrderInterface
     {
         return $this->getData(self::ZPAY_ORDER_ID);
     }
-    
+
     /**
      * @param int $orderId
      *
@@ -75,7 +74,7 @@ class Order extends AbstractModel implements TransactionOrderInterface
     {
         return $this->setData(self::ZPAY_ORDER_ID, $orderId);
     }
-    
+
     /**
      * @return string
      */
@@ -83,7 +82,7 @@ class Order extends AbstractModel implements TransactionOrderInterface
     {
         return $this->getData(self::ZPAY_QUOTE_ID);
     }
-    
+
     /**
      * @param string $quoteId
      *
@@ -93,7 +92,7 @@ class Order extends AbstractModel implements TransactionOrderInterface
     {
         return $this->setData(self::ZPAY_QUOTE_ID, $quoteId);
     }
-    
+
     /**
      * @return string
      */
@@ -101,7 +100,7 @@ class Order extends AbstractModel implements TransactionOrderInterface
     {
         return $this->getData(self::ZPAY_ADDRESS);
     }
-    
+
     /**
      * @param string $address
      *
@@ -111,7 +110,7 @@ class Order extends AbstractModel implements TransactionOrderInterface
     {
         return $this->setData(self::ZPAY_ADDRESS, $address);
     }
-    
+
     /**
      * @return string
      */
@@ -119,7 +118,7 @@ class Order extends AbstractModel implements TransactionOrderInterface
     {
         return $this->getData(self::ZPAY_ORDER_STATUS);
     }
-    
+
     /**
      * @param string $status
      *
@@ -129,7 +128,7 @@ class Order extends AbstractModel implements TransactionOrderInterface
     {
         return $this->setData(self::ZPAY_ORDER_STATUS, $status);
     }
-    
+
     /**
      * @return string
      */
@@ -137,7 +136,7 @@ class Order extends AbstractModel implements TransactionOrderInterface
     {
         return $this->getData(self::ZPAY_PAYOUT_STATUS);
     }
-    
+
     /**
      * @param string $status
      *
@@ -147,7 +146,7 @@ class Order extends AbstractModel implements TransactionOrderInterface
     {
         return $this->setData(self::ZPAY_PAYOUT_STATUS, $status);
     }
-    
+
     /**
      * @return float
      */
@@ -155,7 +154,7 @@ class Order extends AbstractModel implements TransactionOrderInterface
     {
         return $this->getData(self::ZPAY_AMOUNT_TO);
     }
-    
+
     /**
      * @param float $amount
      *
@@ -165,7 +164,7 @@ class Order extends AbstractModel implements TransactionOrderInterface
     {
         return $this->setData(self::ZPAY_AMOUNT_TO, $amount);
     }
-    
+
     /**
      * @return integer
      */
@@ -173,7 +172,7 @@ class Order extends AbstractModel implements TransactionOrderInterface
     {
         return $this->getData(self::ZPAY_TIME);
     }
-    
+
     /**
      * @param int $time
      *
@@ -183,7 +182,7 @@ class Order extends AbstractModel implements TransactionOrderInterface
     {
         return $this->setData(self::ZPAY_TIME, $time);
     }
-    
+
     /**
      * @return string
      */
@@ -191,7 +190,7 @@ class Order extends AbstractModel implements TransactionOrderInterface
     {
         return $this->getData(self::ZPAY_TIMESTAMP);
     }
-    
+
     /**
      * @param string $timestamp
      *

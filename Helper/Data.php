@@ -21,7 +21,7 @@ class Data extends AbstractHelper
     {
         return $this->_getUrl('zpay/payment/gateway');
     }
-    
+
     /**
      * @return string
      */
@@ -29,7 +29,7 @@ class Data extends AbstractHelper
     {
         return $this->_getUrl('zpay/payment/pay');
     }
-    
+
     /**
      * @return string
      */
@@ -37,7 +37,7 @@ class Data extends AbstractHelper
     {
         return $this->_getUrl('zpay/payment/update');
     }
-    
+
     /**
      * @return string
      */
@@ -45,7 +45,7 @@ class Data extends AbstractHelper
     {
         return $this->_getUrl('zpay/payment/verify');
     }
-    
+
     /**
      * @return string
      */
@@ -53,7 +53,7 @@ class Data extends AbstractHelper
     {
         return $this->_getUrl('zpay/payment/verified');
     }
-    
+
     /**
      * @return string
      */

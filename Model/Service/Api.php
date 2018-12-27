@@ -1,4 +1,7 @@
 <?php
+/**
+ * @author Tiago Sampaio <tiago@tiagosampaio.com>
+ */
 
 namespace ZPay\Standard\Model\Service;
 
@@ -13,46 +16,82 @@ use ZPay\Standard\Exception\InvalidObjectException;
  */
 class Api implements \ZPay\Standard\Api\ServiceApiInterface
 {
+    /**
+     * @var string
+     */
+    const TYPE_APPLICATION_JSON = 'application/json';
 
-    /** @var string */
-    const TYPE_APPLICATION_JSON            = 'application/json';
-    
-    /** @var string */
+    /**
+     * @var string
+     */
     const TYPE_APPLICATION_FORM_URLENCODED = 'application/x-www-form-urlencoded';
 
-    /** @var string */
+    /**
+     * @var string
+     */
     private $baseUrl;
-    
-    /** @var string */
+
+    /**
+     * @var string
+     */
     private $token;
-    
-    /** @var string */
+
+    /**
+     * @var string
+     */
     private $username;
-    
-    /** @var string */
+
+    /**
+     * @var string
+     */
     private $password;
-    
-    /** @var string */
+
+    /**
+     * @var string
+     */
     private $contractId;
-    
-    /** @var string */
+
+    /**
+     * @var string
+     */
     private $environment;
-    
-    /** @var \ZPay\Standard\Helper\Config */
+
+    /**
+     * @var \ZPay\Standard\Helper\Config
+     */
     private $configHelper;
-    
-    /** @var \ZPay\Standard\Model\Service\Request\Body\OrderFactory */
+
+    /**
+     * @var \ZPay\Standard\Model\Service\Request\Body\OrderFactory
+     */
     private $orderBodyFactory;
-    
-    /** @var \Zend\Http\Client */
+
+    /**
+     * @var \Zend\Http\Client
+     */
     private $client;
-    
+
+    /**
+     * @var \Magento\Framework\Serialize\SerializerInterface
+     */
+    private $serializer;
+
+    /**
+     * Api constructor.
+     *
+     * @param \Zend\Http\Client                                $client
+     * @param \Magento\Framework\Serialize\SerializerInterface $serializer
+     * @param Request\Body\OrderFactory                        $orderBodyFactory
+     * @param \ZPay\Standard\Helper\Config                     $helperConfig
+     */
     public function __construct(
         \Zend\Http\Client $client,
+        \Magento\Framework\Serialize\SerializerInterface $serializer,
         \ZPay\Standard\Model\Service\Request\Body\OrderFactory $orderBodyFactory,
         \ZPay\Standard\Helper\Config $helperConfig
     ) {
         $this->client = $client;
+        $this->serializer = $serializer;
         $this->configHelper = $helperConfig;
         $this->orderBodyFactory = $orderBodyFactory;
         $this->contractId = $helperConfig->getContractId();
@@ -67,7 +106,7 @@ class Api implements \ZPay\Standard\Api\ServiceApiInterface
     public function init()
     {
         $this->prepareBaseUrl($this->configHelper->getEnvironment());
-        
+
         if (!$this->token) {
             $this->prepareToken();
         }
@@ -83,6 +122,7 @@ class Api implements \ZPay\Standard\Api\ServiceApiInterface
     public function setContractId($contractId)
     {
         $this->contractId = (string) $contractId;
+
         return $this;
     }
 
@@ -94,6 +134,7 @@ class Api implements \ZPay\Standard\Api\ServiceApiInterface
     public function setUsername($username)
     {
         $this->username = $username;
+
         return $this;
     }
 
@@ -105,6 +146,7 @@ class Api implements \ZPay\Standard\Api\ServiceApiInterface
     public function setPassword($password)
     {
         $this->password = $password;
+
         return $this;
     }
 
@@ -116,6 +158,7 @@ class Api implements \ZPay\Standard\Api\ServiceApiInterface
     public function setEnvironment($environment = Environment::PRODUCTION)
     {
         $this->environment = $environment;
+
         return $this;
     }
 
@@ -126,6 +169,7 @@ class Api implements \ZPay\Standard\Api\ServiceApiInterface
     public function getToken()
     {
         $this->init();
+
         return $this->token;
     }
 
@@ -163,7 +207,7 @@ class Api implements \ZPay\Standard\Api\ServiceApiInterface
         $response = $client->send();
 
         /** @var \stdClass $result */
-        $result = json_decode($response->getBody());
+        $result = $this->serializer->unserialize($response->getBody());
 
         if (!in_array($response->getStatusCode(), [200, 201])) {
             throw new ServiceApiResponseException(__('Api service responded an error: %s', $result['message']));
@@ -196,7 +240,7 @@ class Api implements \ZPay\Standard\Api\ServiceApiInterface
             $response = $client->send();
 
             /** @var \stdClass $result */
-            $result = json_decode($response->getBody());
+            $result = $this->serializer->unserialize($response->getBody());
 
             if (!in_array($response->getStatusCode(), [200, 201])) {
                 throw new ServiceApiResponseException(__('Api service responded an error: %s', $result['message']));
@@ -228,7 +272,7 @@ class Api implements \ZPay\Standard\Api\ServiceApiInterface
         $response = $client->send();
 
         /** @var \stdClass $result */
-        $result = json_decode($response->getBody());
+        $result = $this->serializer->unserialize($response->getBody());
 
         return $result;
     }
@@ -254,7 +298,7 @@ class Api implements \ZPay\Standard\Api\ServiceApiInterface
         if ($this->token) {
             $headers['X-Auth-Token'] = $this->token;
         }
-    
+
         $this->client->setHeaders($headers);
         $this->client->setEncType('application/json');
 
@@ -282,7 +326,7 @@ class Api implements \ZPay\Standard\Api\ServiceApiInterface
 
         /** @var \Zend\Http\Response $response */
         $response = $client->send();
-        $result = json_decode($response->getBody(), true);
+        $result = $this->serializer->unserialize($response->getBody());
 
         if ($response->getStatusCode() != 200) {
             /** @todo Throw an exception here. */

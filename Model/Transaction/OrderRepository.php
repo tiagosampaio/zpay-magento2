@@ -1,4 +1,7 @@
 <?php
+/**
+ * @author Tiago Sampaio <tiago@tiagosampaio.com>
+ */
 
 namespace ZPay\Standard\Model\Transaction;
 
@@ -12,38 +15,53 @@ use ZPay\Standard\Model\Transaction\OrderFactory as TransactionOrderModelFactory
 use ZPay\Standard\Model\ResourceModel\Transaction\OrderFactory as TransactionOrderResourceModelFactory;
 use ZPay\Standard\Model\ResourceModel\Transaction\Order\CollectionFactory as TransactionOrderCollectionFactory;
 
+/**
+ * Class OrderRepository
+ *
+ * @package ZPay\Standard\Model\Transaction
+ */
 class OrderRepository implements TransactionOrderRepositoryInterface
 {
     /**
      * @var CollectionProcessorInterface
      */
     private $collectionProcessor;
-    
+
     /**
      * @var SearchResultsFactory
      */
     private $searchResultsFactory;
-    
+
     /**
      * @var TransactionOrderResourceModelFactory
      */
     private $transactionOrderResourceFactory;
-    
+
     /**
      * @var TransactionOrderModelFactory
      */
     private $transactionOrderModelFactory;
-    
+
     /**
      * @var TransactionOrderCollectionFactory
      */
     private $transactionOrderCollectionFactory;
-    
+
     /**
      * @var StatusVerification
      */
     private $statusVerification;
 
+    /**
+     * OrderRepository constructor.
+     *
+     * @param CollectionProcessorInterface         $collectionProcessor
+     * @param StatusVerification                   $statusVerification
+     * @param TransactionOrderResourceModelFactory $transactionOrderResourceFactory
+     * @param OrderFactory                         $transactionOrderModelFactory
+     * @param TransactionOrderCollectionFactory    $transactionOrderCollectionFactory
+     * @param SearchResultsFactory                 $searchResultsFactory
+     */
     public function __construct(
         CollectionProcessorInterface $collectionProcessor,
         StatusVerification $statusVerification,
@@ -71,6 +89,7 @@ class OrderRepository implements TransactionOrderRepositoryInterface
     {
         /** @var \ZPay\Standard\Model\Transaction\Order $transactionOrder */
         $this->getResource()->save($transactionOrder);
+
         return $transactionOrder;
     }
 
@@ -100,6 +119,7 @@ class OrderRepository implements TransactionOrderRepositoryInterface
 
     /**
      * @param int $orderId
+     *
      * @return TransactionOrderInterface
      */
     public function getByZPayOrderId($orderId)
@@ -113,6 +133,7 @@ class OrderRepository implements TransactionOrderRepositoryInterface
 
     /**
      * @param int $orderId
+     *
      * @return TransactionOrderInterface
      */
     public function getByOrderId($orderId)
@@ -135,6 +156,7 @@ class OrderRepository implements TransactionOrderRepositoryInterface
     {
         /** @var \ZPay\Standard\Model\Transaction\Order $transactionOrder */
         $this->getResource()->delete($transactionOrder);
+
         return $this;
     }
 
@@ -149,6 +171,7 @@ class OrderRepository implements TransactionOrderRepositoryInterface
     {
         /** @var TransactionOrderInterface $transactionOrder */
         $transactionOrder = $this->modelInstance()->setId($transactionOrderId);
+
         return $this->delete($transactionOrder);
     }
 
@@ -170,7 +193,7 @@ class OrderRepository implements TransactionOrderRepositoryInterface
 
         return $searchResults;
     }
-    
+
     /**
      * @param string $zpayOrderId
      * @param null   $orderStatus
@@ -182,15 +205,15 @@ class OrderRepository implements TransactionOrderRepositoryInterface
     {
         /** @var \ZPay\Standard\Api\Data\TransactionOrderInterface $transaction */
         $transaction = $this->getByZPayOrderId($zpayOrderId);
-        
+
         if ($orderStatus && $this->statusVerification->isOrderStatusValid($orderStatus)) {
             $transaction->setZpayOrderStatus($orderStatus);
         }
-        
+
         if ($paymentStatus && $this->statusVerification->isPaymentStatusValid($paymentStatus)) {
             $transaction->setZpayPayoutStatus($paymentStatus);
         }
-        
+
         try {
             $this->save($transaction);
         } catch (\Exception $e) {
