@@ -1,14 +1,19 @@
 <?php
+/**
+ * @author Tiago Sampaio <tiago@tiagosampaio.com>
+ */
 
 namespace ZPay\Standard\Helper;
 
 use Magento\Framework\App\Helper\AbstractHelper;
-use Magento\Framework\App\Helper\Context;
-use Magento\Framework\UrlInterface;
 
+/**
+ * Class Data
+ *
+ * @package ZPay\Standard\Helper
+ */
 class Data extends AbstractHelper
 {
-
     /**
      * @return string
      */
@@ -16,7 +21,7 @@ class Data extends AbstractHelper
     {
         return $this->_getUrl('zpay/payment/gateway');
     }
-
+    
     /**
      * @return string
      */
@@ -24,7 +29,7 @@ class Data extends AbstractHelper
     {
         return $this->_getUrl('zpay/payment/pay');
     }
-
+    
     /**
      * @return string
      */
@@ -32,7 +37,7 @@ class Data extends AbstractHelper
     {
         return $this->_getUrl('zpay/payment/update');
     }
-
+    
     /**
      * @return string
      */
@@ -40,7 +45,7 @@ class Data extends AbstractHelper
     {
         return $this->_getUrl('zpay/payment/verify');
     }
-
+    
     /**
      * @return string
      */
@@ -48,7 +53,7 @@ class Data extends AbstractHelper
     {
         return $this->_getUrl('zpay/payment/verified');
     }
-
+    
     /**
      * @return string
      */

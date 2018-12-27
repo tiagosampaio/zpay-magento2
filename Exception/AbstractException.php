@@ -1,22 +1,29 @@
 <?php
+/**
+ * @author Tiago Sampaio <tiago@tiagosampaio.com>
+ */
 
 namespace ZPay\Standard\Exception;
 
 use Magento\Framework\Phrase;
 
+/**
+ * Class AbstractException
+ *
+ * @package ZPay\Standard\Exception
+ */
 abstract class AbstractException extends \Exception
 {
-
     /**
      * @var \Magento\Framework\Phrase
      */
     protected $phrase;
-
+    
     /**
      * @var string
      */
     protected $logMessage;
-
+    
     /**
      * @param \Magento\Framework\Phrase $phrase
      * @param \Exception                $cause
