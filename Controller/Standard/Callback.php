@@ -189,6 +189,12 @@ class Callback extends \Magento\Framework\App\Action\Action
                 self::RESULT_CODE_ERROR,
                 __('Some problem has occurred when trying to register a new invoice.')
             );
+        } finally {
+            $this->transactionOrderRepository->updateStatus(
+                $transactionOrder->getZpayOrderId(),
+                $orderStatus,
+                $paymentStatus
+            );
         }
     
         return $this->createResult(self::RESULT_CODE_SUCCESS);
