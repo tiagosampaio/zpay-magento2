@@ -120,7 +120,10 @@ class Callback extends \Magento\Framework\App\Action\Action
                 throw new \Magento\Framework\Exception\LocalizedException(__('Payment status is not completed yet.'));
             }
             
+            /** @var \Magento\Sales\Model\Order $order */
             $order = $this->getOrder($transactionOrder->getOrderId());
+            
+            $this->canInvoiceOrder($order);
             
             /** @var \Magento\Sales\Model\Order\Invoice $invoice */
             $invoice = $this->invoiceService->prepareInvoice($order);
@@ -158,6 +161,25 @@ class Callback extends \Magento\Framework\App\Action\Action
         $order = $this->orderRepository->get($orderId);
     
         /**
+         * If the order is empty it means that this order ID does not exist.
+         */
+        if (!$order) {
+            throw new \Magento\Framework\Exception\LocalizedException(
+                __('This order does not exist.')
+            );
+        }
+        
+        return $order;
+    }
+    
+    /**
+     * @param \Magento\Sales\Model\Order $order
+     *
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    private function canInvoiceOrder(\Magento\Sales\Model\Order $order)
+    {
+        /**
          * Let's check if the order is in payment review first.
          * If so we need to set the state to processing because of the verification below.
          */
@@ -166,15 +188,22 @@ class Callback extends \Magento\Framework\App\Action\Action
         }
     
         /**
+         * Check if the order was already invoiced before.
+         */
+        if (!$order->canInvoice() && $order->getInvoiceCollection()->getSize()) {
+            throw new \Magento\Framework\Exception\LocalizedException(
+                __('This order was already invoiced.')
+            );
+        }
+    
+        /**
          * If the order cannot be invoiced that's because it's not ready for invoice.
          */
-        if (!$order || !$order->canInvoice()) {
+        if (!$order->canInvoice()) {
             throw new \Magento\Framework\Exception\LocalizedException(
                 __('This order cannot be invoiced.')
             );
         }
-        
-        return $order;
     }
     
     /**
