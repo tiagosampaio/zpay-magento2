@@ -1,42 +1,70 @@
 <?php
+/**
+ * @author Tiago Sampaio <tiago@tiagosampaio.com>
+ */
 
 namespace ZPay\Standard\Block\Payment;
 
 use Magento\Framework\View\Element\Template;
 
+/**
+ * Class Wrapper
+ *
+ * @package ZPay\Standard\Block\Payment
+ */
 class Wrapper extends Template
 {
-
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $_template = 'ZPay_Standard::payment/wrapper.phtml';
-
-    /** @var null|\ZPay\Standard\Helper\Data */
+    
+    /**
+     *
+     * @var null|\ZPay\Standard\Helper\Data
+     */
     private $helperData = null;
-
-    /** @var null|\Magento\Framework\Pricing\Helper\Data */
+    
+    /**
+     * @var null|\Magento\Framework\Pricing\Helper\Data
+     */
     private $helperPricing = null;
-
-    /** @var \Magento\Framework\Session\Storage */
+    
+    /**
+     * @var \Magento\Framework\Session\Storage
+     */
     private $storage = null;
-
-    /** @var \Magento\Framework\Registry */
+    
+    /**
+     * @var \Magento\Framework\Registry
+     */
     private $registry = null;
-
-    /** @var \Magento\Checkout\Model\Session */
+    
+    /**
+     * @var \Magento\Checkout\Model\Session
+     */
     private $checkoutSession;
-
-    /** @var \Magento\Sales\Api\OrderRepositoryInterface */
+    
+    /**
+     * @var \Magento\Sales\Api\OrderRepositoryInterface
+     */
     private $orderRepository;
     
-    /** @var \ZPay\Standard\Api\TransactionOrderRepositoryInterface */
+    /**
+     * @var \ZPay\Standard\Api\TransactionOrderRepositoryInterface
+     */
     private $transactionOrderRepository;
     
-    /** @var \ZPay\Standard\Api\TransactionStatusVerification */
+    /**
+     * @var \ZPay\Standard\Api\TransactionStatusVerification
+     */
     private $statusVerification;
-
-    /** @var \Magento\Framework\Stdlib\DateTime\TimezoneInterface */
+    
+    /**
+     * @var \Magento\Framework\Stdlib\DateTime\TimezoneInterface
+     */
     private $timezone;
-
+    
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
         \Magento\Framework\Pricing\Helper\Data $helperPricing,
@@ -51,7 +79,7 @@ class Wrapper extends Template
         array $data = []
     ) {
         parent::__construct($context, $data);
-
+        
         $this->helperData = $helperData;
         $this->helperPricing = $helperPricing;
         $this->storage = $storage;
@@ -62,51 +90,52 @@ class Wrapper extends Template
         $this->statusVerification = $statusVerification;
         $this->timezone = $timezone;
     }
-
+    
     /**
      * @return \ZPay\Standard\Model\Transaction\Order
      */
     public function getZpayOrder()
     {
         $key = 'zpay_order';
-
+        
         if ($this->registry->registry($key)) {
             return $this->registry->registry($key);
         }
-
+        
         try {
             /** After verified action */
             $orderId = (int) $this->storage->getData('current_order_id');
-
+            
             /** Let's make available only one time. */
             if ($orderId) {
                 $this->storage->unsetData('current_order_id');
             }
-
+            
             /** Checkout success page. */
             if (!$orderId) {
                 $orderId = $this->getOrder()->getId();
             }
-
+            
             /** @var \ZPay\Standard\Model\Transaction\Order $order */
             $order = $this->transactionOrderRepository->getByOrderId($orderId);
-
+            
             $this->registry->register($key, $order);
         } catch (\Exception $e) {
         }
-
+        
         return $order;
     }
-
+    
     /**
      * @return bool
      */
     public function canDisplayWrapper()
     {
         $zpayOrderId = $this->getZpayOrder()->getId();
+        
         return (bool) $zpayOrderId;
     }
-
+    
     /**
      * @return \Magento\Sales\Model\Order
      *
@@ -115,25 +144,26 @@ class Wrapper extends Template
     public function getOrder()
     {
         $key = 'current_magento_order';
-
+        
         if ($this->registry->registry($key)) {
             return $this->registry->registry($key);
         }
-
+        
         if ($orderId = $this->getRequest()->getParam('order_id')) {
             /** @var \Magento\Sales\Model\Order $order */
             $order = $this->orderRepository->get($orderId);
-
+            
             $this->registry->register($key, $order, true);
-
+            
             return $order;
         }
-
+        
         /** @var \Magento\Sales\Model\Order $lastOrder */
         $lastOrder = $this->checkoutSession->getLastRealOrder();
+        
         return $lastOrder;
     }
-
+    
     /**
      * @return \ZPay\Standard\Helper\Data
      */
@@ -141,7 +171,7 @@ class Wrapper extends Template
     {
         return $this->helperData;
     }
-
+    
     /**
      * @return string
      */
@@ -149,7 +179,7 @@ class Wrapper extends Template
     {
         return (string) $this->storage->getData('address');
     }
-
+    
     /**
      * @param float $value
      * @param bool  $format
@@ -161,7 +191,7 @@ class Wrapper extends Template
     {
         return $this->helperPricing->currency($value, $format, $includeContainer);
     }
-
+    
     /**
      * @return float|int
      */
@@ -170,14 +200,14 @@ class Wrapper extends Template
         try {
             $grandTotal = (float) $this->getOrder()->getGrandTotal();
             $amountTo = (float) $this->getZpayOrder()->getZpayAmountTo();
-
+            
             return (float) ($grandTotal / $amountTo);
         } catch (\Exception $e) {
         }
-
+        
         return 0;
     }
-
+    
     /**
      * @return \Magento\Framework\Stdlib\DateTime\TimezoneInterface
      */
@@ -185,19 +215,21 @@ class Wrapper extends Template
     {
         return $this->timezone;
     }
-
+    
     /**
      * @param      $timestamp
      * @param null $format
+     *
      * @return string
      */
     public function convertDate($timestamp, $format = null)
     {
         return $this->timezone
             ->date($timestamp, $this->getTimezone()->getDefaultTimezonePath())
-            ->format($format ?: \Magento\Framework\Stdlib\DateTime::DATETIME_PHP_FORMAT);
+            ->format($format ?: \Magento\Framework\Stdlib\DateTime::DATETIME_PHP_FORMAT)
+            ;
     }
-
+    
     /**
      * @return string
      */
@@ -206,7 +238,7 @@ class Wrapper extends Template
         if ($this->statusVerification->isPaid($this->getZpayOrder())) {
             return null;
         }
-
+        
         return parent::_toHtml();
     }
 }
