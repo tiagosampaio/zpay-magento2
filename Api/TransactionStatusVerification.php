@@ -89,4 +89,16 @@ interface TransactionStatusVerification
      * @return boolean
      */
     public function isCanceled($orderStatus);
+    
+    /**
+     * @param string $status
+     * @return bool
+     */
+    public function isOrderStatusValid($status);
+    
+    /**
+     * @param string $status
+     * @return bool
+     */
+    public function isPaymentStatusValid($status);
 }

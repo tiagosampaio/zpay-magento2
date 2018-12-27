@@ -6,7 +6,6 @@ use ZPay\Standard\Api\Data\TransactionOrderInterface;
 
 class StatusVerification implements \ZPay\Standard\Api\TransactionStatusVerification
 {
-
     /**
      * @param TransactionOrderInterface|string $paymentStatus
      * @return boolean
@@ -91,6 +90,49 @@ class StatusVerification implements \ZPay\Standard\Api\TransactionStatusVerifica
         }
 
         return false;
+    }
+    
+    /**
+     * @param string $status
+     *
+     * @return bool
+     */
+    public function isPaymentStatusValid($status)
+    {
+        $valid = [
+            self::PAYMENT_STATUS_PAID,
+            self::PAYMENT_STATUS_OVERPAID,
+            self::PAYMENT_STATUS_UNDERPAID,
+            self::PAYMENT_STATUS_UNPAID,
+        ];
+        
+        if (!in_array($status, $valid)) {
+            return false;
+        }
+        
+        return true;
+    }
+    
+    /**
+     * @param string $status
+     *
+     * @return bool
+     */
+    public function isOrderStatusValid($status)
+    {
+        $valid = [
+            self::ORDER_STATUS_CANCELED,
+            self::ORDER_STATUS_COMPLETED,
+            self::ORDER_STATUS_CREATED,
+            self::ORDER_STATUS_FAILED,
+            self::ORDER_STATUS_PROCESSING,
+        ];
+        
+        if (!in_array($status, $valid)) {
+            return false;
+        }
+        
+        return true;
     }
     
     /**
