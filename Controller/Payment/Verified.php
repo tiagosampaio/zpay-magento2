@@ -29,7 +29,7 @@ class Verified extends Verify
         
         try {
             /** @var \stdClass $status */
-            $object = $this->api->getOrderStatus($order->getZpayOrderId());
+            $object = (object) $this->api->getOrderStatus($order->getZpayOrderId());
         } catch (\Exception $e) {
             return $this->_redirect('');
         }

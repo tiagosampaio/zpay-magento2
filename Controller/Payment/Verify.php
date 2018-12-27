@@ -30,7 +30,7 @@ class Verify extends PaymentAbstract
         }
         
         /** @var \stdClass $status */
-        $object = $this->api->getOrderStatus($order->getZpayOrderId());
+        $object = (object) $this->api->getOrderStatus($order->getZpayOrderId());
         
         if (!$this->validate($object)) {
             return false;

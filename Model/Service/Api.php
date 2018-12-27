@@ -176,7 +176,7 @@ class Api implements \ZPay\Standard\Api\ServiceApiInterface
     /**
      * @param \Magento\Sales\Api\Data\OrderInterface $order
      *
-     * @return \stdClass
+     * @return array
      *
      * @throws InvalidObjectException
      * @throws ServiceApiResponseException
@@ -206,18 +206,40 @@ class Api implements \ZPay\Standard\Api\ServiceApiInterface
         /** @var \Zend\Http\Response $response */
         $response = $client->send();
 
-        /** @var \stdClass $result */
+        /** @var array $result */
         $result = $this->serializer->unserialize($response->getBody());
 
         if (!in_array($response->getStatusCode(), [200, 201])) {
             throw new ServiceApiResponseException(__('Api service responded an error: %s', $result['message']));
         }
 
-        if (!isset($result->order_id, $result->address, $result->amount_to)) {
+        if (!$this->validateResult($result)) {
             throw new ServiceApiResponseException(__('Api service responded an error: %s', $result['message']));
         }
 
         return $result;
+    }
+
+    /**
+     * @param array $result
+     *
+     * @return bool
+     */
+    private function validateResult(array $result)
+    {
+        if (!isset($result['order_id'])) {
+            return false;
+        }
+
+        if (!isset($result['address'])) {
+            return false;
+        }
+
+        if (!isset($result['amount_to'])) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -256,7 +278,7 @@ class Api implements \ZPay\Standard\Api\ServiceApiInterface
     /**
      * @param string $zpayOrderId
      *
-     * @return \stdClass
+     * @return array
      *
      * @throws ServiceApiResponseException
      */
@@ -271,7 +293,7 @@ class Api implements \ZPay\Standard\Api\ServiceApiInterface
         /** @var \Zend\Http\Response $response */
         $response = $client->send();
 
-        /** @var \stdClass $result */
+        /** @var array $result */
         $result = $this->serializer->unserialize($response->getBody());
 
         return $result;

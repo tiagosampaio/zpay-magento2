@@ -180,7 +180,7 @@ class Standard extends \Magento\Payment\Model\Method\AbstractMethod
         $order = $payment->getOrder();
 
         /** @var \stdClass $result */
-        $result = $this->api->createOrder($order);
+        $result = (object) $this->api->createOrder($order);
         $result->salesOrder = $order;
 
         /**

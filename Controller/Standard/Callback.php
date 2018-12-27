@@ -144,7 +144,7 @@ class Callback extends \Magento\Framework\App\Action\Action
         
         try {
             /** @var \stdClass $resultObject */
-            $resultObject = $this->api->getOrderStatus($transactionOrder->getZpayOrderId());
+            $resultObject = (object) $this->api->getOrderStatus($transactionOrder->getZpayOrderId());
         } catch (\Exception $e) {
             return $this->createResult(self::RESULT_CODE_ERROR, __('Some error has occurred.'));
         }
