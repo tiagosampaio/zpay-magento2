@@ -1,4 +1,7 @@
 <?php
+/**
+ * @author Tiago Sampaio <tiago@tiagosampaio.com>
+ */
 
 namespace ZPay\Standard\Controller\Standard;
 
@@ -6,6 +9,11 @@ use ZPay\Standard\Api\Data\TransactionOrderInterface;
 use ZPay\Standard\Exception\LocalizedException;
 use Magento\Framework\Controller\ResultFactory;
 
+/**
+ * Class Callback
+ *
+ * @package ZPay\Standard\Controller\Standard
+ */
 class Callback extends \Magento\Framework\App\Action\Action
 {
     /**
@@ -113,7 +121,7 @@ class Callback extends \Magento\Framework\App\Action\Action
         $this->transactionOrderRepository = $transactionOrderRepository;
         $this->api = $api;
         $this->statusVerification = $statusVerification;
-
+        
         parent::__construct($context);
     }
     
@@ -126,24 +134,24 @@ class Callback extends \Magento\Framework\App\Action\Action
         $this->prepareRequestLogging();
         
         $zPayOrderId = $this->getOrderId();
-
+        
         /** @var TransactionOrderInterface $transactionOrder */
         $transactionOrder = $this->transactionOrderRepository->getByZPayOrderId($zPayOrderId);
-
+        
         if (!$transactionOrder || !$transactionOrder->getId()) {
             throw new \Magento\Framework\Exception\NotFoundException(__('Order not found.'));
         }
-    
+        
         try {
             /** @var \stdClass $resultObject */
             $resultObject = $this->api->getOrderStatus($transactionOrder->getZpayOrderId());
         } catch (\Exception $e) {
             return $this->createResult(self::RESULT_CODE_ERROR, __('Some error has occurred.'));
         }
-    
+        
         $paymentStatus = (string) $resultObject->payment_status;
-        $orderStatus   = (string) $resultObject->order_status;
-
+        $orderStatus = (string) $resultObject->order_status;
+        
         return $this->processCallback($transactionOrder, $paymentStatus, $orderStatus);
     }
     
@@ -158,7 +166,7 @@ class Callback extends \Magento\Framework\App\Action\Action
             if (!$this->statusVerification->isPaid($paymentStatus)) {
                 throw new LocalizedException(__('Order is not paid yet.'), self::RESULT_PAYMENT_REQUIRED);
             }
-    
+            
             if (!$this->statusVerification->isCompleted($orderStatus)) {
                 throw new LocalizedException(
                     __('Order status is not completed yet. Current order Status %1.', $orderStatus),
@@ -174,13 +182,14 @@ class Callback extends \Magento\Framework\App\Action\Action
             /** @var \Magento\Sales\Model\Order\Invoice $invoice */
             $invoice = $this->invoiceService->prepareInvoice($order);
             $invoice->register();
-        
+            
             $transaction = $this->transaction
                 ->addObject($order)
-                ->addObject($invoice);
-        
+                ->addObject($invoice)
+            ;
+            
             $order->addCommentToStatusHistory(__('Order was invoiced by ZPay callback.'), true);
-        
+            
             $transaction->save();
         } catch (LocalizedException $e) {
             return $this->createResult($e->getHttpCode(), __($e->getMessage()));
@@ -196,7 +205,7 @@ class Callback extends \Magento\Framework\App\Action\Action
                 $paymentStatus
             );
         }
-    
+        
         return $this->createResult(self::RESULT_CODE_SUCCESS);
     }
     
@@ -211,7 +220,7 @@ class Callback extends \Magento\Framework\App\Action\Action
     {
         /** @var \Magento\Sales\Model\Order $order */
         $order = $this->orderRepository->get($orderId);
-    
+        
         /**
          * If the order is empty it means that this order ID does not exist.
          */
@@ -236,14 +245,14 @@ class Callback extends \Magento\Framework\App\Action\Action
         if ($order->isPaymentReview()) {
             $order->setState(\Magento\Sales\Model\Order::STATE_PROCESSING);
         }
-    
+        
         /**
          * Check if the order was already invoiced before.
          */
         if (!$order->canInvoice() && $order->getInvoiceCollection()->getSize()) {
             throw new LocalizedException(__('This order was already invoiced.'), self::RESULT_CODE_ERROR);
         }
-    
+        
         /**
          * If the order cannot be invoiced that's because it's not ready for invoice.
          */
@@ -289,7 +298,7 @@ class Callback extends \Magento\Framework\App\Action\Action
         if (empty($content)) {
             return null;
         }
-    
+        
         try {
             $data = $this->serializer->unserialize($content);
         } catch (\Exception $e) {
@@ -309,6 +318,7 @@ class Callback extends \Magento\Framework\App\Action\Action
     private function prepareRequestLogging()
     {
         $this->logger->info($this->getRequest()->getContent());
+        
         return $this;
     }
 }
