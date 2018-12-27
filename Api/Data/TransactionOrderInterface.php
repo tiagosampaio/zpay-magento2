@@ -1,4 +1,7 @@
 <?php
+/**
+ * @author Tiago Sampaio <tiago@tiagosampaio.com>
+ */
 
 namespace ZPay\Standard\Api\Data;
 
@@ -9,17 +12,59 @@ namespace ZPay\Standard\Api\Data;
  */
 interface TransactionOrderInterface
 {
-    
+    /**
+     * @var string
+     */
     const ID = 'id';
+    
+    /**
+     * @var string
+     */
     const QUOTE_ID = 'quote_id';
+    
+    /**
+     * @var string
+     */
     const ORDER_ID = 'order_id';
+    
+    /**
+     * @var string
+     */
     const ZPAY_ORDER_ID = 'zpay_order_id';
+    
+    /**
+     * @var string
+     */
     const ZPAY_QUOTE_ID = 'zpay_quote_id';
+    
+    /**
+     * @var string
+     */
     const ZPAY_ADDRESS = 'zpay_address';
+    
+    /**
+     * @var string
+     */
     const ZPAY_ORDER_STATUS = 'zpay_order_status';
+    
+    /**
+     * @var string
+     */
     const ZPAY_PAYOUT_STATUS = 'zpay_payout_status';
+    
+    /**
+     * @var string
+     */
     const ZPAY_AMOUNT_TO = 'zpay_amount_to';
+    
+    /**
+     * @var string
+     */
     const ZPAY_TIME = 'zpay_time';
+    
+    /**
+     * @var string
+     */
     const ZPAY_TIMESTAMP = 'zpay_timestamp';
     
     /**
