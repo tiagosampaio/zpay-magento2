@@ -22,6 +22,15 @@ interface TransactionOrderRepositoryInterface
      * @return TransactionOrderInterface
      */
     public function get($zpayOrderId);
+    
+    /**
+     * @param string      $zpayOrderId
+     * @param null|string $orderStatus
+     * @param null|string $paymentStatus
+     *
+     * @return mixed
+     */
+    public function updateStatus($zpayOrderId, $orderStatus = null, $paymentStatus = null);
 
     /**
      * @param string $transactionOrderId

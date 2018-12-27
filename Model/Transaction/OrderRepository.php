@@ -14,30 +14,46 @@ use ZPay\Standard\Model\ResourceModel\Transaction\Order\CollectionFactory as Tra
 
 class OrderRepository implements TransactionOrderRepositoryInterface
 {
-
-    /** @var CollectionProcessorInterface */
-    protected $collectionProcessor;
-
-    /** @var SearchResultsFactory */
-    protected $searchResultsFactory;
-
-    /** @var TransactionOrderResourceModelFactory */
-    protected $transactionOrderResourceFactory;
-
-    /** @var TransactionOrderModelFactory */
-    protected $transactionOrderModelFactory;
-
-    /** @var TransactionOrderCollectionFactory */
-    protected $transactionOrderCollectionFactory;
+    /**
+     * @var CollectionProcessorInterface
+     */
+    private $collectionProcessor;
+    
+    /**
+     * @var SearchResultsFactory
+     */
+    private $searchResultsFactory;
+    
+    /**
+     * @var TransactionOrderResourceModelFactory
+     */
+    private $transactionOrderResourceFactory;
+    
+    /**
+     * @var TransactionOrderModelFactory
+     */
+    private $transactionOrderModelFactory;
+    
+    /**
+     * @var TransactionOrderCollectionFactory
+     */
+    private $transactionOrderCollectionFactory;
+    
+    /**
+     * @var StatusVerification
+     */
+    private $statusVerification;
 
     public function __construct(
         CollectionProcessorInterface $collectionProcessor,
+        StatusVerification $statusVerification,
         TransactionOrderResourceModelFactory $transactionOrderResourceFactory,
         TransactionOrderModelFactory $transactionOrderModelFactory,
         TransactionOrderCollectionFactory $transactionOrderCollectionFactory,
         SearchResultsFactory $searchResultsFactory
     ) {
         $this->searchResultsFactory = $searchResultsFactory;
+        $this->statusVerification = $statusVerification;
         $this->collectionProcessor = $collectionProcessor;
         $this->transactionOrderResourceFactory = $transactionOrderResourceFactory;
         $this->transactionOrderModelFactory = $transactionOrderModelFactory;
@@ -153,6 +169,32 @@ class OrderRepository implements TransactionOrderRepositoryInterface
         $searchResults->setTotalCount($collection->getSize());
 
         return $searchResults;
+    }
+    
+    /**
+     * @param string $zpayOrderId
+     * @param null   $orderStatus
+     * @param null   $paymentStatus
+     *
+     * @return mixed|void
+     */
+    public function updateStatus($zpayOrderId, $orderStatus = null, $paymentStatus = null)
+    {
+        /** @var \ZPay\Standard\Api\Data\TransactionOrderInterface $transaction */
+        $transaction = $this->getByZPayOrderId($zpayOrderId);
+        
+        if ($orderStatus && $this->statusVerification->isOrderStatusValid($orderStatus)) {
+            $transaction->setZpayOrderStatus($orderStatus);
+        }
+        
+        if ($paymentStatus && $this->statusVerification->isPaymentStatusValid($paymentStatus)) {
+            $transaction->setZpayPayoutStatus($paymentStatus);
+        }
+        
+        try {
+            $this->save($transaction);
+        } catch (\Exception $e) {
+        }
     }
 
     /**
