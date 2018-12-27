@@ -23,9 +23,6 @@ class Api implements \ZPay\Standard\Api\ServiceApiInterface
     /** @var string */
     private $baseUrl;
     
-    /** @todo Removed it further.  */
-    private $api;
-    
     /** @var string */
     private $token;
     
