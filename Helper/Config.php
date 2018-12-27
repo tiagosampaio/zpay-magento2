@@ -58,7 +58,7 @@ class Config extends AbstractHelper
      */
     public function getCallbackUrl()
     {
-        return (string) $this->_getUrl('zpay/standard/callback');
+        return (string) $this->_getUrl('zpay/standard/callback', ['ajax' => true]);
     }
 
     /**
