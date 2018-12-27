@@ -2,39 +2,82 @@
 
 namespace ZPay\Standard\Controller\Standard;
 
+use ZPay\Standard\Api\Data\TransactionOrderInterface;
+use ZPay\Standard\Exception\LocalizedException;
+use Magento\Framework\Controller\ResultFactory;
+
 class Callback extends \Magento\Framework\App\Action\Action
 {
-
-    /** @var int */
-    const RESULT_CODE_ERROR = 204;
+    /**
+     * @var int
+     */
+    const RESULT_CODE_ERROR = 400;
     
-    /** @var int */
+    /**
+     * @var int
+     */
+    const RESULT_NOT_FOUND = 404;
+    
+    /**
+     * @var int
+     */
+    const RESULT_PAYMENT_REQUIRED = 402;
+    
+    /**
+     * @var int
+     */
+    const RESULT_PROCESSING = 102;
+    
+    /**
+     * @var int
+     */
     const RESULT_CODE_SUCCESS = 200;
     
-    /** @var \ZPay\Standard\Api\TransactionOrderRepositoryInterface */
+    /**
+     * @var \ZPay\Standard\Api\TransactionOrderRepositoryInterface
+     */
     private $transactionOrderRepository;
-
-    /** @var \Magento\Sales\Api\OrderRepositoryInterface */
+    
+    /**
+     * @var \Magento\Sales\Api\OrderRepositoryInterface
+     */
     private $orderRepository;
-
-    /** @var \Magento\Sales\Model\Service\InvoiceService */
+    
+    /**
+     * @var \Magento\Sales\Model\Service\InvoiceService
+     */
     private $invoiceService;
-
-    /** @var \Magento\Sales\Model\Order\InvoiceRepository */
+    
+    /**
+     * @var \Magento\Sales\Model\Order\InvoiceRepository
+     */
     private $invoiceRepository;
-
-    /** @var \Magento\Framework\DB\Transaction */
+    
+    /**
+     * @var \Magento\Framework\DB\Transaction
+     */
     private $transaction;
-
-    /** @var \ZPay\Standard\Model\Service\Api */
+    
+    /**
+     * @var \ZPay\Standard\Model\Service\Api
+     */
     private $api;
-
-    /** @var \ZPay\Standard\Api\TransactionStatusVerification */
+    
+    /**
+     * @var \ZPay\Standard\Api\TransactionStatusVerification
+     */
     private $statusVerification;
     
-    /** @var \ZPay\Standard\Model\Logger\LoggerInterface */
+    /**
+     * @var \ZPay\Standard\Model\Logger\LoggerInterface
+     */
     private $logger;
-
+    
+    /**
+     * @var \Magento\Framework\Serialize\SerializerInterface
+     */
+    private $serializer;
+    
     /**
      * Callback constructor.
      *
@@ -43,6 +86,7 @@ class Callback extends \Magento\Framework\App\Action\Action
      * @param \Magento\Sales\Api\InvoiceManagementInterface          $invoiceService
      * @param \Magento\Sales\Api\InvoiceRepositoryInterface          $invoiceRepository
      * @param \Magento\Framework\DB\Transaction                      $transaction
+     * @param \Magento\Framework\Serialize\SerializerInterface       $serializer
      * @param \ZPay\Standard\Model\Logger\LoggerInterface            $logger
      * @param \ZPay\Standard\Api\TransactionOrderRepositoryInterface $transactionOrderRepository
      * @param \ZPay\Standard\Api\ServiceApiInterface                 $api
@@ -54,6 +98,7 @@ class Callback extends \Magento\Framework\App\Action\Action
         \Magento\Sales\Api\InvoiceManagementInterface $invoiceService,
         \Magento\Sales\Api\InvoiceRepositoryInterface $invoiceRepository,
         \Magento\Framework\DB\Transaction $transaction,
+        \Magento\Framework\Serialize\SerializerInterface $serializer,
         \ZPay\Standard\Model\Logger\LoggerInterface $logger,
         \ZPay\Standard\Api\TransactionOrderRepositoryInterface $transactionOrderRepository,
         \ZPay\Standard\Api\ServiceApiInterface $api,
@@ -63,6 +108,7 @@ class Callback extends \Magento\Framework\App\Action\Action
         $this->invoiceService = $invoiceService;
         $this->invoiceRepository = $invoiceRepository;
         $this->transaction = $transaction;
+        $this->serializer = $serializer;
         $this->logger = $logger;
         $this->transactionOrderRepository = $transactionOrderRepository;
         $this->api = $api;
@@ -81,7 +127,7 @@ class Callback extends \Magento\Framework\App\Action\Action
         
         $zPayOrderId = $this->getOrderId();
 
-        /** @var \ZPay\Standard\Api\Data\TransactionOrderInterface $transactionOrder */
+        /** @var TransactionOrderInterface $transactionOrder */
         $transactionOrder = $this->transactionOrderRepository->getByZPayOrderId($zPayOrderId);
 
         if (!$transactionOrder || !$transactionOrder->getId()) {
@@ -102,22 +148,22 @@ class Callback extends \Magento\Framework\App\Action\Action
     }
     
     /**
-     * @param \ZPay\Standard\Api\Data\TransactionOrderInterface $transactionOrder
+     * @param TransactionOrderInterface $transactionOrder
      *
      * @return \Magento\Framework\Controller\ResultInterface
      */
-    private function processCallback(
-        \ZPay\Standard\Api\Data\TransactionOrderInterface $transactionOrder,
-        $paymentStatus,
-        $orderStatus
-    ) {
+    private function processCallback(TransactionOrderInterface $transactionOrder, $paymentStatus, $orderStatus)
+    {
         try {
             if (!$this->statusVerification->isPaid($paymentStatus)) {
-                throw new \Magento\Framework\Exception\LocalizedException(__('Order is not paid yet.'));
+                throw new LocalizedException(__('Order is not paid yet.'), self::RESULT_PAYMENT_REQUIRED);
             }
     
             if (!$this->statusVerification->isCompleted($orderStatus)) {
-                throw new \Magento\Framework\Exception\LocalizedException(__('Payment status is not completed yet.'));
+                throw new LocalizedException(
+                    __('Order status is not completed yet. Current order Status %1.', $orderStatus),
+                    self::RESULT_PROCESSING
+                );
             }
             
             /** @var \Magento\Sales\Model\Order $order */
@@ -136,8 +182,8 @@ class Callback extends \Magento\Framework\App\Action\Action
             $order->addCommentToStatusHistory(__('Order was invoiced by ZPay callback.'), true);
         
             $transaction->save();
-        } catch (\Magento\Framework\Exception\LocalizedException $e) {
-            return $this->createResult(self::RESULT_CODE_ERROR, __($e->getMessage()));
+        } catch (LocalizedException $e) {
+            return $this->createResult($e->getHttpCode(), __($e->getMessage()));
         } catch (\Exception $e) {
             return $this->createResult(
                 self::RESULT_CODE_ERROR,
@@ -153,7 +199,7 @@ class Callback extends \Magento\Framework\App\Action\Action
      *
      * @return \Magento\Framework\Controller\ResultInterface|\Magento\Sales\Model\Order
      *
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws LocalizedException
      */
     private function getOrder($orderId)
     {
@@ -164,9 +210,7 @@ class Callback extends \Magento\Framework\App\Action\Action
          * If the order is empty it means that this order ID does not exist.
          */
         if (!$order) {
-            throw new \Magento\Framework\Exception\LocalizedException(
-                __('This order does not exist.')
-            );
+            throw new LocalizedException(__('This order does not exist.'), self::RESULT_NOT_FOUND);
         }
         
         return $order;
@@ -175,7 +219,7 @@ class Callback extends \Magento\Framework\App\Action\Action
     /**
      * @param \Magento\Sales\Model\Order $order
      *
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws LocalizedException
      */
     private function canInvoiceOrder(\Magento\Sales\Model\Order $order)
     {
@@ -191,18 +235,14 @@ class Callback extends \Magento\Framework\App\Action\Action
          * Check if the order was already invoiced before.
          */
         if (!$order->canInvoice() && $order->getInvoiceCollection()->getSize()) {
-            throw new \Magento\Framework\Exception\LocalizedException(
-                __('This order was already invoiced.')
-            );
+            throw new LocalizedException(__('This order was already invoiced.'), self::RESULT_CODE_ERROR);
         }
     
         /**
          * If the order cannot be invoiced that's because it's not ready for invoice.
          */
         if (!$order->canInvoice()) {
-            throw new \Magento\Framework\Exception\LocalizedException(
-                __('This order cannot be invoiced.')
-            );
+            throw new LocalizedException(__('This order cannot be invoiced.'), self::RESULT_CODE_ERROR);
         }
     }
     
@@ -213,11 +253,8 @@ class Callback extends \Magento\Framework\App\Action\Action
      *
      * @return \Magento\Framework\Controller\ResultInterface
      */
-    private function createResult(
-        $code,
-        $message = null,
-        $typeClass = \Magento\Framework\Controller\ResultFactory::TYPE_RAW
-    ) {
+    private function createResult($code, $message = null, $typeClass = ResultFactory::TYPE_RAW)
+    {
         /** @var \Magento\Framework\Controller\ResultInterface $result */
         $result = $this->resultFactory->create($typeClass);
         $result->setHttpResponseCode((int) $code);
@@ -248,7 +285,7 @@ class Callback extends \Magento\Framework\App\Action\Action
         }
     
         try {
-            $data = json_decode($content, true);
+            $data = $this->serializer->unserialize($content);
         } catch (\Exception $e) {
             return null;
         }
