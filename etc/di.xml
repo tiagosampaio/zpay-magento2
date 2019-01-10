@@ -1,5 +1,17 @@
 <?xml version="1.0"?>
 <!--
+  ZPay Payment Gateway
+
+  @category ZPay
+  @package ZPay\Standard
+  @author Tiago Sampaio <tiago@tiagosampaio.com>
+  @link https://github.com/tiagosampaio
+  @link https://tiagosampaio.com
+
+  Copyright (c) 2019.
+  -->
+
+<!--
 /**
  * @author Tiago Sampaio <tiago@tiagosampaio.com>
  */
@@ -9,6 +21,7 @@
     <preference for="ZPay\Standard\Api\TransactionOrderRepositoryInterface" type="ZPay\Standard\Model\Transaction\OrderRepository" />
     <preference for="ZPay\Standard\Api\ServiceApiInterface" type="ZPay\Standard\Model\Service\Api"/>
     <preference for="ZPay\Standard\Api\TransactionStatusVerification" type="ZPay\Standard\Model\Transaction\StatusVerification"/>
+    <preference for="ZPay\Standard\Api\CallbackProcessorInterface" type="ZPay\Standard\Model\Transaction\CallbackProcessor"/>
 
     <preference for="ZPay\Standard\Model\Logger\LoggerInterface" type="ZPay\Standard\Model\Logger\Logger"/>
 
