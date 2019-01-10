@@ -23,6 +23,7 @@ use ZPay\Standard\Exception\LocalizedException;
  * Class CallbackReceiver
  *
  * @package ZPay\Standard\Model\Transaction
+ * @api
  */
 class CallbackReceiver implements CallbackReceiverInterface
 {
