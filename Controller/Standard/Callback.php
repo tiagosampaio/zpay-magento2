@@ -11,6 +11,8 @@
  * Copyright (c) 2019.
  */
 
+declare(strict_types = 1);
+
 namespace ZPay\Standard\Controller\Standard;
 
 use ZPay\Standard\Exception\LocalizedException;
