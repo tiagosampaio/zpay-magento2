@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!--
+  ZPay Payment Gateway
+
+  @category ZPay
+  @package ZPay\Standard
+  @author Tiago Sampaio <tiago@tiagosampaio.com>
+  @link https://github.com/tiagosampaio
+  @link https://tiagosampaio.com
+
+  Copyright (c) 2019.
+  -->
+
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+    <route url="/V1/zpay/callback" method="POST">
+        <service class="ZPay\Standard\Api\CallbackReceiverInterface" method="process"/>
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+</routes>

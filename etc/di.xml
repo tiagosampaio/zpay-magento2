@@ -17,6 +17,7 @@
     <preference for="ZPay\Standard\Api\ServiceApiInterface" type="ZPay\Standard\Model\Service\Api"/>
     <preference for="ZPay\Standard\Api\TransactionStatusVerification" type="ZPay\Standard\Model\Transaction\StatusVerification"/>
     <preference for="ZPay\Standard\Api\CallbackProcessorInterface" type="ZPay\Standard\Model\Transaction\CallbackProcessor"/>
+    <preference for="ZPay\Standard\Api\CallbackReceiverInterface" type="ZPay\Standard\Model\Transaction\CallbackReceiver"/>
 
     <preference for="ZPay\Standard\Model\Logger\LoggerInterface" type="ZPay\Standard\Model\Logger\Logger"/>
 
