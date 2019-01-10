@@ -1,3 +1,15 @@
+/*
+ * ZPay Payment Gateway
+ *
+ * @category ZPay
+ * @package ZPay\Standard
+ * @author Tiago Sampaio <tiago@tiagosampaio.com>
+ * @link https://github.com/tiagosampaio
+ * @link https://tiagosampaio.com
+ *
+ * Copyright (c) 2019.
+ */
+
 var config = {
     paths: {
         'jquery-qrcode':'ZPay_Standard/js/lib/jquery-qrcode.min',

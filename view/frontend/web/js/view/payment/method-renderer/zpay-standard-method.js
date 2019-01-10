@@ -1,5 +1,13 @@
-/**
+/*
+ * ZPay Payment Gateway
+ *
+ * @category ZPay
+ * @package ZPay\Standard
  * @author Tiago Sampaio <tiago@tiagosampaio.com>
+ * @link https://github.com/tiagosampaio
+ * @link https://tiagosampaio.com
+ *
+ * Copyright (c) 2019.
  */
 define([
     'jquery',
