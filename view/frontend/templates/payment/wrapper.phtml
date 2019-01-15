@@ -38,7 +38,7 @@ if ($block->canDisplayWrapper()) :
         <div class="right">
             <div class="clock-div">
                 <p class="clock-title"><?php echo __('This quote is available until...') ?></p>
-                <span id="clock-timer"></span>
+                <span id="clock-timer" class="countdown"></span>
             </div>
             <button class="force-refresh"><?php echo __('Update Quote') ?></button>
         </div>
@@ -87,8 +87,7 @@ if ($block->canDisplayWrapper()) :
                 '<?php echo $zAmountTo?>',
                 '<?php echo $zTime?>',
                 '<?php echo $zTimestamp?>'
-            ).setTimerContainer(jQuery('#clock-timer'))
-                .start();
+            ).start();
         });
     </script>
 </div>

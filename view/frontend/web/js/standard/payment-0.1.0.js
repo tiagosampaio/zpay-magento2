@@ -13,9 +13,10 @@
 define([
     'jquery',
     'qrCode',
+    'timer',
     'moment',
     'mage/translate'
-], function ($, qrCode, moment) {
+], function ($, qrCode, timer, moment) {
     return ZPay = {
         magentoAmount:null,
         QRCodeElement:null,
@@ -164,31 +165,11 @@ define([
             $(this.updateButton).text($.mage.__('Update Quote'));
         },
         startTimer: function () {
-            let limitTime = moment(this.ZOrder.timestamp).add(this.ZOrder.time, 'milliseconds');
-            let now       = moment();
-
-            let duration  = moment.duration(limitTime.diff(now));
-
-            // Update the count down every 1 second
-            this.timer = setInterval(function(object) {
-                duration.subtract(moment.duration(1, 'seconds'));
-
-                if (duration.asMilliseconds() > 0) {
-                    object.updateTimer(duration.days(), duration.hours(), duration.minutes(), duration.seconds());
-                    return;
-                }
-
-                // If the count down is finished, write some text
-                if (duration.asMilliseconds() <= 0) {
-                    object.stopTimer()
-                        .updateQuote();
-                }
-            }, 1000, this);
-
+            timer.start(this.ZOrder.timestamp);
             return this;
         },
         stopTimer: function () {
-            clearInterval(this.timer);
+            timer.stop();
             return this;
         },
         restartTimer: function () {
@@ -196,20 +177,5 @@ define([
             this.startTimer();
             return this;
         },
-        updateTimer: function (days, hours, minutes, seconds) {
-            if (hours<10)   {hours   = "0"+hours}
-            if (minutes<10) {minutes = "0"+minutes}
-            if (seconds<10) {seconds = "0"+seconds}
-
-            var text = hours + ":" + minutes + ":" + seconds;
-            $(this.timerContainer).text(text);
-            // console.log(text);
-
-            return this;
-        },
-        setTimerContainer: function (container) {
-            this.timerContainer = container;
-            return this;
-        }
     };
 });

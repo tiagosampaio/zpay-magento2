@@ -25,7 +25,9 @@ var config = {
     },
     map: {
         '*': {
-            qrCode: 'ZPay_Standard/js/qrcode'
+            qrCode: 'ZPay_Standard/js/qrcode',
+            timer: 'ZPay_Standard/js/timer',
+            countdown: 'ZPay_Standard/js/lib/jquery.countdown.min',
         }
     }
 };
