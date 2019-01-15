@@ -203,6 +203,11 @@ class Standard extends \Magento\Payment\Model\Method\AbstractMethod
 
         // $this->_registry->register('zpay_api_current_result', $result, true);
 
+        $payment->setSkipOrderProcessing(true);
+
+        $order->setState(Order::STATE_NEW);
+        $order->setStatus($this->getConfigData('order_status'));
+
         return $this;
     }
 
