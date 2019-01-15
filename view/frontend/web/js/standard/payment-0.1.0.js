@@ -61,7 +61,6 @@ define([
             $(this.updateButton).on('click', $.proxy(this.updateQuote, this));
 
             this.startTimer();
-            this.scheduleUpdateQuote();
             this.scheduleVerifyPayment();
             this.generateQRCode();
 
@@ -114,12 +113,6 @@ define([
 
             return this;
         },
-        scheduleUpdateQuote: function () {
-            var time = parseInt(this.ZOrder.time)*100;
-            // this.schedule(this.updateQuote, time);
-
-            return this;
-        },
         updateQuote: function () {
             $(this.updateButton).text($.mage.__('Please wait while the quote is updated...'));
 
@@ -166,6 +159,7 @@ define([
         },
         startTimer: function () {
             timer.start(this.ZOrder.timestamp);
+            timer.onFinish = this.updateQuote.bind(this);
             return this;
         },
         stopTimer: function () {

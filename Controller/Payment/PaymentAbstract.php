@@ -3,10 +3,10 @@
  * ZPay Payment Gateway
  *
  * @category ZPay
- * @package ZPay\Standard
- * @author Tiago Sampaio <tiago@tiagosampaio.com>
- * @link https://github.com/tiagosampaio
- * @link https://tiagosampaio.com
+ * @package  ZPay\Standard
+ * @author   Tiago Sampaio <tiago@tiagosampaio.com>
+ * @link     https://github.com/tiagosampaio
+ * @link     https://tiagosampaio.com
  *
  * Copyright (c) 2019.
  */
@@ -38,57 +38,57 @@ abstract class PaymentAbstract extends Action
      * @var string
      */
     const CONFIRMED_ORDER_ID_KEY = 'just_confirmed_order_id';
-    
+
     /**
      * @var \ZPay\Standard\Model\Service\Api
      */
     protected $api;
-    
+
     /**
      * @var Storage
      */
     protected $storage;
-    
+
     /**
      * @var HelperPricing
      */
     protected $helperPricing;
-    
+
     /**
      * @var OrderRepositoryInterface
      */
     protected $orderRepository;
-    
+
     /**
      * @var InvoiceService
      */
     protected $invoiceService;
-    
+
     /**
      * @var Transaction
      */
     protected $transaction;
-    
+
     /**
      * @var TransactionOrderRepositoryInterface
      */
     protected $transactionOrderRepository;
-    
+
     /**
      * @var InvoiceRepositoryInterface
      */
     protected $invoiceRepository;
-    
+
     /**
      * @var \ZPay\Standard\Api\TransactionStatusVerification
      */
     protected $statusVerification;
-    
+
     /**
      * @var \Magento\Framework\App\Config\ScopeConfigInterface
      */
     protected $scopeConfig;
-    
+
     /**
      * PaymentAbstract constructor.
      *
@@ -127,30 +127,30 @@ abstract class PaymentAbstract extends Action
         $this->invoiceRepository = $invoiceRepository;
         $this->statusVerification = $statusVerification;
         $this->scopeConfig = $scopeConfig;
-        
+
         parent::__construct($context);
     }
-    
+
     /**
      * @return bool|Order
      */
     protected function getZPayOrder()
     {
         $orderId = (string) $this->_request->getParam('order');
-        
+
         return $this->loadZPayOrder($orderId);
     }
-    
+
     /**
      * @return bool|Order
      */
     protected function getConfirmedZPayOrder()
     {
         $orderId = $this->storage->getData(self::CONFIRMED_ORDER_ID_KEY);
-        
+
         return $this->loadZPayOrder($orderId);
     }
-    
+
     /**
      * @param string $orderId
      *
@@ -161,16 +161,16 @@ abstract class PaymentAbstract extends Action
         if (!$this->validateOrderId($orderId)) {
             return false;
         }
-        
+
         $transactionOrder = $this->transactionOrderRepository->getByZPayOrderId($orderId);
-        
+
         if (!$transactionOrder->getId()) {
             return false;
         }
-        
+
         return $transactionOrder;
     }
-    
+
     /**
      * @param string $orderId
      *
@@ -181,10 +181,10 @@ abstract class PaymentAbstract extends Action
         if (empty($orderId)) {
             return false;
         }
-        
+
         return true;
     }
-    
+
     /**
      * @param \stdClass $object
      *
@@ -196,18 +196,18 @@ abstract class PaymentAbstract extends Action
             if (!$object) {
                 return false;
             }
-            
+
             if (!$object->order_id) {
                 return false;
             }
-            
+
             if (!$object->quote_id) {
                 return false;
             }
         } catch (\Exception $e) {
             return false;
         }
-        
+
         return true;
     }
 }
