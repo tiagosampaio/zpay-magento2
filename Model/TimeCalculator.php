@@ -37,7 +37,7 @@ class TimeCalculator
     public function calculate($timestamp, $milliseconds)
     {
         $timestamp = $this->convertDatetime($timestamp);
-        $seconds   = abs($milliseconds/1000);
+        $seconds   = abs(max($milliseconds, 1000)/1000);
         $dateInterval = new \DateInterval("PT{$seconds}S");
         $timestamp->add($dateInterval);
 

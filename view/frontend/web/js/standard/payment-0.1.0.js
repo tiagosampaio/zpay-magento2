@@ -61,6 +61,7 @@ define([
             $(this.updateButton).on('click', $.proxy(this.updateQuote, this));
 
             this.startTimer();
+            timer.onFinish = this.updateQuote.bind(this);
             this.scheduleVerifyPayment();
             this.generateQRCode();
 
@@ -159,7 +160,6 @@ define([
         },
         startTimer: function () {
             timer.start(this.ZOrder.timestamp);
-            timer.onFinish = this.updateQuote.bind(this);
             return this;
         },
         stopTimer: function () {
@@ -167,8 +167,7 @@ define([
             return this;
         },
         restartTimer: function () {
-            this.stopTimer();
-            this.startTimer();
+            timer.restart(this.ZOrder.timestamp);
             return this;
         },
     };

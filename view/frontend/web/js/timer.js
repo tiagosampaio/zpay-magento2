@@ -6,7 +6,7 @@
  * Copyright (c) 2019.
  */
 
-define(['jquery', 'moment', 'countdown'], function ($) {
+define(['jquery', 'countdown'], function ($) {
     return {
         defaults: {
             container: $('.countdown'),
@@ -42,19 +42,20 @@ define(['jquery', 'moment', 'countdown'], function ($) {
             return this;
         },
         restart: function (timestamp, element) {
+            console.log(this);
             this.container(element);
+            console.log(this);
             this.stop();
+            console.log(this);
             this.start(timestamp);
+            console.log(this);
             return this;
         },
         onUpdate: function () {
-
         },
         onFinish: function () {
-
         },
         onStop: function () {
-
         },
         updateContainer: function (event) {
             this.container().text(
