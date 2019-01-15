@@ -12,10 +12,10 @@
 
 define([
     'jquery',
-    'jquery-qrcode',
+    'qrCode',
     'moment',
     'mage/translate'
-], function (jQuery, QRCode, moment) {
+], function ($, qrCode, moment) {
     return ZPay = {
         magentoAmount:null,
         QRCodeElement:null,
@@ -57,7 +57,7 @@ define([
             return this;
         },
         start: function () {
-            jQuery(this.updateButton).on('click', jQuery.proxy(this.updateQuote, this));
+            $(this.updateButton).on('click', $.proxy(this.updateQuote, this));
 
             this.startTimer();
             this.scheduleUpdateQuote();
@@ -67,59 +67,11 @@ define([
             return this;
         },
         generateQRCode: function () {
-            jQuery(this.QRCodeElement).qrcode({
-                // render method: 'canvas', 'image' or 'div'
-                render: 'canvas',
-
-                // version range somewhere in 1 .. 40
-                minVersion: 10,
-                maxVersion: 40,
-
-                // error correction level: 'L', 'M', 'Q' or 'H'
-                ecLevel: 'L',
-
-                // offset in pixel if drawn onto existing canvas
-                left: 0,
-                top: 0,
-
-                // size in pixel
-                size: 300,
-
-                // code color or image element
-                fill: '#333333',
-
-                // background color or image element, null for transparent background
-                background: '#fff',
-
-                // content
-                text: "bitcoin:" + this.ZOrder.address + "?amount=" + parseFloat(this.ZOrder.amount),
-
-                // corner radius relative to module width: 0.0 .. 0.5
-                radius: 0.3,
-
-                // quiet zone in modules
-                quiet: 2,
-
-                // modes
-                // 0: normal
-                // 1: label strip
-                // 2: label box
-                // 3: image strip
-                // 4: image box
-                mode: 2,
-
-                mSize: 0.1,
-                mPosX: 0.5,
-                mPosY: 0.5,
-
-                label: 'ZPay',
-                fontname: '"Raleway", "Helvetica Neue", Verdana, Arial, sans-serif',
-                fontcolor: '#ff9818',
-
-                image: null
-            });
-
+            qrCode.draw(this.QRCodeElement, this.generateQRCodeText());
             return this;
+        },
+        generateQRCodeText: function () {
+            return "bitcoin:" + this.ZOrder.address + "?amount=" + parseFloat(this.ZOrder.amount);
         },
         schedule: function (callback, time) {
             setInterval(callback.bind(this), time);
@@ -136,7 +88,7 @@ define([
         verifyPayment: function () {
             var object = this;
 
-            jQuery.ajax(object.urlVerify, {
+            $.ajax(object.urlVerify, {
                 method:'GET',
                 data:{order:object.ZOrder.orderId},
                 dataType:'json',
@@ -168,9 +120,9 @@ define([
             return this;
         },
         updateQuote: function () {
-            jQuery(this.updateButton).text(jQuery.mage.__('Please wait while the quote is updated...'));
+            $(this.updateButton).text($.mage.__('Please wait while the quote is updated...'));
 
-            jQuery.ajax(this.urlUpdate, {
+            $.ajax(this.urlUpdate, {
                 method:'GET',
                 data:{order:this.ZOrder.orderId},
                 dataType:'json',
@@ -195,10 +147,10 @@ define([
             this.ZOrder.time      = parseInt(data.time);
             this.ZOrder.timestamp = data.timestamp;
 
-            jQuery('table.values .code-text').html(this.ZOrder.address);
-            jQuery('table.values .btc').html(this.ZOrder.amount);
-            jQuery('table.values .brl .price').html(data.total_brl);
-            jQuery('table.values .rate .price').html(data.rate);
+            $('table.values .code-text').html(this.ZOrder.address);
+            $('table.values .btc').html(this.ZOrder.amount);
+            $('table.values .brl .price').html(data.total_brl);
+            $('table.values .rate .price').html(data.rate);
 
             this.generateQRCode();
 
@@ -209,7 +161,7 @@ define([
             this.restartTimer();
         },
         updateQuoteComplete: function (data) {
-            jQuery(this.updateButton).text(jQuery.mage.__('Update Quote'));
+            $(this.updateButton).text($.mage.__('Update Quote'));
         },
         startTimer: function () {
             let limitTime = moment(this.ZOrder.timestamp).add(this.ZOrder.time, 'milliseconds');
@@ -250,7 +202,7 @@ define([
             if (seconds<10) {seconds = "0"+seconds}
 
             var text = hours + ":" + minutes + ":" + seconds;
-            jQuery(this.timerContainer).text(text);
+            $(this.timerContainer).text(text);
             // console.log(text);
 
             return this;

@@ -22,5 +22,10 @@ var config = {
         'zpay-payment':{
             'deps':['jquery-qrcode']
         }
+    },
+    map: {
+        '*': {
+            qrCode: 'ZPay_Standard/js/qrcode'
+        }
     }
 };
